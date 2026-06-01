@@ -1,12 +1,12 @@
 package http
 
 import (
-	"github.com/shopee-clone/shopee/platforms/sre/internal/alerting"
-	"github.com/shopee-clone/shopee/platforms/sre/internal/deployment"
-	"github.com/shopee-clone/shopee/platforms/sre/internal/healthcheck"
-	"github.com/shopee-clone/shopee/platforms/sre/internal/incident"
-	"github.com/shopee-clone/shopee/platforms/sre/internal/runbook"
-	"github.com/shopee-clone/shopee/platforms/sre/internal/slo"
+	"github.com/tikiclone/tiki/platforms/sre/internal/alerting"
+	"github.com/tikiclone/tiki/platforms/sre/internal/deployment"
+	"github.com/tikiclone/tiki/platforms/sre/internal/healthcheck"
+	"github.com/tikiclone/tiki/platforms/sre/internal/incident"
+	"github.com/tikiclone/tiki/platforms/sre/internal/runbook"
+	"github.com/tikiclone/tiki/platforms/sre/internal/slo"
 )
 
 type Handler struct {

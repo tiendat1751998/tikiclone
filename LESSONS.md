@@ -59,4 +59,4 @@ Common issues found during audits:
 - DB enum: UPPERCASE
 - Prices: int64 (BIGINT), weight: int, currency: VND
 - Domain errors: `*DomainError` pointers
-- MySQL: host=mysql-primary, port=3306, user=shopee, pass=shopee_dev
+- MySQL: host=mysql-primary, port=3306, user=tiki, pass=tiki_dev

@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
-cd /home/datdt/shopeeclone
+cd /home/datdt/tikiclone
 
 # Restart gateway with all env vars from docker-compose
-docker run -d --name shopeeclone-gateway-1 --network shopeeclone_default \
+docker run -d --name tikiclone-gateway-1 --network tikiclone_default \
   -p 8080:8080 \
   -e APP_ENV=development \
   -e GATEWAY_HTTP_PORT=8080 \
@@ -23,12 +23,12 @@ docker run -d --name shopeeclone-gateway-1 --network shopeeclone_default \
   -e UPSTREAM_PRODUCT_CATALOG_SERVICE=product-catalog:8090 \
   -e UPSTREAM_PROMOTION_SERVICE=promotion:8091 \
   -e UPSTREAM_SHIPMENT_SERVICE=shipment:8092 \
-  shopeeclone-gateway 2>&1 || true
+  tikiclone-gateway 2>&1 || true
 
 # If image doesn't exist, build it
 if [ $? -ne 0 ]; then
-  docker build -t shopeeclone-gateway -f services/gateway/Dockerfile .
-  docker run -d --name shopeeclone-gateway-1 --network shopeeclone_default \
+  docker build -t tikiclone-gateway -f services/gateway/Dockerfile .
+  docker run -d --name tikiclone-gateway-1 --network tikiclone_default \
     -p 8080:8080 \
     -e APP_ENV=development \
     -e GATEWAY_HTTP_PORT=8080 \
@@ -48,7 +48,7 @@ if [ $? -ne 0 ]; then
     -e UPSTREAM_PRODUCT_CATALOG_SERVICE=product-catalog:8090 \
     -e UPSTREAM_PROMOTION_SERVICE=promotion:8091 \
     -e UPSTREAM_SHIPMENT_SERVICE=shipment:8092 \
-    shopeeclone-gateway
+    tikiclone-gateway
 fi
 
 echo "Gateway started. Waiting 10s..."

@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/services/auth/internal/config"
-	"github.com/shopee-clone/shopee/services/auth/internal/domain"
+	"github.com/tikiclone/tiki/services/auth/internal/config"
+	"github.com/tikiclone/tiki/services/auth/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 )
@@ -25,7 +25,7 @@ func NewStore(rdb *redis.Client, cfg config.RedisConfig) *Store {
 }
 
 func (s *Store) StoreSession(ctx context.Context, session *domain.Session) error {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "redis.store_session")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "redis.store_session")
 	defer span.End()
 
 	data, err := json.Marshal(session)

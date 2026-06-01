@@ -75,7 +75,7 @@ func Load() *Config {
 		log.Fatal("MYSQL_PASSWORD is required")
 	}
 	return &Config{
-		AppName:  getEnv("APP_NAME", "shopee-product-catalog"),
+		AppName:  getEnv("APP_NAME", "tiki-product-catalog"),
 		AppEnv:   getEnv("APP_ENV", "development"),
 		LogLevel: getEnv("LOG_LEVEL", "info"),
 		HTTPPort: getEnvInt("CATALOG_HTTP_PORT", 8080),
@@ -84,9 +84,9 @@ func Load() *Config {
 		MySQL: MySQLConfig{
 			Host:         getEnv("MYSQL_HOST", "localhost"),
 			Port:         getEnvInt("MYSQL_PORT", 3306),
-			User:         getEnv("MYSQL_USER", "shopee"),
+			User:         getEnv("MYSQL_USER", "tiki"),
 			Password:     mysqlPassword,
-			Database:     getEnv("MYSQL_DATABASE", "shopee_catalog"),
+			Database:     getEnv("MYSQL_DATABASE", "tiki_catalog"),
 			MaxOpenConns: getEnvInt("MYSQL_MAX_OPEN_CONNS", 25),
 			MaxIdleConns: getEnvInt("MYSQL_MAX_IDLE_CONNS", 10),
 			MaxLifetime:  getEnvDuration("MYSQL_MAX_LIFETIME", 5*time.Minute),
@@ -117,7 +117,7 @@ func Load() *Config {
 
 		OpenTelemetry: OTELConfig{
 			Endpoint:    getEnv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318"),
-			ServiceName: getEnv("OTEL_SERVICE_NAME", "shopee-product-catalog"),
+			ServiceName: getEnv("OTEL_SERVICE_NAME", "tiki-product-catalog"),
 			TraceRatio:  getEnvFloat("OTEL_TRACES_SAMPLER_ARG", 0.1),
 		},
 	}

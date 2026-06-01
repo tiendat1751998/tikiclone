@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/services/cart/internal/domain"
+	"github.com/tikiclone/tiki/services/cart/internal/domain"
 )
 
 func TestNewCart(t *testing.T) {

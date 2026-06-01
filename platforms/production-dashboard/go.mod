@@ -1,4 +1,4 @@
-module github.com/shopee-clone/shopee/platforms/production-dashboard
+module github.com/tikiclone/tiki/platforms/production-dashboard
 
 go 1.26.3
 
@@ -10,7 +10,7 @@ require (
 	github.com/prometheus/client_golang v1.23.2
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/segmentio/kafka-go v0.4.47
-	github.com/shopee-clone/shopee/packages/go-shared v0.0.0-00010101000000-000000000000
+	github.com/tikiclone/tiki/packages/go-shared v0.0.0-00010101000000-000000000000
 	go.opentelemetry.io/otel v1.32.0
 	go.uber.org/zap v1.27.0
 	golang.org/x/sync v0.16.0
@@ -72,4 +72,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/shopee-clone/shopee/packages/go-shared => ../../packages/go-shared
+replace github.com/tikiclone/tiki/packages/go-shared => ../../packages/go-shared

@@ -4,11 +4,11 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/bidding"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/budget"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/campaign"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/creative"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/targeting"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/bidding"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/budget"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/campaign"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/creative"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/targeting"
 )
 
 func setupBidding() (bidding.Service, campaign.Service, creative.Service, *budget.InMemoryRepository, *targeting.InMemoryRepository) {

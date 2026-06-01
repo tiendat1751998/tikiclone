@@ -3,12 +3,12 @@ package paymentpublic
 import (
 	"github.com/jmoiron/sqlx"
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/services/payment/internal/application"
-	"github.com/shopee-clone/shopee/services/payment/internal/config"
-	"github.com/shopee-clone/shopee/services/payment/internal/domain"
-	"github.com/shopee-clone/shopee/services/payment/internal/infrastructure/kafka"
-	"github.com/shopee-clone/shopee/services/payment/internal/infrastructure/mysql"
-	redisinfra "github.com/shopee-clone/shopee/services/payment/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/services/payment/internal/application"
+	"github.com/tikiclone/tiki/services/payment/internal/config"
+	"github.com/tikiclone/tiki/services/payment/internal/domain"
+	"github.com/tikiclone/tiki/services/payment/internal/infrastructure/kafka"
+	"github.com/tikiclone/tiki/services/payment/internal/infrastructure/mysql"
+	redisinfra "github.com/tikiclone/tiki/services/payment/internal/infrastructure/redis"
 )
 
 type PaymentService = application.PaymentService

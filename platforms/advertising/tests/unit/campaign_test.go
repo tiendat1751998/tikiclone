@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/campaign"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/campaign"
 )
 
 func TestCampaignCRUD(t *testing.T) {

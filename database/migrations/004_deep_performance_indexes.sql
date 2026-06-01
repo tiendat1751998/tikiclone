@@ -1,10 +1,10 @@
 -- ============================================================
 -- Migration 004: Deep Performance Indexes & Query Optimizations
 -- Created: 2026-02-24
--- Targets: shopee_platform (MySQL 8.0)
+-- Targets: tiki_platform (MySQL 8.0)
 --
 -- APPLY THIS MIGRATION:
---   mysql -u shopee -p shopee_platform < database/migrations/004_deep_performance_indexes.sql
+--   mysql -u tiki -p tiki_platform < database/migrations/004_deep_performance_indexes.sql
 --
 -- VERIFY INDEX USAGE:
 --   EXPLAIN SELECT ... (check that type=ref/range, Extra=Using index)

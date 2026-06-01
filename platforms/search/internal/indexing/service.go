@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/shopee-clone/shopee/platforms/search/internal/events"
-	"github.com/shopee-clone/shopee/platforms/search/internal/search"
+	"github.com/tikiclone/tiki/platforms/search/internal/events"
+	"github.com/tikiclone/tiki/platforms/search/internal/search"
 )
 
 type Service interface {

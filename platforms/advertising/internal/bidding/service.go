@@ -6,10 +6,10 @@ import (
 	"sort"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/budget"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/campaign"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/creative"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/targeting"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/budget"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/campaign"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/creative"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/targeting"
 )
 
 type Service interface {

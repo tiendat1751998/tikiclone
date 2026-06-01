@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/bytedance/sonic"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/websocket"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/websocket"
 	"go.uber.org/zap"
 )
 

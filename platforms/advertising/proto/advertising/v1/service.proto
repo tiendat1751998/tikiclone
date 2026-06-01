@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package shopee.advertising.v1;
 
-option go_package = "github.com/shopee-clone/shopee/platforms/advertising/proto/advertising/v1;advertisingpb";
+option go_package = "github.com/tikiclone/tiki/platforms/advertising/proto/advertising/v1;advertisingpb";
 
 import "google/protobuf/timestamp.proto";
 

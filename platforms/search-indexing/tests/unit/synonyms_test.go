@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/synonyms"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/synonyms"
 )
 
 func TestCreateSynonymSet(t *testing.T) {

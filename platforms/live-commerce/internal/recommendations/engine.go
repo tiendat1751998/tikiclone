@@ -5,7 +5,7 @@ import (
 	"sort"
 	"sync"
 	"time"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/domain"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/domain"
 )
 
 type TrendingScore struct {

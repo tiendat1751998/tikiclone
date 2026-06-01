@@ -1,4 +1,4 @@
-# Real-Time Chat System Architecture - Shopee Clone
+# Real-Time Chat System Architecture - Tiki Clone
 
 This document details the instant messaging (IM) system between buyers and sellers.
 

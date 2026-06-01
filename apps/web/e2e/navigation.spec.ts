@@ -56,7 +56,7 @@ test.describe('Responsive Layout', () => {
 test.describe('SEO & Meta', () => {
   test('should have correct page title', async ({ page }) => {
     await page.goto('/');
-    await expect(page).toHaveTitle(/shopee/i);
+    await expect(page).toHaveTitle(/tiki/i);
   });
 
   test('should have meta description', async ({ page }) => {

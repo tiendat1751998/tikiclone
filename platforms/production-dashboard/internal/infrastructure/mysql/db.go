@@ -6,7 +6,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/shopee-clone/shopee/platforms/production-dashboard/internal/config"
+	"github.com/tikiclone/tiki/platforms/production-dashboard/internal/config"
 )
 
 func NewDB(cfg config.MySQLConfig) (*sqlx.DB, error) {

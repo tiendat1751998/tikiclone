@@ -1,4 +1,4 @@
-module github.com/shopee-clone/shopee/packages/go-shared
+module github.com/tiki-clone/tiki/packages/go-shared
 
 go 1.26.3
 

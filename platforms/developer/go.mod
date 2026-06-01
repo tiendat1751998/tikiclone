@@ -1,4 +1,4 @@
-module github.com/shopee-clone/shopee/platforms/developer
+module github.com/tiki-clone/shopee/platforms/developer
 
 go 1.26.3
 
@@ -42,4 +42,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/shopee-clone/shopee/packages/go-shared => ../../packages/go-shared
+replace github.com/tiki-clone/shopee/packages/go-shared => ../../packages/go-shared

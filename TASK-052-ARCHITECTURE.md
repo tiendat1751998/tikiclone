@@ -53,7 +53,7 @@
 
 ## Structure
 ```
-shopee-clone/
+tiki-clone/
 ├── apps/
 │   ├── storefront/          ← Main e-commerce site (Next.js 15)
 │   ├── seller-center/       ← Seller management portal
@@ -172,13 +172,13 @@ shopee-clone/
 ## Completed
 ✅ Turborepo monorepo root (turbo.json, package.json)
 ✅ 9 shared packages with source code:
-   - @shopee/ui-system (Button, Input, Modal, Skeleton, Badge)
-   - @shopee/design-tokens (colors, typography, spacing, shadows)
-   - @shopee/shared-auth (auth store, tokens, refresh)
-   - @shopee/shared-query (React Query provider, useApiQuery)
-   - @shopee/shared-observability (Web Vitals)
-   - @shopee/shared-utils (formatVND, validate, sanitize)
-   - @shopee/shared-config (environment config)
+   - @tiki/ui-system (Button, Input, Modal, Skeleton, Badge)
+   - @tiki/design-tokens (colors, typography, spacing, shadows)
+   - @tiki/shared-auth (auth store, tokens, refresh)
+   - @tiki/shared-query (React Query provider, useApiQuery)
+   - @tiki/shared-observability (Web Vitals)
+   - @tiki/shared-utils (formatVND, validate, sanitize)
+   - @tiki/shared-config (environment config)
 ✅ Storefront app scaffold (apps/storefront/)
 ✅ RSC-optimized home page with Suspense streaming
 ✅ 5 Server Components (categories, featured, deals, recommendations)

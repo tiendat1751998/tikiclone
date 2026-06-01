@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/segmentio/kafka-go"
-	"github.com/shopee-clone/shopee/services/cart/internal/domain"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/cart/internal/domain"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 	"go.uber.org/zap"
 )
 

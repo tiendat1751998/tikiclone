@@ -1,5 +1,5 @@
 # CRITICAL BUG & CVE SCAN REPORT
-# Shopee Clone Codebase - Full Security Audit
+# Tiki Clone Codebase - Full Security Audit
 
 ## Executive Summary
 Found **35+ critical vulnerabilities** across the codebase including:

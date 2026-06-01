@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/global-infra/internal/configmanager"
+	"github.com/tikiclone/tiki/platforms/global-infra/internal/configmanager"
 )
 
 type createConfigRequest struct {

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/session"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/session"
 )
 
 func (h *Handler) GetSessions(c *gin.Context) {

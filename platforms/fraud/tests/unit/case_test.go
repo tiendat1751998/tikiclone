@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	fraudcase "github.com/shopee-clone/shopee/platforms/fraud/internal/case"
+	fraudcase "github.com/tikiclone/tiki/platforms/fraud/internal/case"
 )
 
 func TestCreateCase(t *testing.T) {

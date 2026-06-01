@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/monitoring"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/monitoring"
 )
 
 func TestReportMetrics(t *testing.T) {

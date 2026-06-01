@@ -1,17 +1,17 @@
 package http
 
 import (
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/shipments"
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/tracking"
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/routing"
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/dispatch"
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/couriers"
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/fulfillment"
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/pickups"
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/estimations"
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/replay"
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/synchronization"
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/idempotency"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/shipments"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/tracking"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/routing"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/dispatch"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/couriers"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/fulfillment"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/pickups"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/estimations"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/replay"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/synchronization"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/idempotency"
 )
 
 type Handler struct {

@@ -1,11 +1,11 @@
-module github.com/shopee-clone/shopee/platforms/aiml
+module github.com/tiki-clone/shopee/platforms/aiml
 
 go 1.26.3
 
 require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/google/uuid v1.6.0
-	github.com/shopee-clone/shopee/packages/go-shared v0.0.0-00010101000000-000000000000
+	github.com/tiki-clone/shopee/packages/go-shared v0.0.0-00010101000000-000000000000
 )
 
 require (
@@ -65,4 +65,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/shopee-clone/shopee/packages/go-shared => ../../packages/go-shared
+replace github.com/tiki-clone/shopee/packages/go-shared => ../../packages/go-shared

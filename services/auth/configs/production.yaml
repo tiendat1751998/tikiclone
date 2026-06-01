@@ -1,5 +1,5 @@
 app:
-  name: shopee-auth
+  name: tiki-auth
   env: production
   log_level: info
 

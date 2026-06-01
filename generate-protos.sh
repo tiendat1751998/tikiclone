@@ -20,14 +20,14 @@ docker run --rm \
     
     echo 'Generating central catalog proto...' && \
     mkdir -p proto/catalog/v1 && \
-    protoc --proto_path=proto/shopee \
+    protoc --proto_path=proto/tiki \
            --proto_path=/tmp/validate \
            --proto_path=/usr/include \
            --go_out=proto \
-           --go_opt=module=github.com/shopee-clone/shopee/proto \
+           --go_opt=module=github.com/tiki-clone/tiki/proto \
            --go-grpc_out=proto \
-           --go-grpc_opt=module=github.com/shopee-clone/shopee/proto \
-           proto/shopee/catalog/v1/catalog.proto && \
+           --go-grpc_opt=module=github.com/tiki-clone/tiki/proto \
+           proto/tiki/catalog/v1/catalog.proto && \
            
     echo 'Generating services/order proto...' && \
     protoc --proto_path=services/order \

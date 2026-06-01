@@ -1,9 +1,12 @@
 {
-  "name": "@shopee/shared-observability",
+  "name": "@tiki/shared-observability",
   "version": "0.1.0",
   "private": true,
   "main": "./src/index.ts",
   "types": "./src/index.ts",
+  "dependencies": {
+    "web-vitals": "^4.2.0"
+  },
   "devDependencies": {
     "typescript": "^5.7.2"
   }

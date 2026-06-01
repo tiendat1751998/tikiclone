@@ -2,9 +2,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: circuit-breaker-default
-  namespace: shopee
+  namespace: tiki
 spec:
-  host: "*.shopee.svc.cluster.local"
+  host: "*.tiki.svc.cluster.local"
   trafficPolicy:
     connectionPool:
       tcp:
@@ -26,9 +26,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: circuit-breaker-gateway
-  namespace: shopee
+  namespace: tiki
 spec:
-  host: "api-gateway.shopee.svc.cluster.local"
+  host: "api-gateway.tiki.svc.cluster.local"
   trafficPolicy:
     connectionPool:
       tcp:
@@ -50,9 +50,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: circuit-breaker-inventory
-  namespace: shopee
+  namespace: tiki
 spec:
-  host: "inventory.shopee.svc.cluster.local"
+  host: "inventory.tiki.svc.cluster.local"
   trafficPolicy:
     connectionPool:
       tcp:

@@ -14,7 +14,7 @@ spec:
     - from:
         - namespaceSelector:
             matchLabels:
-              name: shopee-ingress
+              name: tiki-ingress
       ports:
         - protocol: TCP
           port: 3001

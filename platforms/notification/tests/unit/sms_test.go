@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/notification/internal/events"
-	"github.com/shopee-clone/shopee/platforms/notification/internal/sms"
+	"github.com/tikiclone/tiki/platforms/notification/internal/events"
+	"github.com/tikiclone/tiki/platforms/notification/internal/sms"
 )
 
 func TestSendSMS(t *testing.T) {

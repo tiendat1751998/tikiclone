@@ -1,4 +1,4 @@
-# Shopee Clone — Deployment Guide
+# Tiki Clone — Deployment Guide
 
 ## Architecture Overview
 
@@ -7,7 +7,7 @@
 │                        Kubernetes Cluster                        │
 │                                                                  │
 │  ┌──────────────┐    ┌──────────────────────────────────────┐   │
-│  │   Ingress     │───▶│         API Gateway (shopee-gateway) │   │
+│  │   Ingress     │───▶│         API Gateway (tiki-gateway) │   │
 │  │   Controller  │    │  - JWT Validation                    │   │
 │  └──────────────┘    │  - Rate Limiting                     │   │
 │                       │  - Request Routing                   │   │

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 JWT_SECRET="dev-access-secret-key-for-local-development-only"
-MYSQL_CMD="docker exec shopeeclone-mysql-primary-1 mysql -uroot -proot_password"
+MYSQL_CMD="docker exec tikiclone-mysql-primary-1 mysql -uroot -proot_password"
 
 PASS=0
 FAIL=0
@@ -36,7 +36,7 @@ echo ""
 
 # ========= TEST 1: INVENTORY STOCK VERIFICATION =========
 echo "=== Test 1: Inventory Stock ==="
-SKU_QTY=$($MYSQL_CMD shopee_inventory -N -e "SELECT SUM(quantity) FROM stock;" 2>/dev/null)
+SKU_QTY=$($MYSQL_CMD tiki_inventory -N -e "SELECT SUM(quantity) FROM stock;" 2>/dev/null)
 echo "  Total stock entries: $SKU_QTY"
 TOKEN=$(generate_token "user-test-001")
 RESP=$(curl -s -H "Authorization: Bearer $TOKEN" "http://localhost:8086/api/v1/inventory/stock/sku-001?warehouse_id=wh-001")
@@ -47,7 +47,7 @@ STOCK_QTY=$(echo "$RESP" | python3 -c "import sys,json; print(json.load(sys.stdi
 echo ""
 echo "=== Test 2: Inventory Reserve via DB Transaction ==="
 # Directly test the core business logic: atomic stock reservation
-$MYSQL_CMD shopee_inventory -e "
+$MYSQL_CMD tiki_inventory -e "
 START TRANSACTION;
 SELECT @avail := available_qty FROM stock WHERE sku_id='sku-001' AND warehouse_id='wh-001' FOR UPDATE;
 UPDATE stock SET available_qty = available_qty - 2, reserved_qty = reserved_qty + 2, version = version + 1 WHERE sku_id='sku-001' AND warehouse_id='wh-001' AND available_qty >= 2;
@@ -56,7 +56,7 @@ COMMIT;
 " 2>/dev/null | grep -v "password\|Warning"
 
 # Verify stock decreased
-NEW_QTY=$($MYSQL_CMD shopee_inventory -N -e "SELECT available_qty FROM stock WHERE sku_id='sku-001' AND warehouse_id='wh-001';" 2>/dev/null)
+NEW_QTY=$($MYSQL_CMD tiki_inventory -N -e "SELECT available_qty FROM stock WHERE sku_id='sku-001' AND warehouse_id='wh-001';" 2>/dev/null)
 if [ "$NEW_QTY" = "$((STOCK_QTY - 2))" ]; then
     echo "  PASS: DB-level reserve works (available: $STOCK_QTY -> $NEW_QTY)"
     PASS=$((PASS + 1))
@@ -66,7 +66,7 @@ else
 fi
 
 # Restore stock
-$MYSQL_CMD shopee_inventory -e "UPDATE stock SET available_qty=$STOCK_QTY, reserved_qty=0, version=version+1 WHERE sku_id='sku-001';" 2>/dev/null
+$MYSQL_CMD tiki_inventory -e "UPDATE stock SET available_qty=$STOCK_QTY, reserved_qty=0, version=version+1 WHERE sku_id='sku-001';" 2>/dev/null
 
 # ========= TEST 3: PAYMENT AUTHORIZATION (HTTP) =========
 echo ""
@@ -97,7 +97,7 @@ else
 fi
 
 # Also verify in DB
-DB_COUNT=$($MYSQL_CMD shopee_payment -N -e "SELECT COUNT(*) FROM idempotency_keys WHERE \`key\`='$PAY_IDEM_KEY';" 2>/dev/null)
+DB_COUNT=$($MYSQL_CMD tiki_payment -N -e "SELECT COUNT(*) FROM idempotency_keys WHERE \`key\`='$PAY_IDEM_KEY';" 2>/dev/null)
 echo "  Idempotency key in DB: $DB_COUNT"
 
 # ========= TEST 5: ORDER CREATION (HTTP) =========
@@ -130,7 +130,7 @@ echo ""
 echo "=== Test 7: Flash Sale Oversell Prevention (DB) ==="
 # Create a test SKU with 10 stock
 FS_ID="fs-$(date +%s)"
-$MYSQL_CMD shopee_inventory -e "
+$MYSQL_CMD tiki_inventory -e "
 INSERT INTO stock (id, product_id, sku_id, warehouse_id, quantity, reserved_qty, available_qty, status, reorder_level, version)
 VALUES ('stk-$FS_ID', 'prod-$FS_ID', 'sku-$FS_ID', 'wh-001', 10, 0, 10, 'in_stock', 5, 1)
 ON DUPLICATE KEY UPDATE quantity=10, available_qty=10, reserved_qty=0, version=1;" 2>/dev/null
@@ -140,7 +140,7 @@ echo "  Running 20 parallel reservation attempts..."
 SUCCESS=0
 PID_LIST=""
 for i in $(seq 1 20); do
-    $MYSQL_CMD shopee_inventory -e "
+    $MYSQL_CMD tiki_inventory -e "
 START TRANSACTION;
 SELECT @avail := available_qty FROM stock WHERE sku_id='sku-$FS_ID' AND warehouse_id='wh-001' FOR UPDATE;
 UPDATE stock SET available_qty = available_qty - 1, reserved_qty = reserved_qty + 1, version = version + 1 WHERE sku_id='sku-$FS_ID' AND warehouse_id='wh-001' AND available_qty >= 1;
@@ -155,7 +155,7 @@ done
 wait $PID_LIST 2>/dev/null || true
 
 # Count actual reservations
-ACTUAL_RES=$($MYSQL_CMD shopee_inventory -N -e "SELECT COUNT(*) FROM reservations WHERE sku_id='sku-$FS_ID' AND status='active';" 2>/dev/null || echo "0")
+ACTUAL_RES=$($MYSQL_CMD tiki_inventory -N -e "SELECT COUNT(*) FROM reservations WHERE sku_id='sku-$FS_ID' AND status='active';" 2>/dev/null || echo "0")
 if [ "$ACTUAL_RES" -le 10 ]; then
     echo "  PASS: Oversell prevented ($ACTUAL_RES reservations of 10 max)"
     PASS=$((PASS + 1))
@@ -165,22 +165,22 @@ else
 fi
 
 # Cleanup
-$MYSQL_CMD shopee_inventory -e "DELETE FROM reservations WHERE sku_id='sku-$FS_ID'; DELETE FROM stock WHERE sku_id='sku-$FS_ID';" 2>/dev/null
+$MYSQL_CMD tiki_inventory -e "DELETE FROM reservations WHERE sku_id='sku-$FS_ID'; DELETE FROM stock WHERE sku_id='sku-$FS_ID';" 2>/dev/null
 
 # ========= TEST 8: STOCK RELEASE (DB-level) =========
 echo ""
 echo "=== Test 8: Stock Release ==="
 RLS_ID="rls-$(date +%s)"
-$MYSQL_CMD shopee_inventory -e "
+$MYSQL_CMD tiki_inventory -e "
 INSERT INTO stock (id, product_id, sku_id, warehouse_id, quantity, reserved_qty, available_qty, status, reorder_level, version)
 VALUES ('stk-$RLS_ID', 'prod-$RLS_ID', 'sku-$RLS_ID', 'wh-001', 100, 5, 95, 'in_stock', 10, 1)
 ON DUPLICATE KEY UPDATE quantity=100, available_qty=95, reserved_qty=5, version=1;" 2>/dev/null
 
 # Release: reserved_qty-5, available_qty+5
-$MYSQL_CMD shopee_inventory -e "
+$MYSQL_CMD tiki_inventory -e "
 UPDATE stock SET available_qty = available_qty + 5, reserved_qty = reserved_qty - 5, version = version + 1 WHERE sku_id='sku-$RLS_ID';" 2>/dev/null
 
-AFTER=$($MYSQL_CMD shopee_inventory -N -e "SELECT available_qty FROM stock WHERE sku_id='sku-$RLS_ID';" 2>/dev/null)
+AFTER=$($MYSQL_CMD tiki_inventory -N -e "SELECT available_qty FROM stock WHERE sku_id='sku-$RLS_ID';" 2>/dev/null)
 if [ "$AFTER" = "100" ]; then
     echo "  PASS: Stock release restores available_qty to 100"
     PASS=$((PASS + 1))
@@ -189,14 +189,14 @@ else
     FAIL=$((FAIL + 1))
 fi
 
-$MYSQL_CMD shopee_inventory -e "DELETE FROM stock WHERE sku_id='sku-$RLS_ID';" 2>/dev/null
+$MYSQL_CMD tiki_inventory -e "DELETE FROM stock WHERE sku_id='sku-$RLS_ID';" 2>/dev/null
 
 # ========= TEST 9: VOUCHER USAGE LIMIT (DB-level) =========
 echo ""
 echo "=== Test 9: Voucher Usage Limit ==="
 # Verify atomic increment prevents overshoot
 VCH_ID="vch-lim-$(date +%s)"
-$MYSQL_CMD shopee_platform -e "
+$MYSQL_CMD tiki_platform -e "
 INSERT INTO vouchers (id, code, title, description, type, discount_value, min_spend, max_discount, usage_limit, usage_count, per_user_limit, scope, start_time, end_time, status, stackable, priority)
 VALUES ('$VCH_ID', 'LIMIT10', 'Limit Test', '', 'percentage', 10, 0, 5000, 3, 0, 1, 'platform', NOW() - INTERVAL 1 HOUR, NOW() + INTERVAL 24 HOUR, 'active', FALSE, 1)
 ON DUPLICATE KEY UPDATE usage_limit=3, usage_count=0;" 2>/dev/null
@@ -207,12 +207,12 @@ RESP=$(curl -s -X POST -H "Content-Type: application/json" \
     "http://localhost:8091/api/v1/vouchers/validate")
 check "Validate limit voucher" "discount_value" "$RESP"
 
-$MYSQL_CMD shopee_platform -e "DELETE FROM vouchers WHERE code='LIMIT10'; DELETE FROM voucher_redemptions WHERE voucher_id='$VCH_ID';" 2>/dev/null
+$MYSQL_CMD tiki_platform -e "DELETE FROM vouchers WHERE code='LIMIT10'; DELETE FROM voucher_redemptions WHERE voucher_id='$VCH_ID';" 2>/dev/null
 
 # ========= TEST 10: ORDER STATE MACHINE =========
 echo ""
 echo "=== Test 10: Order State Machine (using existing data) ==="
-STATUSES=$($MYSQL_CMD shopee_order -N -e "SELECT id, status FROM orders LIMIT 5;" 2>/dev/null)
+STATUSES=$($MYSQL_CMD tiki_order -N -e "SELECT id, status FROM orders LIMIT 5;" 2>/dev/null)
 echo "$STATUSES" | while read id status; do
     echo "  Order $id: $status"
 done
@@ -226,7 +226,7 @@ echo " RESULTS: $PASS passed, $FAIL failed, $WARN warnings"
 echo "=============================================="
 
 # Final cleanup
-$MYSQL_CMD shopee_inventory -e "UPDATE stock SET quantity=$STOCK_QTY, reserved_qty=0, available_qty=$STOCK_QTY, version=version+1 WHERE sku_id='sku-001'" 2>/dev/null || true
+$MYSQL_CMD tiki_inventory -e "UPDATE stock SET quantity=$STOCK_QTY, reserved_qty=0, available_qty=$STOCK_QTY, version=version+1 WHERE sku_id='sku-001'" 2>/dev/null || true
 
 echo ""
 echo "=== Service Health Summary ==="

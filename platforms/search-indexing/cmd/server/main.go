@@ -13,12 +13,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/bulkindexer"
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/coordinator"
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/monitoring"
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/pipeline"
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/synonyms"
-	httptransport "github.com/shopee-clone/shopee/platforms/search-indexing/internal/transport/http"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/bulkindexer"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/coordinator"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/monitoring"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/pipeline"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/synonyms"
+	httptransport "github.com/tikiclone/tiki/platforms/search-indexing/internal/transport/http"
 	automaxprocs "go.uber.org/automaxprocs/maxprocs"
 )
 

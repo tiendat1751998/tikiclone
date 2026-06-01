@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package logistics.v1;
 
-option go_package = "github.com/shopee-clone/shopee/platforms/logistics-delivery/proto/logistics/v1;logisticsv1";
+option go_package = "github.com/tikiclone/tiki/platforms/logistics-delivery/proto/logistics/v1;logisticsv1";
 
 service LogisticsService {
   rpc CreateShipment(CreateShipmentRequest) returns (ShipmentResponse);

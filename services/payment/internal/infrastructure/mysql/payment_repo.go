@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/services/payment/internal/domain"
+	"github.com/tikiclone/tiki/services/payment/internal/domain"
 )
 
 type PaymentRepository struct {

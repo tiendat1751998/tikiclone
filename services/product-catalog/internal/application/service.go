@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/product-catalog/internal/domain"
-	"github.com/shopee-clone/shopee/services/product-catalog/internal/infrastructure/redis"
-	"github.com/shopee-clone/shopee/services/product-catalog/internal/metrics"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/product-catalog/internal/domain"
+	"github.com/tikiclone/tiki/services/product-catalog/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/services/product-catalog/internal/metrics"
 	"go.opentelemetry.io/otel"
 	"go.uber.org/zap"
 )
@@ -35,7 +35,7 @@ func NewCatalogService(pr domain.ProductRepository, sr domain.SKURepository, cr 
 }
 
 func (s *CatalogService) CreateProduct(ctx context.Context, shopID, name, description, categoryID, currency, idempotencyKey string) (*domain.Product, error) {
-	ctx, span := otel.Tracer("shopee-catalog").Start(ctx, "catalog.create_product")
+	ctx, span := otel.Tracer("tiki-catalog").Start(ctx, "catalog.create_product")
 	defer span.End()
 
 	if shopID == "" {
@@ -73,7 +73,7 @@ func (s *CatalogService) CreateProduct(ctx context.Context, shopID, name, descri
 }
 
 func (s *CatalogService) GetProduct(ctx context.Context, id string) (*domain.Product, error) {
-	ctx, span := otel.Tracer("shopee-catalog").Start(ctx, "catalog.get_product")
+	ctx, span := otel.Tracer("tiki-catalog").Start(ctx, "catalog.get_product")
 	defer span.End()
 
 	if data, err := s.redis.GetProduct(ctx, id); err == nil && len(data) > 0 {

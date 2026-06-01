@@ -5,12 +5,12 @@ import (
 	"math"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/notification/internal/email"
-	"github.com/shopee-clone/shopee/platforms/notification/internal/inapp"
-	"github.com/shopee-clone/shopee/platforms/notification/internal/notifier"
-	"github.com/shopee-clone/shopee/platforms/notification/internal/preferences"
-	"github.com/shopee-clone/shopee/platforms/notification/internal/push"
-	"github.com/shopee-clone/shopee/platforms/notification/internal/sms"
+	"github.com/tikiclone/tiki/platforms/notification/internal/email"
+	"github.com/tikiclone/tiki/platforms/notification/internal/inapp"
+	"github.com/tikiclone/tiki/platforms/notification/internal/notifier"
+	"github.com/tikiclone/tiki/platforms/notification/internal/preferences"
+	"github.com/tikiclone/tiki/platforms/notification/internal/push"
+	"github.com/tikiclone/tiki/platforms/notification/internal/sms"
 )
 
 type Service interface {

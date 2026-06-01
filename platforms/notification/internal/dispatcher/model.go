@@ -3,7 +3,7 @@ package dispatcher
 import (
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/notification/internal/notifier"
+	"github.com/tikiclone/tiki/platforms/notification/internal/notifier"
 )
 
 type DispatchJob struct {

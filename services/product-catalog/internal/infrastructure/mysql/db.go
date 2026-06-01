@@ -1,5 +1,5 @@
 package mysql
-import ("fmt"; "github.com/jmoiron/sqlx"; _ "github.com/go-sql-driver/mysql"; "github.com/shopee-clone/shopee/services/product-catalog/internal/config")
+import ("fmt"; "github.com/jmoiron/sqlx"; _ "github.com/go-sql-driver/mysql"; "github.com/tikiclone/tiki/services/product-catalog/internal/config")
 func NewDB(cfg config.MySQLConfig) (*sqlx.DB, error) {
 	db, err := sqlx.Connect("mysql", cfg.DSN())
 	if err != nil { return nil, fmt.Errorf("mysql connect: %w", err) }

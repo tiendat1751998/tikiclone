@@ -30,7 +30,7 @@ func envInt(key string, fallback int) int {
 
 func Load() *Config {
 	return &Config{
-		AppName:  env("APP_NAME", "shopee-aiml"),
+		AppName:  env("APP_NAME", "tiki-aiml"),
 		AppEnv:   env("APP_ENV", "development"),
 		LogLevel: env("LOG_LEVEL", "info"),
 		HTTPPort: envInt("AIML_HTTP_PORT", 8080),

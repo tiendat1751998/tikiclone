@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/cdn"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/cdn"
 )
 
 func (h *Handler) PurgeCDNCache(c *gin.Context) {

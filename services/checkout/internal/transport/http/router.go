@@ -6,10 +6,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/auth"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/health"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/middleware"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/auth"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/health"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/middleware"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 )
 
 type Router struct {
@@ -27,8 +27,8 @@ func (r *Router) Setup(engine *gin.Engine) {
 	engine.Use(
 		middleware.Recovery(), middleware.ErrorHandler(),
 		middleware.RequestID(), middleware.CORS(),
-		middleware.OTelMiddleware("shopee-checkout"),
-		observability.ObserveHTTPMetrics("shopee-checkout"),
+		middleware.OTelMiddleware("tiki-checkout"),
+		observability.ObserveHTTPMetrics("tiki-checkout"),
 	)
 
 	engine.GET("/health", r.health.LivenessHandler())

@@ -2,9 +2,9 @@ package http
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/middleware"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/platforms/notification-campaign/internal/health"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/middleware"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/platforms/notification-campaign/internal/health"
 )
 
 type Router struct {

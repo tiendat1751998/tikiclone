@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/services/order/internal/domain"
+	"github.com/tikiclone/tiki/services/order/internal/domain"
 )
 
 type OrderRepository struct {
@@ -121,6 +121,12 @@ func (r *OrderRepository) FindByUserID(ctx context.Context, userID string, limit
 	query := `SELECT id, order_number, user_id, seller_id, status, total_amount, currency, shipping_address, billing_address, idempotency_key, snapshot_id, parent_order_id, metadata, version, created_at, updated_at, deleted_at FROM orders WHERE user_id = ? AND deleted_at IS NULL ORDER BY created_at DESC LIMIT ? OFFSET ?`
 	if err := r.db.SelectContext(ctx, &orders, query, userID, limit, offset); err != nil {
 		return nil, fmt.Errorf("failed to list orders: %w", err)
+	}
+	for _, o := range orders {
+		items, err := r.FindItemsByOrderID(ctx, o.ID)
+		if err == nil {
+			o.Items = items
+		}
 	}
 	return orders, nil
 }

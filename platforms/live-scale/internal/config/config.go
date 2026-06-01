@@ -89,7 +89,7 @@ func envDuration(key string, fallback time.Duration) time.Duration {
 
 func Load() *Config {
 	return &Config{
-		AppName:  env("APP_NAME", "shopee-live-scale"),
+		AppName:  env("APP_NAME", "tiki-live-scale"),
 		AppEnv:   env("APP_ENV", "development"),
 		LogLevel: env("LOG_LEVEL", "info"),
 		HTTPPort: envInt("HTTP_PORT", 8081),
@@ -100,14 +100,14 @@ func Load() *Config {
 			DB:       envInt("REDIS_DB", 0),
 		},
 		Postgres: PostgresConfig{
-			DSN: env("DATABASE_DSN", "postgres://shopee:shopee_dev@localhost:5432/shopee_live_scale?sslmode=disable"),
+			DSN: env("DATABASE_DSN", "postgres://tiki:tiki_dev@localhost:5432/tiki_live_scale?sslmode=disable"),
 		},
 		Kafka: KafkaConfig{
 			Brokers: strings.Split(env("KAFKA_BROKERS", "localhost:9092"), ","),
 		},
 		OTEL: OTELConfig{
 			Endpoint:    env("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318"),
-			ServiceName: env("OTEL_SERVICE_NAME", "shopee-live-scale"),
+			ServiceName: env("OTEL_SERVICE_NAME", "tiki-live-scale"),
 		},
 		SFU: SFUConfig{
 			HeartbeatInterval: envDuration("SFU_HEARTBEAT_INTERVAL", 10*time.Second),

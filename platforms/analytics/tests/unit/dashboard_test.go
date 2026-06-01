@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/dashboard"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/dashboard"
 )
 
 func TestDashboardCRUD(t *testing.T) {

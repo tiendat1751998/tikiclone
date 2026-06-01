@@ -85,13 +85,13 @@ type OTELConfig struct {
 
 func Load() *Config {
 	return &Config{
-		AppName: getEnv("APP_NAME", "shopee-inventory"), AppEnv: getEnv("APP_ENV", "development"),
+		AppName: getEnv("APP_NAME", "tiki-inventory"), AppEnv: getEnv("APP_ENV", "development"),
 		LogLevel: getEnv("LOG_LEVEL", "info"), HTTPPort: getEnvInt("INVENTORY_HTTP_PORT", 8086),
 		GRPCPort: getEnvInt("INVENTORY_GRPC_PORT", 9096),
 		MySQL: MySQLConfig{
 			Host: getEnv("MYSQL_HOST", "localhost"), Port: getEnvInt("MYSQL_PORT", 3306),
-			User: getEnv("MYSQL_USER", "shopee"), Password: requireEnv("MYSQL_PASSWORD"),
-			Database: getEnv("MYSQL_DATABASE", "shopee_inventory"), MaxOpenConns: 25, MaxIdleConns: 10,
+			User: getEnv("MYSQL_USER", "tiki"), Password: requireEnv("MYSQL_PASSWORD"),
+			Database: getEnv("MYSQL_DATABASE", "tiki_inventory"), MaxOpenConns: 25, MaxIdleConns: 10,
 			MaxLifetime: 5 * time.Minute, Timeout: 5 * time.Second,
 		},
 		Redis: RedisConfig{
@@ -100,12 +100,12 @@ func Load() *Config {
 			DialTimeout: 5 * time.Second, ReadTimeout: 3 * time.Second, WriteTimeout: 3 * time.Second, MaxRetries: 3,
 		},
 		Kafka: KafkaConfig{
-			Brokers: getEnvSlice("KAFKA_BROKERS", ","), TopicPrefix: getEnv("KAFKA_TOPIC_PREFIX", "shopee.inventory"),
-			ConsumerGroup: getEnv("KAFKA_CONSUMER_GROUP", "shopee-inventory-service"), DLQTopic: "shopee.inventory.dlq",
+			Brokers: getEnvSlice("KAFKA_BROKERS", ","), TopicPrefix: getEnv("KAFKA_TOPIC_PREFIX", "tiki.inventory"),
+			ConsumerGroup: getEnv("KAFKA_CONSUMER_GROUP", "tiki-inventory-service"), DLQTopic: "tiki.inventory.dlq",
 		},
 		JWT: JWTConfig{
 			AccessSecret: requireEnv("JWT_ACCESS_SECRET"),
-			AccessTTL: getEnvDuration("JWT_ACCESS_TTL", 15*time.Minute), Issuer: "shopee-auth", Audience: "shopee-clone",
+			AccessTTL: getEnvDuration("JWT_ACCESS_TTL", 15*time.Minute), Issuer: "tiki-auth", Audience: "tiki-clone",
 		},
 		Inventory: InventoryConfig{
 			ReservationTTL: getEnvDuration("INVENTORY_RESERVATION_TTL", 30*time.Minute),
@@ -117,7 +117,7 @@ func Load() *Config {
 		Idempotency: IdempotencyConfig{TTL: getEnvDuration("IDEMPOTENCY_TTL", 24*time.Hour)},
 		OpenTelemetry: OTELConfig{
 			Endpoint: getEnv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318"),
-			ServiceName: getEnv("OTEL_SERVICE_NAME", "shopee-inventory"),
+			ServiceName: getEnv("OTEL_SERVICE_NAME", "tiki-inventory"),
 			TraceRatio: getEnvFloat("OTEL_TRACES_SAMPLER_ARG", 0.1),
 		},
 	}

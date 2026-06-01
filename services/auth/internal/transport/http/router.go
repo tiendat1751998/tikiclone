@@ -6,9 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/health"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/middleware"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/health"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/middleware"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 )
 
 type Router struct {
@@ -59,8 +59,8 @@ func (r *Router) Setup(engine *gin.Engine) {
 		middleware.ErrorHandler(),
 		middleware.RequestID(),
 		middleware.CORS(),
-		middleware.OTelMiddleware("shopee-auth"),
-		observability.ObserveHTTPMetrics("shopee-auth"),
+		middleware.OTelMiddleware("tiki-auth"),
+		observability.ObserveHTTPMetrics("tiki-auth"),
 		SecurityHeaders(),
 		RequestSanitizer(),
 	)

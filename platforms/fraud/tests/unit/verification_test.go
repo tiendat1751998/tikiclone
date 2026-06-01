@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/verification"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/verification"
 )
 
 func TestInitiateSMSVerification(t *testing.T) {

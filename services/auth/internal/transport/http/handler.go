@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/auth/internal/application"
-	"github.com/shopee-clone/shopee/services/auth/internal/domain"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/auth/internal/application"
+	"github.com/tikiclone/tiki/services/auth/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.uber.org/zap"
@@ -22,7 +22,7 @@ func NewHandler(authService *application.AuthService) *Handler {
 }
 
 func (h *Handler) Register(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-auth").Start(c.Request.Context(), "http.register")
+	ctx, span := otel.Tracer("tiki-auth").Start(c.Request.Context(), "http.register")
 	defer span.End()
 
 	var req domain.RegisterRequest
@@ -51,7 +51,7 @@ func (h *Handler) Register(c *gin.Context) {
 }
 
 func (h *Handler) Login(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-auth").Start(c.Request.Context(), "http.login")
+	ctx, span := otel.Tracer("tiki-auth").Start(c.Request.Context(), "http.login")
 	defer span.End()
 
 	var req domain.LoginRequest
@@ -77,7 +77,7 @@ func (h *Handler) Login(c *gin.Context) {
 }
 
 func (h *Handler) RefreshToken(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-auth").Start(c.Request.Context(), "http.refresh")
+	ctx, span := otel.Tracer("tiki-auth").Start(c.Request.Context(), "http.refresh")
 	defer span.End()
 
 	var req struct {
@@ -104,7 +104,7 @@ func (h *Handler) RefreshToken(c *gin.Context) {
 }
 
 func (h *Handler) Logout(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-auth").Start(c.Request.Context(), "http.logout")
+	ctx, span := otel.Tracer("tiki-auth").Start(c.Request.Context(), "http.logout")
 	defer span.End()
 
 	accessToken := extractToken(c)
@@ -127,7 +127,7 @@ func (h *Handler) Logout(c *gin.Context) {
 }
 
 func (h *Handler) LogoutAll(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-auth").Start(c.Request.Context(), "http.logout_all")
+	ctx, span := otel.Tracer("tiki-auth").Start(c.Request.Context(), "http.logout_all")
 	defer span.End()
 
 	accessToken := extractToken(c)
@@ -142,7 +142,7 @@ func (h *Handler) LogoutAll(c *gin.Context) {
 }
 
 func (h *Handler) GetSessions(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-auth").Start(c.Request.Context(), "http.sessions")
+	ctx, span := otel.Tracer("tiki-auth").Start(c.Request.Context(), "http.sessions")
 	defer span.End()
 
 	accessToken := extractToken(c)
@@ -165,7 +165,7 @@ func (h *Handler) GetSessions(c *gin.Context) {
 }
 
 func (h *Handler) RevokeSession(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-auth").Start(c.Request.Context(), "http.revoke_session")
+	ctx, span := otel.Tracer("tiki-auth").Start(c.Request.Context(), "http.revoke_session")
 	defer span.End()
 
 	sessionID := c.Param("session_id")
@@ -187,7 +187,7 @@ func (h *Handler) RevokeSession(c *gin.Context) {
 }
 
 func (h *Handler) GetProfile(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-auth").Start(c.Request.Context(), "http.profile")
+	ctx, span := otel.Tracer("tiki-auth").Start(c.Request.Context(), "http.profile")
 	defer span.End()
 
 	accessToken := extractToken(c)
@@ -216,7 +216,7 @@ func (h *Handler) GetProfile(c *gin.Context) {
 }
 
 func (h *Handler) ValidateToken(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-auth").Start(c.Request.Context(), "http.validate_token")
+	ctx, span := otel.Tracer("tiki-auth").Start(c.Request.Context(), "http.validate_token")
 	defer span.End()
 
 	tokenString := extractToken(c)
@@ -247,7 +247,7 @@ func (h *Handler) ValidateToken(c *gin.Context) {
 }
 
 func (h *Handler) RequestPasswordReset(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-auth").Start(c.Request.Context(), "http.request_password_reset")
+	ctx, span := otel.Tracer("tiki-auth").Start(c.Request.Context(), "http.request_password_reset")
 	defer span.End()
 
 	var req domain.PasswordResetRequest
@@ -269,7 +269,7 @@ func (h *Handler) RequestPasswordReset(c *gin.Context) {
 }
 
 func (h *Handler) ResetPassword(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-auth").Start(c.Request.Context(), "http.reset_password")
+	ctx, span := otel.Tracer("tiki-auth").Start(c.Request.Context(), "http.reset_password")
 	defer span.End()
 
 	var req domain.ResetPasswordRequest
@@ -291,7 +291,7 @@ func (h *Handler) ResetPassword(c *gin.Context) {
 }
 
 func (h *Handler) VerifyEmail(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-auth").Start(c.Request.Context(), "http.verify_email")
+	ctx, span := otel.Tracer("tiki-auth").Start(c.Request.Context(), "http.verify_email")
 	defer span.End()
 
 	var req domain.VerifyEmailRequest
@@ -313,7 +313,7 @@ func (h *Handler) VerifyEmail(c *gin.Context) {
 }
 
 func (h *Handler) SendVerificationEmail(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-auth").Start(c.Request.Context(), "http.send_verification_email")
+	ctx, span := otel.Tracer("tiki-auth").Start(c.Request.Context(), "http.send_verification_email")
 	defer span.End()
 
 	accessToken := extractToken(c)

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/search/internal/search"
+	"github.com/tikiclone/tiki/platforms/search/internal/search"
 )
 
 func newTestDocument(id, title, desc, category string, price, rating float64, stock int) *search.ProductDocument {

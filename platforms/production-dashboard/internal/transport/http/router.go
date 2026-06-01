@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/health"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/middleware"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/health"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/middleware"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 )
 
 type Router struct {

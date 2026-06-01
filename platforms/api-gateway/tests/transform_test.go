@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/api-gateway/internal/transform"
+	"github.com/tikiclone/tiki/platforms/api-gateway/internal/transform"
 )
 
 func TestTransformSetHeader(t *testing.T) {

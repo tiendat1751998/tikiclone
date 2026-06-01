@@ -1,5 +1,5 @@
 package health
-import ("context"; "github.com/gin-gonic/gin"; "github.com/shopee-clone/shopee/packages/go-shared/pkg/health"; "github.com/redis/go-redis/v9")
+import ("context"; "github.com/gin-gonic/gin"; "github.com/tikiclone/tiki/packages/go-shared/pkg/health"; "github.com/redis/go-redis/v9")
 type Checker struct { redis *redis.Client; httpHealth *health.Checker }
 func NewChecker(s, v string, r *redis.Client) *Checker {
 	c := &Checker{redis: r, httpHealth: health.NewChecker(s, v)}

@@ -2,10 +2,10 @@ package http
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/auth"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/health"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/middleware"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/auth"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/health"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/middleware"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 )
 
 type Router struct {
@@ -14,12 +14,13 @@ type Router struct {
 	jwtAuth  gin.HandlerFunc
 }
 
+// NewRouter creates a new router with mandatory JWT authentication.
+// Unlike other services, cart auth is REQUIRED - fail fast if not configured.
 func NewRouter(handler *Handler, healthChecker *health.Checker, jwtSecret string) *Router {
-	var jwtAuth gin.HandlerFunc
-	if jwtSecret != "" {
-		jwtAuth = auth.GinJWTAuth(jwtSecret)
+	if jwtSecret == "" {
+		panic("cart: JWT_ACCESS_SECRET is required - cannot start without authentication")
 	}
-	return &Router{handler: handler, health: healthChecker, jwtAuth: jwtAuth}
+	return &Router{handler: handler, health: healthChecker, jwtAuth: auth.GinJWTAuth(jwtSecret)}
 }
 
 func (r *Router) Setup(engine *gin.Engine) {
@@ -28,8 +29,8 @@ func (r *Router) Setup(engine *gin.Engine) {
 		middleware.ErrorHandler(),
 		middleware.RequestID(),
 		middleware.CORS(),
-		middleware.OTelMiddleware("shopee-cart"),
-		observability.ObserveHTTPMetrics("shopee-cart"),
+		middleware.OTelMiddleware("tiki-cart"),
+		observability.ObserveHTTPMetrics("tiki-cart"),
 	)
 
 	engine.GET("/health", r.health.LivenessHandler())
@@ -37,9 +38,7 @@ func (r *Router) Setup(engine *gin.Engine) {
 	engine.GET("/metrics", observability.MetricsHandler())
 
 	api := engine.Group("/")
-	if r.jwtAuth != nil {
-		api.Use(r.jwtAuth)
-	}
+	api.Use(r.jwtAuth)
 	{
 		api.GET("/", r.handler.GetCart)
 		api.POST("/items", r.handler.AddItem)

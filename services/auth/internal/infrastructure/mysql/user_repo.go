@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/auth/internal/domain"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/auth/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 	"go.uber.org/zap"
@@ -23,7 +23,7 @@ func NewUserRepository(db *sqlx.DB) *UserRepository {
 }
 
 func (r *UserRepository) Create(ctx context.Context, user *domain.User) error {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "mysql.user.create")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "mysql.user.create")
 	defer span.End()
 
 	query := `INSERT INTO users (id, email, phone, username, password_hash, display_name, status, email_verified, phone_verified, created_at, updated_at)
@@ -39,7 +39,7 @@ func (r *UserRepository) Create(ctx context.Context, user *domain.User) error {
 }
 
 func (r *UserRepository) FindByID(ctx context.Context, id string) (*domain.User, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "mysql.user.find_by_id")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "mysql.user.find_by_id")
 	defer span.End()
 
 	var user domain.User
@@ -59,7 +59,7 @@ func (r *UserRepository) FindByID(ctx context.Context, id string) (*domain.User,
 }
 
 func (r *UserRepository) FindByEmail(ctx context.Context, email string) (*domain.User, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "mysql.user.find_by_email")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "mysql.user.find_by_email")
 	defer span.End()
 
 	var user domain.User
@@ -79,7 +79,7 @@ func (r *UserRepository) FindByEmail(ctx context.Context, email string) (*domain
 }
 
 func (r *UserRepository) FindByUsername(ctx context.Context, username string) (*domain.User, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "mysql.user.find_by_username")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "mysql.user.find_by_username")
 	defer span.End()
 
 	var user domain.User
@@ -97,7 +97,7 @@ func (r *UserRepository) FindByUsername(ctx context.Context, username string) (*
 }
 
 func (r *UserRepository) Update(ctx context.Context, user *domain.User) error {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "mysql.user.update")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "mysql.user.update")
 	defer span.End()
 
 	query := `UPDATE users SET

@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/couriers"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/couriers"
 )
 
 func (h *Handler) CreateCourier(c *gin.Context) {

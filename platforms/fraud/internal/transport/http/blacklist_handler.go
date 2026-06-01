@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/blacklist"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/blacklist"
 )
 
 func (h *Handler) CheckBlacklist(c *gin.Context) {

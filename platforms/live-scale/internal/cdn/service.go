@@ -6,7 +6,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/events"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/events"
 )
 
 type Service struct {

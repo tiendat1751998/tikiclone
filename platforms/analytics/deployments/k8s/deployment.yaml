@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: shopee-analytics
+  name: tiki-analytics
   labels:
-    app: shopee-analytics
+    app: tiki-analytics
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: shopee-analytics
+      app: tiki-analytics
   template:
     metadata:
       labels:
-        app: shopee-analytics
+        app: tiki-analytics
     spec:
       containers:
       - name: analytics
-        image: shopee/analytics:latest
+        image: tiki-clone/tiki-analytics:latest
         ports:
         - containerPort: 8080
         - containerPort: 9090
         env:
         - name: APP_NAME
-          value: "shopee-analytics"
+          value: "tiki-analytics"
         - name: APP_ENV
           value: "production"
         - name: ANALYTICS_HTTP_PORT
@@ -63,12 +63,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: shopee-analytics
+  name: tiki-analytics
   labels:
-    app: shopee-analytics
+    app: tiki-analytics
 spec:
   selector:
-    app: shopee-analytics
+    app: tiki-analytics
   ports:
   - name: http
     port: 8080

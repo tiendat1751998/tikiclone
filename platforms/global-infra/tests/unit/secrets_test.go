@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/global-infra/internal/secrets"
+	"github.com/tikiclone/tiki/platforms/global-infra/internal/secrets"
 )
 
 func TestSecretCreate(t *testing.T) {

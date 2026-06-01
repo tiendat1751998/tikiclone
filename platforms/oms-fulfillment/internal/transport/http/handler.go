@@ -1,11 +1,11 @@
 package http
 
 import (
-	"github.com/shopee-clone/shopee/platforms/oms-fulfillment/internal/inventory"
-	"github.com/shopee-clone/shopee/platforms/oms-fulfillment/internal/ordermanagement"
-	"github.com/shopee-clone/shopee/platforms/oms-fulfillment/internal/pickpack"
-	"github.com/shopee-clone/shopee/platforms/oms-fulfillment/internal/returns"
-	"github.com/shopee-clone/shopee/platforms/oms-fulfillment/internal/warehouse"
+	"github.com/tikiclone/tiki/platforms/oms-fulfillment/internal/inventory"
+	"github.com/tikiclone/tiki/platforms/oms-fulfillment/internal/ordermanagement"
+	"github.com/tikiclone/tiki/platforms/oms-fulfillment/internal/pickpack"
+	"github.com/tikiclone/tiki/platforms/oms-fulfillment/internal/returns"
+	"github.com/tikiclone/tiki/platforms/oms-fulfillment/internal/warehouse"
 )
 
 type Handler struct {

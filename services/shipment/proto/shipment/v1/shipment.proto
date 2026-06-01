@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package shopee.shipment.v1;
 
-option go_package = "github.com/shopee-clone/shopee/services/shipment/proto/shipment/v1";
+option go_package = "github.com/tikiclone/tiki/services/shipment/proto/shipment/v1";
 
 service ShipmentService {
   rpc CreateShipment(CreateShipmentRequest) returns (ShipmentResponse);

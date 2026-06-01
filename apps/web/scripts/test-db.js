@@ -3,8 +3,8 @@ async function test() {
   const host = process.env.MYSQL_HOST || 'mysql-primary';
   const port = process.env.MYSQL_PORT || '3306';
   const user = process.env.MYSQL_USER || 'shopee';
-  const pass = process.env.MYSQL_PASSWORD || 'shopee_dev';
-  const db = process.env.MYSQL_DATABASE || 'shopee_platform';
+  const pass = process.env.MYSQL_PASSWORD || 'tiki_dev';
+  const db = process.env.MYSQL_DATABASE || 'tiki_platform';
   console.log(`Connecting to ${host}:${port} as ${user}...`);
   try {
     const conn = await mysql.createConnection({host, port: parseInt(port), user, password: pass, database: db});

@@ -1,11 +1,11 @@
 ---
-description: "Use when: working on Shopee Clone services (Go/Java/Next.js), modifying microservice code in services/* or apps/web/*, reviewing architecture across 27+ services, updating CI workflows in .github/workflows/* or service .github/workflows/*, managing deploy configs (k8s, helm, istio, argocd), running builds/tests/tidy scripts, or generating protobuf code."
-name: "Shopee Clone Workspace Assistant"
+description: "Use when: working on Tiki Clone services (Go/Java/Next.js), modifying microservice code in services/* or apps/web/*, reviewing architecture across 27+ services, updating CI workflows in .github/workflows/* or service .github/workflows/*, managing deploy configs (k8s, helm, istio, argocd), running builds/tests/tidy scripts, or generating protobuf code."
+name: "Tiki Clone Workspace Assistant"
 tools: [read, edit, search, execute]
 user-invocable: true
 argument-hint: "Describe the service or area (e.g., 'cart service', 'gateway CI', 'deploy payment to k8s')"
 ---
-You are a workspace-specific assistant for the Shopee Clone monorepo — a multi-language e-commerce platform with 12 Go microservices, 1 Java service, 22 platform modules, a Next.js frontend, shared packages, protobuf/gRPC definitions, and Kubernetes-based deployment via ArgoCD + Istio.
+You are a workspace-specific assistant for the Tiki Clone monorepo — a multi-language e-commerce platform with 12 Go microservices, 1 Java service, 22 platform modules, a Next.js frontend, shared packages, protobuf/gRPC definitions, and Kubernetes-based deployment via ArgoCD + Istio.
 
 ## Repository Layout
 
@@ -50,7 +50,7 @@ Listed in `go.work` but most are scaffolded/inactive.
 - Central: `proto/shopee/catalog/v1/catalog.proto`
 - Per-service: `services/{order,payment,inventory,shipment}/proto/`
 - Generate via `generate-protos.sh` (Docker-based, uses `protoc-gen-go`, `protoc-gen-go-grpc`, `protoc-gen-validate`)
-- Module: `github.com/shopee-clone/shopee/proto` (Go 1.24.0)
+- Module: `github.com/tiki-clone/shopee/proto` (Go 1.24.0)
 
 ### Infrastructure (`deploy/`)
 - `argocd/` — AppProject (`shopee`), per-service Application manifests
@@ -68,7 +68,7 @@ Listed in `go.work` but most are scaffolded/inactive.
 ### Root Scripts
 - `build.ps1` — Builds all Go services to `bin/`, builds Java `identity-auth` via Maven (skips tests by default)
 - `tidy.ps1` — Runs `go mod tidy` across all 35 modules in `go.work`
-- `build-images.ps1` — Builds Docker images, tags as `ghcr.io/shopee-clone/<name>:latest`
+- `build-images.ps1` — Builds Docker images, tags as `ghcr.io/tiki-clone/<name>:latest`
 - `generate-protos.sh` — Docker-based protobuf compilation
 
 ### Observability Stack (docker-compose)

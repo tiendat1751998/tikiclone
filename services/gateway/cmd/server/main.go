@@ -13,17 +13,17 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/health"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	sharedRedis "github.com/shopee-clone/shopee/packages/go-shared/pkg/redis"
-	"github.com/shopee-clone/shopee/services/gateway/internal/auth"
-	"github.com/shopee-clone/shopee/services/gateway/internal/config"
-	"github.com/shopee-clone/shopee/services/gateway/internal/discovery"
-	"github.com/shopee-clone/shopee/services/gateway/internal/ratelimit"
-	"github.com/shopee-clone/shopee/services/gateway/internal/resilience"
-	"github.com/shopee-clone/shopee/services/gateway/internal/routing"
-	"github.com/shopee-clone/shopee/services/gateway/internal/tracing"
-	"github.com/shopee-clone/shopee/services/gateway/internal/transport"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/health"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	sharedRedis "github.com/tikiclone/tiki/packages/go-shared/pkg/redis"
+	"github.com/tikiclone/tiki/services/gateway/internal/auth"
+	"github.com/tikiclone/tiki/services/gateway/internal/config"
+	"github.com/tikiclone/tiki/services/gateway/internal/discovery"
+	"github.com/tikiclone/tiki/services/gateway/internal/ratelimit"
+	"github.com/tikiclone/tiki/services/gateway/internal/resilience"
+	"github.com/tikiclone/tiki/services/gateway/internal/routing"
+	"github.com/tikiclone/tiki/services/gateway/internal/tracing"
+	"github.com/tikiclone/tiki/services/gateway/internal/transport"
 	"go.uber.org/zap"
 	automaxprocs "go.uber.org/automaxprocs/maxprocs"
 	"google.golang.org/grpc"
@@ -153,35 +153,57 @@ func main() {
 }
 
 func registerUpstreams(cfg *config.Config, svcDiscovery *discovery.ServiceDiscovery) {
-	upstreams := map[string]*discovery.ServiceInstance{
-		"auth":           {ID: "auth-1", Name: "auth", Address: extractHost(cfg.Upstreams.AuthService), Port: extractPort(cfg.Upstreams.AuthService), Weight: 10},
-		"catalog":        {ID: "catalog-1", Name: "catalog", Address: extractHost(cfg.Upstreams.CatalogService), Port: extractPort(cfg.Upstreams.CatalogService), Weight: 10},
-		"cart":           {ID: "cart-1", Name: "cart", Address: extractHost(cfg.Upstreams.CartService), Port: extractPort(cfg.Upstreams.CartService), Weight: 10},
-		"order":          {ID: "order-1", Name: "order", Address: extractHost(cfg.Upstreams.OrderService), Port: extractPort(cfg.Upstreams.OrderService), Weight: 10},
-		"inventory":      {ID: "inventory-1", Name: "inventory", Address: extractHost(cfg.Upstreams.InventoryService), Port: extractPort(cfg.Upstreams.InventoryService), Weight: 10},
-		"payment":        {ID: "payment-1", Name: "payment", Address: extractHost(cfg.Upstreams.PaymentService), Port: extractPort(cfg.Upstreams.PaymentService), Weight: 10},
-		"search":         {ID: "search-1", Name: "search", Address: extractHost(cfg.Upstreams.SearchService), Port: extractPort(cfg.Upstreams.SearchService), Weight: 10},
-		"recommendation": {ID: "rec-1", Name: "recommendation", Address: extractHost(cfg.Upstreams.RecommendationService), Port: extractPort(cfg.Upstreams.RecommendationService), Weight: 5},
+	upstreams := map[string][]*discovery.ServiceInstance{
+		"auth": {
+			{ID: "auth-1", Name: "auth", Address: extractHost(cfg.Upstreams.AuthService), Port: extractPort(cfg.Upstreams.AuthService), Weight: 10},
+		},
+		"catalog": {
+			{ID: "catalog-1", Name: "catalog", Address: extractHost(cfg.Upstreams.CatalogService), Port: extractPort(cfg.Upstreams.CatalogService), Weight: 10},
+			{ID: "catalog-2", Name: "catalog", Address: extractHost(cfg.Upstreams.CatalogServiceReplica2), Port: extractPort(cfg.Upstreams.CatalogServiceReplica2), Weight: 10},
+			{ID: "catalog-3", Name: "catalog", Address: extractHost(cfg.Upstreams.CatalogServiceReplica3), Port: extractPort(cfg.Upstreams.CatalogServiceReplica3), Weight: 10},
+		},
+		"cart": {
+			{ID: "cart-1", Name: "cart", Address: extractHost(cfg.Upstreams.CartService), Port: extractPort(cfg.Upstreams.CartService), Weight: 10},
+		},
+		"order": {
+			{ID: "order-1", Name: "order", Address: extractHost(cfg.Upstreams.OrderService), Port: extractPort(cfg.Upstreams.OrderService), Weight: 10},
+		},
+		"inventory": {
+			{ID: "inventory-1", Name: "inventory", Address: extractHost(cfg.Upstreams.InventoryService), Port: extractPort(cfg.Upstreams.InventoryService), Weight: 10},
+		},
+		"payment": {
+			{ID: "payment-1", Name: "payment", Address: extractHost(cfg.Upstreams.PaymentService), Port: extractPort(cfg.Upstreams.PaymentService), Weight: 10},
+		},
+		"search": {
+			{ID: "search-1", Name: "search", Address: extractHost(cfg.Upstreams.SearchService), Port: extractPort(cfg.Upstreams.SearchService), Weight: 10},
+		},
+		"recommendation": {
+			{ID: "rec-1", Name: "recommendation", Address: extractHost(cfg.Upstreams.RecommendationService), Port: extractPort(cfg.Upstreams.RecommendationService), Weight: 5},
+		},
+		"delivery": {
+			{ID: "delivery-1", Name: "delivery", Address: extractHost(cfg.Upstreams.DeliveryService), Port: extractPort(cfg.Upstreams.DeliveryService), Weight: 10},
+		},
 	}
 
-	for name, instance := range upstreams {
-		svcDiscovery.RegisterStatic(name, []*discovery.ServiceInstance{instance})
+	for name, instances := range upstreams {
+		svcDiscovery.RegisterStatic(name, instances)
 	}
 }
 
 func registerProxyOptions(cfg *config.Config, proxy *transport.Proxy) {
-	services := []string{"auth", "catalog", "cart", "order", "inventory", "payment", "search", "recommendation"}
+	services := []string{"auth", "catalog", "cart", "order", "inventory", "payment", "search", "recommendation", "delivery"}
 	opts := make([]transport.ProxyOption, 0, len(services))
 
 	timeouts := map[string]time.Duration{
-		"auth":           10 * time.Second,
-		"catalog":        15 * time.Second,
-		"cart":           5 * time.Second,
-		"order":          30 * time.Second,
-		"inventory":      5 * time.Second,
-		"payment":        30 * time.Second,
-		"search":         10 * time.Second,
-		"recommendation": 15 * time.Second,
+		"auth":           5 * time.Second,
+		"catalog":        5 * time.Second,
+		"cart":           3 * time.Second,
+		"order":          10 * time.Second,
+		"inventory":      3 * time.Second,
+		"payment":        10 * time.Second,
+		"search":         5 * time.Second,
+		"recommendation": 5 * time.Second,
+		"delivery":       5 * time.Second,
 	}
 
 	for _, svc := range services {

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"time"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/platforms/billing/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/platforms/billing/internal/infrastructure/redis"
 	"go.uber.org/zap"
 )
 

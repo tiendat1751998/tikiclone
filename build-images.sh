@@ -28,7 +28,7 @@ if [ "$SKIP_JAVA" = false ]; then
     DOCKERFILE_PATH="${JAVA_DIR}/Dockerfile"
     if [ -f "$DOCKERFILE_PATH" ]; then
         echo -e "\n\033[0;33m[Java] Building docker image for identity-auth...\033[0m"
-        IMAGE_NAME="ghcr.io/shopee-clone/identity-auth:latest"
+        IMAGE_NAME="ghcr.io/tiki-clone/identity-auth:latest"
         docker build -t "$IMAGE_NAME" -f "$DOCKERFILE_PATH" "$JAVA_DIR"
         echo -e "\033[0;32m[Java] Success: Built ${IMAGE_NAME}\033[0m"
     fi
@@ -53,7 +53,7 @@ if [ "$SKIP_GO" = false ]; then
             
             if [ -n "$DOCKERFILE_PATH" ]; then
                 echo -e "\n\033[0;33m[Go] Building docker image for ${MODULE}...\033[0m"
-                IMAGE_NAME="ghcr.io/shopee-clone/${MODULE_NAME}:latest"
+                IMAGE_NAME="ghcr.io/tiki-clone/${MODULE_NAME}:latest"
                 
                 echo "Creating temporary build context for ${MODULE_NAME}..."
                 
@@ -68,7 +68,7 @@ if [ "$SKIP_GO" = false ]; then
                 
                 # Copy central proto directory if needed
                 HAS_PROTO=0
-                if grep -q "github.com/shopee-clone/shopee/proto" "${FULL_PATH}/go.mod" 2>/dev/null || [ "${MODULE_NAME}" = "catalog-product" ]; then
+                if grep -q "github.com/tiki-clone/tiki/proto" "${FULL_PATH}/go.mod" 2>/dev/null || [ "${MODULE_NAME}" = "catalog-product" ]; then
                     echo "-> Copying central proto module into build context..."
                     mkdir -p "${TEMP_CONTEXT_DIR}/proto"
                     cp -r "${SCRIPT_DIR}/proto/"* "${TEMP_CONTEXT_DIR}/proto/"
@@ -82,9 +82,9 @@ if [ "$SKIP_GO" = false ]; then
                 
                 # Apply replacements to go.mod inside the temp context
                 if [ -f "${TEMP_CONTEXT_DIR}/go.mod" ]; then
-                    sed 's|replace github.com/shopee-clone/shopee/proto => ../../proto|replace github.com/shopee-clone/shopee/proto => /proto|g' "${TEMP_CONTEXT_DIR}/go.mod" > "${TEMP_CONTEXT_DIR}/go.mod.tmp"
+                    sed 's|replace github.com/tiki-clone/tiki/proto => ../../proto|replace github.com/tiki-clone/tiki/proto => /proto|g' "${TEMP_CONTEXT_DIR}/go.mod" > "${TEMP_CONTEXT_DIR}/go.mod.tmp"
                     mv "${TEMP_CONTEXT_DIR}/go.mod.tmp" "${TEMP_CONTEXT_DIR}/go.mod"
-                    sed 's|replace github.com/shopee-clone/shopee/packages/go-shared => ../../packages/go-shared|replace github.com/shopee-clone/shopee/packages/go-shared => ./packages/go-shared|g' "${TEMP_CONTEXT_DIR}/go.mod" > "${TEMP_CONTEXT_DIR}/go.mod.tmp"
+                    sed 's|replace github.com/tiki-clone/tiki/packages/go-shared => ../../packages/go-shared|replace github.com/tiki-clone/tiki/packages/go-shared => ./packages/go-shared|g' "${TEMP_CONTEXT_DIR}/go.mod" > "${TEMP_CONTEXT_DIR}/go.mod.tmp"
                     mv "${TEMP_CONTEXT_DIR}/go.mod.tmp" "${TEMP_CONTEXT_DIR}/go.mod"
                 fi
                 
@@ -103,12 +103,12 @@ if [ "$SKIP_GO" = false ]; then
                     print "    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest && \\"
                     print "    mkdir -p /tmp/validate/validate && \\"
                     print "    wget -qO /tmp/validate/validate/validate.proto https://raw.githubusercontent.com/bufbuild/protoc-gen-validate/main/validate/validate.proto && \\"
-                    print "    if [ -d \"/proto/shopee/catalog/v1\" ]; then \\"
+                    print "    if [ -d \"/proto/tiki/catalog/v1\" ]; then \\"
                     print "        echo \"Compiling catalog.proto...\" && \\"
                     print "        mkdir -p /proto/catalog/v1 && \\"
-                    print "        protoc --proto_path=/proto/shopee --proto_path=/tmp/validate --proto_path=/usr/include --go_out=/proto --go_opt=module=github.com/shopee-clone/shopee/proto --go-grpc_out=/proto --go-grpc_opt=module=github.com/shopee-clone/shopee/proto /proto/shopee/catalog/v1/catalog.proto || exit 1; \\"
+                    print "        protoc --proto_path=/proto/tiki --proto_path=/tmp/validate --proto_path=/usr/include --go_out=/proto --go_opt=module=github.com/tiki-clone/tiki/proto --go-grpc_out=/proto --go-grpc_opt=module=github.com/tiki-clone/tiki/proto /proto/tiki/catalog/v1/catalog.proto || exit 1; \\"
                     print "    fi && \\"
-                    print "    find . -name \"*.proto\" -type f -not -path \"./proto/shopee/*\" | while read f; do \\"
+                    print "    find . -name \"*.proto\" -type f -not -path \"./proto/tiki/*\" | while read f; do \\"
                     print "        echo \"Compiling $f...\" && \\"
                     print "        protoc --proto_path=. --proto_path=/tmp/validate --proto_path=/usr/include --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative \"$f\" || exit 1; \\"
                     print "    done"

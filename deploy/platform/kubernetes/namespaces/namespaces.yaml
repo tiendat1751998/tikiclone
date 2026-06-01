@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: shopee
+  name: tiki
   labels:
     istio-injection: enabled
     pod-security.kubernetes.io/enforce: restricted
@@ -9,27 +9,27 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: shopee-infra
+  name: tiki-infra
   labels:
     istio-injection: disabled
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: shopee-observability
+  name: tiki-observability
   labels:
     istio-injection: disabled
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: shopee-gitops
+  name: tiki-gitops
   labels:
     istio-injection: disabled
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: shopee-ingress
+  name: tiki-ingress
   labels:
     istio-injection: disabled

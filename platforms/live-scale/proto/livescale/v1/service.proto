@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package livescale.v1;
 
-option go_package = "github.com/shopee-clone/shopee/platforms/live-scale/proto/livescale/v1;livescalev1";
+option go_package = "github.com/tikiclone/tiki/platforms/live-scale/proto/livescale/v1;livescalev1";
 
 message SFUNode {
   string id = 1;

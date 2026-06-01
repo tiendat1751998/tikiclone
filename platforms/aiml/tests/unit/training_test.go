@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/training"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/training"
 )
 
 func TestTrainingJobCreate(t *testing.T) {

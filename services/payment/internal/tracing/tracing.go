@@ -1,8 +1,8 @@
 package tracing
 
 import (
-	"github.com/shopee-clone/shopee/services/payment/internal/config"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/payment/internal/config"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"

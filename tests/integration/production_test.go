@@ -1,4 +1,4 @@
-package shopeeclone
+package tikiclone
 
 import (
 	"context"
@@ -14,40 +14,40 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	sharedRedis "github.com/shopee-clone/shopee/packages/go-shared/pkg/redis"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	sharedRedis "github.com/tikiclone/tiki/packages/go-shared/pkg/redis"
 
 	// Order service
-	orderDomain "github.com/shopee-clone/shopee/services/order/internal/domain"
-	orderMysql "github.com/shopee-clone/shopee/services/order/internal/infrastructure/mysql"
-	orderRedis "github.com/shopee-clone/shopee/services/order/internal/infrastructure/redis"
-	orderApp "github.com/shopee-clone/shopee/services/order/internal/application"
-	orderConfig "github.com/shopee-clone/shopee/services/order/internal/config"
+	orderDomain "github.com/tikiclone/tiki/services/order/internal/domain"
+	orderMysql "github.com/tikiclone/tiki/services/order/internal/infrastructure/mysql"
+	orderRedis "github.com/tikiclone/tiki/services/order/internal/infrastructure/redis"
+	orderApp "github.com/tikiclone/tiki/services/order/internal/application"
+	orderConfig "github.com/tikiclone/tiki/services/order/internal/config"
 
 	// Inventory service
-	invDomain "github.com/shopee-clone/shopee/services/inventory/internal/domain"
-	invMysql "github.com/shopee-clone/shopee/services/inventory/internal/infrastructure/mysql"
-	invRedis "github.com/shopee-clone/shopee/services/inventory/internal/infrastructure/redis"
-	invApp "github.com/shopee-clone/shopee/services/inventory/internal/application"
-	invConfig "github.com/shopee-clone/shopee/services/inventory/internal/config"
+	invDomain "github.com/tikiclone/tiki/services/inventory/internal/domain"
+	invMysql "github.com/tikiclone/tiki/services/inventory/internal/infrastructure/mysql"
+	invRedis "github.com/tikiclone/tiki/services/inventory/internal/infrastructure/redis"
+	invApp "github.com/tikiclone/tiki/services/inventory/internal/application"
+	invConfig "github.com/tikiclone/tiki/services/inventory/internal/config"
 
 	// Payment service
-	payDomain "github.com/shopee-clone/shopee/services/payment/internal/domain"
-	payMysql "github.com/shopee-clone/shopee/services/payment/internal/infrastructure/mysql"
-	payRedis "github.com/shopee-clone/shopee/services/payment/internal/infrastructure/redis"
-	payApp "github.com/shopee-clone/shopee/services/payment/internal/application"
-	payConfig "github.com/shopee-clone/shopee/services/payment/internal/config"
+	payDomain "github.com/tikiclone/tiki/services/payment/internal/domain"
+	payMysql "github.com/tikiclone/tiki/services/payment/internal/infrastructure/mysql"
+	payRedis "github.com/tikiclone/tiki/services/payment/internal/infrastructure/redis"
+	payApp "github.com/tikiclone/tiki/services/payment/internal/application"
+	payConfig "github.com/tikiclone/tiki/services/payment/internal/config"
 
 	// Promotion service
-	promoDomain "github.com/shopee-clone/shopee/services/promotion/internal/domain"
-	promoMysql "github.com/shopee-clone/shopee/services/promotion/internal/infrastructure/mysql"
-	promoRedis "github.com/shopee-clone/shopee/services/promotion/internal/infrastructure/redis"
-	promoApp "github.com/shopee-clone/shopee/services/promotion/internal/application"
+	promoDomain "github.com/tikiclone/tiki/services/promotion/internal/domain"
+	promoMysql "github.com/tikiclone/tiki/services/promotion/internal/infrastructure/mysql"
+	promoRedis "github.com/tikiclone/tiki/services/promotion/internal/infrastructure/redis"
+	promoApp "github.com/tikiclone/tiki/services/promotion/internal/application"
 
 	// Cart service
-	cartDomain "github.com/shopee-clone/shopee/services/cart/internal/domain"
-	cartMysql "github.com/shopee-clone/shopee/services/cart/internal/infrastructure/mysql"
-	cartApp "github.com/shopee-clone/shopee/services/cart/internal/application"
+	cartDomain "github.com/tikiclone/tiki/services/cart/internal/domain"
+	cartMysql "github.com/tikiclone/tiki/services/cart/internal/infrastructure/mysql"
+	cartApp "github.com/tikiclone/tiki/services/cart/internal/application"
 )
 
 var (
@@ -80,7 +80,7 @@ func TestMain(m *testing.M) {
 		os.Exit(0)
 	}
 
-	testDBName := "shopee_production_test"
+	testDBName := "tiki_production_test"
 	rootDB.Exec("DROP DATABASE IF EXISTS " + testDBName)
 	rootDB.Exec("CREATE DATABASE " + testDBName + " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
 	rootDB.Close()

@@ -3,7 +3,7 @@ package indexing
 import (
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/search/internal/search"
+	"github.com/tikiclone/tiki/platforms/search/internal/search"
 )
 
 type IndexStatus string

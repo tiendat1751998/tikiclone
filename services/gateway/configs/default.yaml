@@ -1,5 +1,5 @@
 app:
-  name: shopee-gateway
+  name: tiki-gateway
   env: development
   log_level: debug
 
@@ -47,9 +47,9 @@ auth:
 
 otel:
   endpoint: http://localhost:4318
-  service_name: shopee-gateway
+  service_name: tiki-gateway
   trace_ratio: 0.1
-  metrics_prefix: shopee_gateway
+  metrics_prefix: tiki_gateway
 
 upstreams:
   auth_service: identity-auth:8080
@@ -75,7 +75,7 @@ upstreams:
 cors:
   allowed_origins:
     - http://localhost:3000
-    - https://api.shopee-clone.com
+    - https://api.tiki-clone.com
   allowed_methods:
     - GET
     - POST

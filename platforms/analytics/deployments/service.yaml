@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: shopee-analytics
+  name: tiki-analytics
   labels:
-    app: shopee-analytics
+    app: tiki-analytics
 spec:
   type: ClusterIP
   ports:
@@ -16,4 +16,4 @@ spec:
       protocol: TCP
       name: grpc
   selector:
-    app: shopee-analytics
+    app: tiki-analytics

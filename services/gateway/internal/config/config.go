@@ -79,19 +79,22 @@ type CircuitBreakerConfig struct {
 }
 
 type UpstreamConfig struct {
-	AuthService          string
-	CatalogService       string
-	CartService          string
-	OrderService         string
-	InventoryService     string
-	PaymentService       string
-	SearchService        string
+	AuthService           string
+	CatalogService        string
+	CatalogServiceReplica2 string
+	CatalogServiceReplica3 string
+	CartService           string
+	OrderService          string
+	InventoryService      string
+	PaymentService        string
+	SearchService         string
 	RecommendationService string
-	DefaultTimeout       time.Duration
-	MaxIdleConns         int
-	IdleConnTimeout      time.Duration
-	MaxRetries           int
-	CircuitBreaker       CircuitBreakerConfig
+	DeliveryService       string
+	DefaultTimeout        time.Duration
+	MaxIdleConns          int
+	IdleConnTimeout       time.Duration
+	MaxRetries            int
+	CircuitBreaker        CircuitBreakerConfig
 }
 
 type CORSConfig struct {
@@ -116,7 +119,7 @@ type ServerConfig struct {
 
 func Load() *Config {
 	return &Config{
-		AppName:  getEnv("APP_NAME", "shopee-gateway"),
+		AppName:  getEnv("APP_NAME", "tiki-gateway"),
 		AppEnv:   getEnv("APP_ENV", "development"),
 		LogLevel: getEnv("LOG_LEVEL", "info"),
 		HTTPPort: getEnvInt("GATEWAY_HTTP_PORT", 8080),
@@ -135,11 +138,11 @@ func Load() *Config {
 		},
 
 		RateLimit: RateLimitConfig{
-			Enabled:          getEnvBool("RATE_LIMIT_ENABLED", true),
-			GlobalMaxRPS:     getEnvInt("RATE_LIMIT_GLOBAL_RPS", 10000),
-			DefaultMaxRPS:    getEnvInt("RATE_LIMIT_DEFAULT_RPS", 100),
-			IPMaxRPS:         getEnvInt("RATE_LIMIT_IP_RPS", 50),
-			AuthenticatedRPS: getEnvInt("RATE_LIMIT_AUTH_RPS", 200),
+			Enabled:          getEnvBool("RATE_LIMIT_ENABLED", false),
+			GlobalMaxRPS:     getEnvInt("RATE_LIMIT_GLOBAL_RPS", 100000),
+			DefaultMaxRPS:    getEnvInt("RATE_LIMIT_DEFAULT_RPS", 10000),
+			IPMaxRPS:         getEnvInt("RATE_LIMIT_IP_RPS", 5000),
+			AuthenticatedRPS: getEnvInt("RATE_LIMIT_AUTH_RPS", 5000),
 			LoginMaxRPS:      getEnvInt("RATE_LIMIT_LOGIN_RPS", 5),
 			CheckoutMaxRPS:   getEnvInt("RATE_LIMIT_CHECKOUT_RPS", 1),
 			WindowSize:       getEnvDuration("RATE_LIMIT_WINDOW", 1*time.Second),
@@ -157,26 +160,29 @@ func Load() *Config {
 
 		OpenTelemetry: OTELConfig{
 			Endpoint:      getEnv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318"),
-			ServiceName:   getEnv("OTEL_SERVICE_NAME", "shopee-gateway"),
+			ServiceName:   getEnv("OTEL_SERVICE_NAME", "tiki-gateway"),
 			TraceRatio:    getEnvFloat("OTEL_TRACES_SAMPLER_ARG", 0.1),
-			MetricsPrefix: getEnv("OTEL_METRICS_PREFIX", "shopee_gateway"),
+			MetricsPrefix: getEnv("OTEL_METRICS_PREFIX", "tiki_gateway"),
 		},
 
 		Upstreams: UpstreamConfig{
-			AuthService:          getEnv("UPSTREAM_AUTH_SERVICE", "identity-auth:8080"),
-			CatalogService:       getEnv("UPSTREAM_CATALOG_SERVICE", "catalog-product:8080"),
-			CartService:          getEnv("UPSTREAM_CART_SERVICE", "shopping-cart:8080"),
-			OrderService:         getEnv("UPSTREAM_ORDER_SERVICE", "order-processing:8080"),
-			InventoryService:     getEnv("UPSTREAM_INVENTORY_SERVICE", "inventory-flashsale:8080"),
-			PaymentService:       getEnv("UPSTREAM_PAYMENT_SERVICE", "payment-ledger:8080"),
-			SearchService:        getEnv("UPSTREAM_SEARCH_SERVICE", "search-indexing:8080"),
+			AuthService:           getEnv("UPSTREAM_AUTH_SERVICE", "identity-auth:8080"),
+			CatalogService:        getEnv("UPSTREAM_CATALOG_SERVICE", "catalog-product:8080"),
+			CatalogServiceReplica2: getEnv("UPSTREAM_CATALOG_SERVICE_REPLICA2", "catalog-product-2:8088"),
+			CatalogServiceReplica3: getEnv("UPSTREAM_CATALOG_SERVICE_REPLICA3", "catalog-product-3:8088"),
+			CartService:           getEnv("UPSTREAM_CART_SERVICE", "shopping-cart:8080"),
+			OrderService:          getEnv("UPSTREAM_ORDER_SERVICE", "order-processing:8080"),
+			InventoryService:      getEnv("UPSTREAM_INVENTORY_SERVICE", "inventory-flashsale:8080"),
+			PaymentService:        getEnv("UPSTREAM_PAYMENT_SERVICE", "payment-ledger:8080"),
+			SearchService:         getEnv("UPSTREAM_SEARCH_SERVICE", "search-indexing:8080"),
 			RecommendationService: getEnv("UPSTREAM_RECOMMENDATION_SERVICE", "recommendation-ml:8080"),
-			DefaultTimeout:       getEnvDuration("UPSTREAM_DEFAULT_TIMEOUT", 30*time.Second),
-			MaxIdleConns:         getEnvInt("UPSTREAM_MAX_IDLE_CONNS", 100),
-			IdleConnTimeout:      getEnvDuration("UPSTREAM_IDLE_CONN_TIMEOUT", 90*time.Second),
-			MaxRetries:           getEnvInt("UPSTREAM_MAX_RETRIES", 2),
+			DeliveryService:       getEnv("UPSTREAM_DELIVERY_SERVICE", "shipment:8092"),
+			DefaultTimeout:        getEnvDuration("UPSTREAM_DEFAULT_TIMEOUT", 5*time.Second),
+			MaxIdleConns:          getEnvInt("UPSTREAM_MAX_IDLE_CONNS", 5000),
+			IdleConnTimeout:       getEnvDuration("UPSTREAM_IDLE_CONN_TIMEOUT", 300*time.Second),
+			MaxRetries:            getEnvInt("UPSTREAM_MAX_RETRIES", 0),
 			CircuitBreaker: CircuitBreakerConfig{
-				Enabled:      getEnvBool("CIRCUIT_BREAKER_ENABLED", true),
+				Enabled:      getEnvBool("CIRCUIT_BREAKER_ENABLED", false),
 				MaxRequests:  getEnvInt("CIRCUIT_BREAKER_MAX_REQUESTS", 5),
 				Interval:     getEnvDuration("CIRCUIT_BREAKER_INTERVAL", 60*time.Second),
 				Timeout:      getEnvDuration("CIRCUIT_BREAKER_TIMEOUT", 30*time.Second),
@@ -186,7 +192,7 @@ func Load() *Config {
 		},
 
 		CORS: CORSConfig{
-			AllowedOrigins:   splitEnv("CORS_ALLOWED_ORIGINS", "http://localhost:3000,https://api.shopee-clone.com"),
+			AllowedOrigins:   splitEnv("CORS_ALLOWED_ORIGINS", "http://localhost:3000,https://api.tiki-clone.com"),
 			AllowedMethods:   strings.Split(getEnv("CORS_ALLOWED_METHODS", "GET,POST,PUT,PATCH,DELETE,OPTIONS"), ","),
 			AllowedHeaders:   strings.Split(getEnv("CORS_ALLOWED_HEADERS", "Origin,Content-Type,Accept,Authorization,X-Request-ID,X-Correlation-ID"), ","),
 			ExposedHeaders:   strings.Split(getEnv("CORS_EXPOSED_HEADERS", "X-Request-ID,X-Correlation-ID,X-RateLimit-Limit,X-RateLimit-Remaining,X-RateLimit-Reset"), ","),

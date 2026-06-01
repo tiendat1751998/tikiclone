@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/shopee-clone/shopee/services/shipment/internal/config"
-	"github.com/shopee-clone/shopee/services/shipment/internal/domain"
-	"github.com/shopee-clone/shopee/services/shipment/internal/infrastructure/kafka"
-	"github.com/shopee-clone/shopee/services/shipment/internal/infrastructure/mysql"
-	redisinfra "github.com/shopee-clone/shopee/services/shipment/internal/infrastructure/redis"
-	"github.com/shopee-clone/shopee/services/shipment/internal/metrics"
+	"github.com/tikiclone/tiki/services/shipment/internal/config"
+	"github.com/tikiclone/tiki/services/shipment/internal/domain"
+	"github.com/tikiclone/tiki/services/shipment/internal/infrastructure/kafka"
+	"github.com/tikiclone/tiki/services/shipment/internal/infrastructure/mysql"
+	redisinfra "github.com/tikiclone/tiki/services/shipment/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/services/shipment/internal/metrics"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.uber.org/zap"
@@ -74,7 +74,7 @@ type ScanQRCodeResponse struct {
 }
 
 func (s *ShipmentService) CreateShipment(ctx context.Context, req *CreateShipmentRequest) (*domain.Shipment, error) {
-	ctx, span := otel.Tracer("shopee-shipment").Start(ctx, "ShipmentService.CreateShipment")
+	ctx, span := otel.Tracer("tiki-shipment").Start(ctx, "ShipmentService.CreateShipment")
 	defer span.End()
 
 	// Idempotency check
@@ -143,7 +143,7 @@ func (s *ShipmentService) CreateShipment(ctx context.Context, req *CreateShipmen
 }
 
 func (s *ShipmentService) UpdateStatus(ctx context.Context, shipmentID string, target domain.ShipmentStatus, actorID, reason string) (*domain.Shipment, error) {
-	ctx, span := otel.Tracer("shopee-shipment").Start(ctx, "ShipmentService.UpdateStatus")
+	ctx, span := otel.Tracer("tiki-shipment").Start(ctx, "ShipmentService.UpdateStatus")
 	defer span.End()
 
 	shipment, err := s.shipmentRepo.FindByID(ctx, shipmentID)

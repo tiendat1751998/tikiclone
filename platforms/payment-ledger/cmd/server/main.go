@@ -8,12 +8,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/payment-ledger/internal/dispute"
-	"github.com/shopee-clone/shopee/platforms/payment-ledger/internal/ledger"
-	"github.com/shopee-clone/shopee/platforms/payment-ledger/internal/payment"
-	"github.com/shopee-clone/shopee/platforms/payment-ledger/internal/payout"
-	"github.com/shopee-clone/shopee/platforms/payment-ledger/internal/reconciliation"
-	httptransport "github.com/shopee-clone/shopee/platforms/payment-ledger/internal/transport/http"
+	"github.com/tikiclone/tiki/platforms/payment-ledger/internal/dispute"
+	"github.com/tikiclone/tiki/platforms/payment-ledger/internal/ledger"
+	"github.com/tikiclone/tiki/platforms/payment-ledger/internal/payment"
+	"github.com/tikiclone/tiki/platforms/payment-ledger/internal/payout"
+	"github.com/tikiclone/tiki/platforms/payment-ledger/internal/reconciliation"
+	httptransport "github.com/tikiclone/tiki/platforms/payment-ledger/internal/transport/http"
 	automaxprocs "go.uber.org/automaxprocs/maxprocs"
 )
 

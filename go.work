@@ -18,6 +18,7 @@ use (
 	./platforms/notification-campaign
 	./platforms/oms-fulfillment
 	./platforms/payment-ledger
+	./platforms/production-dashboard
 	./platforms/rec-vector
 	./platforms/recommendation
 	./platforms/search
@@ -25,13 +26,14 @@ use (
 	./platforms/service-mesh
 	./platforms/sre
 	./platforms/user-behavior
-	./platforms/production-dashboard
 	./proto
+	./services/admin-panel
 	./services/auth
 	./services/cart
 	./services/catalog-product
 	./services/checkout
 	./services/gateway
+	./services/identity-auth
 	./services/inventory
 	./services/order
 	./services/payment
@@ -39,6 +41,5 @@ use (
 	./services/product-catalog
 	./services/promotion
 	./services/shipment
-	./services/admin-panel
 	./tests/integration
 )

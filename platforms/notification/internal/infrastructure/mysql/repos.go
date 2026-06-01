@@ -1,5 +1,5 @@
 package mysql
-import ("context"; "database/sql"; "github.com/jmoiron/sqlx"; "github.com/shopee-clone/shopee/platforms/notification/internal/domain")
+import ("context"; "database/sql"; "github.com/jmoiron/sqlx"; "github.com/tikiclone/tiki/platforms/notification/internal/domain")
 
 type NotificationRepository struct{ db *sqlx.DB }
 func NewNotificationRepository(db *sqlx.DB) *NotificationRepository { return &NotificationRepository{db: db} }

@@ -1,4 +1,4 @@
-# System Topology - Shopee Clone Enterprise
+# System Topology - Tiki Clone Enterprise
 
 This system leverages high-concurrency microservices designed to scale independently.
 

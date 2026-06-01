@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/services/gateway/internal/config"
-	"github.com/shopee-clone/shopee/services/gateway/internal/middleware"
+	"github.com/tikiclone/tiki/services/gateway/internal/config"
+	"github.com/tikiclone/tiki/services/gateway/internal/middleware"
 )
 
 type RefreshTokenHandler struct {
@@ -152,7 +152,7 @@ func (h *RefreshTokenHandler) issueToken(userID string, roles []string, sessionI
 		"sub":        userID,
 		"iat":        now.Unix(),
 		"exp":        now.Add(ttl).Unix(),
-		"iss":        "shopee-gateway",
+		"iss":        "tiki-gateway",
 		"type":       "access",
 	}
 

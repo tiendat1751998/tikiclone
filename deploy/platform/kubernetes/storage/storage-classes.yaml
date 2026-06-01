@@ -1,7 +1,7 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: shopee-fast
+  name: tiki-fast
 provisioner: ebs.csi.aws.com
 parameters:
   type: gp3
@@ -16,7 +16,7 @@ volumeBindingMode: WaitForFirstConsumer
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: shopee-standard
+  name: tiki-standard
 provisioner: ebs.csi.aws.com
 parameters:
   type: gp3
@@ -29,7 +29,7 @@ volumeBindingMode: WaitForFirstConsumer
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: shopee-ssd
+  name: tiki-ssd
 provisioner: ebs.csi.aws.com
 parameters:
   type: gp3

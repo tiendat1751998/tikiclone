@@ -1,5 +1,5 @@
 package application
-import ("context"; "fmt"; "time"; "github.com/shopee-clone/shopee/platforms/user-behavior/internal/domain"; "github.com/shopee-clone/shopee/platforms/user-behavior/internal/metrics"; "github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"; "go.opentelemetry.io/otel"; "go.uber.org/zap")
+import ("context"; "fmt"; "time"; "github.com/tikiclone/tiki/platforms/user-behavior/internal/domain"; "github.com/tikiclone/tiki/platforms/user-behavior/internal/metrics"; "github.com/tikiclone/tiki/packages/go-shared/pkg/observability"; "go.opentelemetry.io/otel"; "go.uber.org/zap")
 
 type BehaviorService struct { publisher EventPublisher }
 type EventPublisher interface { Publish(ctx context.Context, eventType string, payload interface{}) error }
@@ -7,7 +7,7 @@ type EventPublisher interface { Publish(ctx context.Context, eventType string, p
 func NewBehaviorService(pub EventPublisher) *BehaviorService { return &BehaviorService{publisher: pub} }
 
 func (s *BehaviorService) IngestEvent(ctx context.Context, event *domain.ClickEvent) error {
-	ctx, span := otel.Tracer("shopee-user-behavior").Start(ctx, "behavior.ingest"); defer span.End()
+	ctx, span := otel.Tracer("tiki-user-behavior").Start(ctx, "behavior.ingest"); defer span.End()
 	if event.UserID == "" || event.EventType == "" { return domain.ErrEventValidation }
 	if event.ID == "" { event.ID = fmt.Sprintf("evt_%d", time.Now().UnixNano()) }
 	if event.Timestamp.IsZero() { event.Timestamp = time.Now() }

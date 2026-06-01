@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/services/product/internal/domain"
+	"github.com/tikiclone/tiki/services/product/internal/domain"
 )
 
 // ProductRepo implements ProductRepository using MySQL

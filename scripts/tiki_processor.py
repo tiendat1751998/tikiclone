@@ -212,9 +212,9 @@ def main():
     parser.add_argument("--output", "-o", help="Output file")
     parser.add_argument("--host", default="127.0.0.1", help="MySQL host")
     parser.add_argument("--port", type=int, default=3306, help="MySQL port")
-    parser.add_argument("--user", default="shopee", help="MySQL user")
-    parser.add_argument("--password", default="shopee_dev", help="MySQL password")
-    parser.add_argument("--database", default="shopee_platform", help="MySQL database")
+    parser.add_argument("--user", default="tiki", help="MySQL user")
+    parser.add_argument("--password", default="tiki_dev", help="MySQL password")
+    parser.add_argument("--database", default="tiki_platform", help="MySQL database")
     args = parser.parse_args()
 
     conn = get_db(args)

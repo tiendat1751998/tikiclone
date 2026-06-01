@@ -1,5 +1,5 @@
 # COMPLETE REFACTOR & SECURITY FIX REPORT
-# Shopee Clone Codebase - Production-Ready Refactor
+# Tiki Clone Codebase - Production-Ready Refactor
 
 ## Summary
 Refactored and fixed **12 critical files** across the codebase.

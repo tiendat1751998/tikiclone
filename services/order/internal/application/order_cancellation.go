@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/services/order/internal/domain"
-	"github.com/shopee-clone/shopee/services/order/internal/metrics"
+	"github.com/tikiclone/tiki/services/order/internal/domain"
+	"github.com/tikiclone/tiki/services/order/internal/metrics"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -23,7 +23,7 @@ type CancelOrderRequest struct {
 }
 
 func (s *OrderService) CancelOrder(ctx context.Context, req *CancelOrderRequest) (*domain.Order, error) {
-	ctx, span := otel.Tracer("shopee-order").Start(ctx, "OrderService.CancelOrder")
+	ctx, span := otel.Tracer("tiki-order").Start(ctx, "OrderService.CancelOrder")
 	defer span.End()
 
 	span.SetAttributes(
@@ -71,8 +71,8 @@ func (s *OrderService) CancelOrder(ctx context.Context, req *CancelOrderRequest)
 	outboxEvent := domain.NewOutboxEvent("order", order.ID, string(domain.EventOrderCancelled), eventPayload)
 
 	err = s.orderRepo.ExecInTx(ctx, func(tx *sqlx.Tx) error {
-		// TransitionTo already incremented Version, so we use the current Version as expected
-		if err := s.orderRepo.UpdateStatusInTx(ctx, tx, req.OrderID, domain.OrderStatusCancelled, order.Version); err != nil {
+		// TransitionTo incremented Version in memory; use original version for DB optimistic lock
+		if err := s.orderRepo.UpdateStatusInTx(ctx, tx, req.OrderID, domain.OrderStatusCancelled, order.Version-1); err != nil {
 			return err
 		}
 		if err := s.orderRepo.SaveLifecycleEventInTx(ctx, tx, lifecycleEvent); err != nil {

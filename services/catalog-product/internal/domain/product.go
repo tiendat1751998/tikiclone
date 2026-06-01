@@ -17,13 +17,14 @@ type Product struct {
 }
 
 type SKU struct {
-	SKUID      string      `json:"sku_id" bson:"sku_id"`
-	SPUID      string      `json:"spu_id" bson:"spu_id"`
-	Price      float64     `json:"price" bson:"price"`
-	Stock      int32       `json:"stock" bson:"stock"`
-	Variations []Variation `json:"variations" bson:"variations"`
-	Image      string      `json:"image,omitempty" bson:"image,omitempty"`
-	Status     string      `json:"status" bson:"status"`
+	SKUID        string      `json:"sku_id" bson:"sku_id"`
+	SPUID        string      `json:"spu_id" bson:"spu_id"`
+	Price        float64     `json:"price" bson:"price"`
+	ComparePrice float64     `json:"compare_price" bson:"compare_price"`
+	Stock        int32       `json:"stock" bson:"stock"`
+	Variations   []Variation `json:"variations" bson:"variations"`
+	Image        string      `json:"image,omitempty" bson:"image,omitempty"`
+	Status       string      `json:"status" bson:"status"`
 }
 
 type Variation struct {
@@ -32,14 +33,17 @@ type Variation struct {
 }
 
 type Category struct {
-	CategoryID string     `json:"category_id" bson:"category_id"`
-	Name       string     `json:"name" bson:"name"`
-	Slug       string     `json:"slug,omitempty" bson:"slug,omitempty"`
-	ParentID   string     `json:"parent_id,omitempty" bson:"parent_id,omitempty"`
-	Level      int32      `json:"level" bson:"level"`
-	SortOrder  int32      `json:"sort_order" bson:"sort_order"`
-	Children   []Category `json:"children,omitempty" bson:"children,omitempty"`
-}
+ 	CategoryID string     `json:"category_id" bson:"category_id"`
+ 	Name       string     `json:"name" bson:"name"`
+ 	Slug       string     `json:"slug,omitempty" bson:"slug,omitempty"`
+ 	ParentID   string     `json:"parent_id,omitempty" bson:"parent_id,omitempty"`
+ 	Level      int32      `json:"level" bson:"level"`
+ 	SortOrder  int32      `json:"sort_order" bson:"sort_order"`
+ 	Children   []Category `json:"children,omitempty" bson:"children,omitempty"`
+ 	ProductCount int64    `json:"product_count" bson:"product_count"`
+ 	ImageURL   string     `json:"image_url,omitempty" bson:"image_url,omitempty"`
+ 	URLPath    string     `json:"url_path,omitempty" bson:"url_path,omitempty"`
+ }
 
 type ProductFilter struct {
 	Page       int
@@ -50,6 +54,8 @@ type ProductFilter struct {
 	MinPrice   float64
 	MaxPrice   float64
 	SortBy     string
+	SortOrder  string
+	IsDeal     bool
 }
 
 type ProductList struct {

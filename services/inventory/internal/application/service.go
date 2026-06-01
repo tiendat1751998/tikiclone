@@ -7,13 +7,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/shopee-clone/shopee/services/inventory/internal/config"
-	"github.com/shopee-clone/shopee/services/inventory/internal/domain"
-	"github.com/shopee-clone/shopee/services/inventory/internal/infrastructure/kafka"
-	"github.com/shopee-clone/shopee/services/inventory/internal/infrastructure/mysql"
-	redisinfra "github.com/shopee-clone/shopee/services/inventory/internal/infrastructure/redis"
-	"github.com/shopee-clone/shopee/services/inventory/internal/metrics"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/inventory/internal/config"
+	"github.com/tikiclone/tiki/services/inventory/internal/domain"
+	"github.com/tikiclone/tiki/services/inventory/internal/infrastructure/kafka"
+	"github.com/tikiclone/tiki/services/inventory/internal/infrastructure/mysql"
+	redisinfra "github.com/tikiclone/tiki/services/inventory/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/services/inventory/internal/metrics"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.uber.org/zap"
@@ -48,7 +48,7 @@ type ReserveStockRequest struct {
 // - Race conditions (distributed lock + DB lock)
 // - Data inconsistency (atomic stock update + reservation creation in same tx)
 func (s *InventoryService) ReserveStock(ctx context.Context, req *ReserveStockRequest) (*domain.Reservation, error) {
-	ctx, span := otel.Tracer("shopee-inventory").Start(ctx, "InventoryService.ReserveStock")
+	ctx, span := otel.Tracer("tiki-inventory").Start(ctx, "InventoryService.ReserveStock")
 	defer span.End()
 
 	start := time.Now()
@@ -88,8 +88,12 @@ func (s *InventoryService) ReserveStock(ctx context.Context, req *ReserveStockRe
 	if req.IdempotencyKey != "" {
 		rec := domain.NewIdempotencyRecord(reservation.ID, s.cfg.Inventory.IdempotencyTTL)
 		rec.Key = req.IdempotencyKey
-		s.invRepo.SaveIdempotencyKey(ctx, rec)
-		s.redisStore.StoreIdempotencyKey(ctx, req.IdempotencyKey, reservation.ID, s.cfg.Inventory.IdempotencyTTL)
+		if err := s.invRepo.SaveIdempotencyKey(ctx, rec); err != nil {
+			observability.LogWithTrace(ctx).Error("failed to save idempotency key", zap.Error(err))
+		}
+		if err := s.redisStore.StoreIdempotencyKey(ctx, req.IdempotencyKey, reservation.ID, s.cfg.Inventory.IdempotencyTTL); err != nil {
+			observability.LogWithTrace(ctx).Error("failed to store idempotency key in Redis", zap.Error(err))
+		}
 	}
 
 	// Invalidate cache (don't update - prevents stale data on cache write failure)
@@ -172,7 +176,7 @@ func (s *InventoryService) executeReservationInTx(ctx context.Context, req *Rese
 // ReleaseStock releases a reservation and returns stock to available pool.
 // Uses DB transaction to ensure atomicity.
 func (s *InventoryService) ReleaseStock(ctx context.Context, reservationID string) error {
-	ctx, span := otel.Tracer("shopee-inventory").Start(ctx, "InventoryService.ReleaseStock")
+	ctx, span := otel.Tracer("tiki-inventory").Start(ctx, "InventoryService.ReleaseStock")
 	defer span.End()
 
 	// Get reservation first to have SkuID for cache invalidation after tx
@@ -284,7 +288,11 @@ func (s *InventoryService) ProcessOutboxEvents(ctx context.Context) error {
 	var processedIDs []string
 	for _, event := range events {
 		// Mark as processing first (prevents duplicate processing)
-		s.invRepo.MarkOutboxEventProcessing(ctx, event.ID)
+		if err := s.invRepo.MarkOutboxEventProcessing(ctx, event.ID); err != nil {
+			observability.LogWithTrace(ctx).Error("failed to mark outbox event as processing",
+				zap.String("event_id", event.ID), zap.Error(err))
+			continue
+		}
 
 		var invEvent domain.InventoryEvent
 		if err := json.Unmarshal(event.Payload, &invEvent); err != nil {

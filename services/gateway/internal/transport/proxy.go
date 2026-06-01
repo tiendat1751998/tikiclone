@@ -16,10 +16,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/gateway/internal/discovery"
-	"github.com/shopee-clone/shopee/services/gateway/internal/middleware"
-	"github.com/shopee-clone/shopee/services/gateway/internal/resilience"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/gateway/internal/discovery"
+	"github.com/tikiclone/tiki/services/gateway/internal/middleware"
+	"github.com/tikiclone/tiki/services/gateway/internal/resilience"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -29,28 +29,28 @@ import (
 
 var (
 	proxyRequestsTotal = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name: "shopee_gateway_proxy_requests_total",
+		Name: "tiki_gateway_proxy_requests_total",
 		Help: "Total proxy requests",
 	}, []string{"service", "method", "status"})
 
 	proxyRequestDuration = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name:    "shopee_gateway_proxy_duration_seconds",
+		Name:    "tiki_gateway_proxy_duration_seconds",
 		Help:    "Proxy request duration",
 		Buckets: []float64{0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10},
 	}, []string{"service", "method"})
 
 	proxyRetriesTotal = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name: "shopee_gateway_proxy_retries_total",
+		Name: "tiki_gateway_proxy_retries_total",
 		Help: "Total proxy retries",
 	}, []string{"service"})
 
 	proxyCircuitBreakerState = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "shopee_gateway_circuit_breaker_state",
+		Name: "tiki_gateway_circuit_breaker_state",
 		Help: "Circuit breaker state (0=closed, 1=half-open, 2=open)",
 	}, []string{"service"})
 
 	proxyErrorsTotal = promauto.NewCounterVec(prometheus.CounterOpts{
-		Name: "shopee_gateway_proxy_errors_total",
+		Name: "tiki_gateway_proxy_errors_total",
 		Help: "Total proxy errors by type",
 	}, []string{"service", "error_type"})
 )
@@ -73,10 +73,10 @@ type ProxyTarget struct {
 }
 
 type ProxyOption struct {
-	ServiceName     string
-	CircuitBreaker  resilience.CircuitBreakerOptions
-	RetryConfig     resilience.RetryConfig
-	Timeout         time.Duration
+	ServiceName    string
+	CircuitBreaker resilience.CircuitBreakerOptions
+	RetryConfig    resilience.RetryConfig
+	Timeout        time.Duration
 }
 
 func NewProxy(
@@ -84,17 +84,24 @@ func NewProxy(
 	maxIdleConns int,
 	idleConnTimeout time.Duration,
 ) *Proxy {
+	transport := &http.Transport{
+		MaxIdleConns:          maxIdleConns,
+		MaxIdleConnsPerHost:   maxIdleConns,
+		IdleConnTimeout:       idleConnTimeout,
+		DisableCompression:    true,
+		MaxConnsPerHost:        maxIdleConns * 2,
+		DisableKeepAlives:     false,
+		ForceAttemptHTTP2:     false,
+		ExpectContinueTimeout: 0,
+		ResponseHeaderTimeout: 2 * time.Second,
+	}
+	transport.MaxResponseHeaderBytes = 1 << 20
 	return &Proxy{
 		discovery:       svcDiscovery,
 		circuitBreakers: make(map[string]*resilience.CircuitBreaker),
 		retryConfig:     make(map[string]resilience.RetryConfig),
 		timeouts:        make(map[string]time.Duration),
-		transport: &http.Transport{
-			MaxIdleConns:        maxIdleConns,
-			MaxIdleConnsPerHost: maxIdleConns / 4,
-			IdleConnTimeout:     idleConnTimeout,
-			DisableCompression:  false,
-		},
+		transport:       transport,
 	}
 }
 
@@ -108,7 +115,6 @@ func (p *Proxy) Configure(opts []ProxyOption) {
 			p.timeouts[opt.ServiceName] = opt.Timeout
 		}
 		p.cbMu.Unlock()
-
 		proxyCircuitBreakerState.WithLabelValues(opt.ServiceName).Set(float64(cb.State()))
 	}
 }
@@ -141,7 +147,6 @@ func (p *Proxy) getOrCreateProxy(serviceName string) *httputil.ReverseProxy {
 	if cached, ok := p.cachedProxies.Load(serviceName); ok {
 		return cached.(*httputil.ReverseProxy)
 	}
-
 	proxy := &httputil.ReverseProxy{
 		Transport: p.transport,
 		Director:  func(req *http.Request) {},
@@ -163,10 +168,8 @@ func (p *Proxy) getOrCreateProxy(serviceName string) *httputil.ReverseProxy {
 }
 
 func (p *Proxy) ReverseProxy(target *ProxyTarget) gin.HandlerFunc {
-	baseProxy := p.getOrCreateProxy(target.ServiceName)
-
 	return func(c *gin.Context) {
-		_, span := otel.Tracer("shopee-gateway").Start(c.Request.Context(),
+		_, span := otel.Tracer("tiki-gateway").Start(c.Request.Context(),
 			fmt.Sprintf("reverse_proxy.%s", target.ServiceName),
 			trace.WithSpanKind(trace.SpanKindClient),
 		)
@@ -193,22 +196,24 @@ func (p *Proxy) ReverseProxy(target *ProxyTarget) gin.HandlerFunc {
 			return
 		}
 
-		targetURL := fmt.Sprintf("http://%s:%d", instance.Address, instance.Port)
-		upstreamURL, err := url.Parse(targetURL)
-		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "invalid upstream url"})
-			return
+		targetURL, _ := url.Parse(fmt.Sprintf("http://%s:%d", instance.Address, instance.Port))
+		baseDirector := p.buildDirector(targetURL, target)
+
+		req := c.Request
+		ctx := c.Request.Context()
+		if timeout := p.getTimeout(target.ServiceName); timeout > 0 {
+			ctx, cancel := context.WithTimeout(ctx, timeout)
+			defer cancel()
+			req = req.WithContext(ctx)
 		}
 
-		proxy := new(httputil.ReverseProxy)
-		*proxy = *baseProxy
-		baseDirector := p.buildDirector(upstreamURL, target)
-		proxy.Director = func(req *http.Request) {
-			baseDirector(req)
-			p.injectGatewayHeaders(c, req)
+		proxy := p.getOrCreateProxy(target.ServiceName)
+		proxy.Director = func(r *http.Request) {
+			baseDirector(r)
+			p.injectGatewayHeaders(c, r)
 		}
 
-		timeout := p.getTimeout(target.ServiceName)
+		recorder := &responseRecorder{ResponseWriter: c.Writer, statusCode: http.StatusOK}
 
 		retryCfg := p.getRetryConfig(target.ServiceName)
 		cb := p.getCircuitBreaker(target.ServiceName)
@@ -218,14 +223,14 @@ func (p *Proxy) ReverseProxy(target *ProxyTarget) gin.HandlerFunc {
 
 		if cb != nil {
 			err = cb.Execute(func() error {
-				return p.doProxyRequest(c, proxy, target, timeout)
+				return p.doProxyRequest(c, recorder, req, proxy)
 			})
 		} else if retryCfg.MaxAttempts > 1 {
 			err = resilience.DoWithRetry(c.Request.Context(), retryCfg, target.ServiceName, func(ctx context.Context) error {
-				return p.doProxyRequest(c, proxy, target, timeout)
+				return p.doProxyRequest(c, recorder, req, proxy)
 			})
 		} else {
-			err = p.doProxyRequest(c, proxy, target, timeout)
+			err = p.doProxyRequest(c, recorder, req, proxy)
 		}
 
 		duration := time.Since(start)
@@ -267,35 +272,25 @@ func (p *Proxy) buildDirector(upstreamURL *url.URL, target *ProxyTarget) func(re
 		}
 
 		if _, ok := req.Header["User-Agent"]; !ok {
-			req.Header.Set("User-Agent", "")
+			req.Header.Set("User-Agent", "Tiki-Clone-Gateway")
 		}
 	}
 }
 
-func (p *Proxy) doProxyRequest(c *gin.Context, proxy *httputil.ReverseProxy, target *ProxyTarget, timeout time.Duration) error {
-	ctx := c.Request.Context()
-	if timeout > 0 {
-		var cancel context.CancelFunc
-		ctx, cancel = context.WithTimeout(ctx, timeout)
-		defer cancel()
-	}
-
-	req := c.Request.WithContext(ctx)
-
-	recorder := &responseRecorder{ResponseWriter: c.Writer, statusCode: http.StatusOK}
+func (p *Proxy) doProxyRequest(c *gin.Context, recorder *responseRecorder, req *http.Request, proxy *httputil.ReverseProxy) error {
 	proxy.ServeHTTP(recorder, req)
 
 	select {
-	case <-ctx.Done():
-		if ctx.Err() == context.DeadlineExceeded {
-			return fmt.Errorf("upstream %s timeout after %v", target.ServiceName, timeout)
+	case <-req.Context().Done():
+		if req.Context().Err() == context.DeadlineExceeded {
+			return fmt.Errorf("upstream timeout")
 		}
-		return ctx.Err()
+		return req.Context().Err()
 	default:
 	}
 
 	if recorder.statusCode >= 500 {
-		return fmt.Errorf("upstream %s returned %d", target.ServiceName, recorder.statusCode)
+		return fmt.Errorf("upstream returned %d", recorder.statusCode)
 	}
 
 	return nil
@@ -384,15 +379,15 @@ func copyRequestBody(r *http.Request) ([]byte, error) {
 }
 
 func errorType(err error) string {
-	errStr := err.Error()
+	errStr := strings.ToLower(err.Error())
 	switch {
 	case strings.Contains(errStr, "circuit breaker"):
 		return "CIRCUIT_BREAKER_OPEN"
 	case strings.Contains(errStr, "timeout"):
 		return "TIMEOUT"
-	case strings.Contains(errStr, "refused"):
+	case strings.Contains(errStr, "connection refused"):
 		return "CONNECTION_REFUSED"
-	case strings.Contains(errStr, "reset"):
+	case strings.Contains(errStr, "connection reset"):
 		return "CONNECTION_RESET"
 	case strings.Contains(errStr, "no such host"):
 		return "DNS_FAILURE"

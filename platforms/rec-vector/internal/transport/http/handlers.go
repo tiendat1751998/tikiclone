@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/similarity"
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/vectorstore"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/similarity"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/vectorstore"
 )
 
 type insertVectorRequest struct {

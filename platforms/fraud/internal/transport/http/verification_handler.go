@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/verification"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/verification"
 )
 
 type initiateVerificationRequest struct {

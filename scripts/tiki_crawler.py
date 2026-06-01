@@ -71,8 +71,8 @@ logger = logging.getLogger("tiki_crawler")
 class Database:
     """MySQL database helper using mysql-connector-python or pymysql."""
 
-    def __init__(self, host="mysql-primary", port=3306, user="shopee",
-                 password="shopee_dev", database="shopee_platform"):
+    def __init__(self, host="mysql-primary", port=3306, user="tiki",
+                 password="tiki_dev", database="tiki_platform"):
         self.host = host
         self.port = port
         self.user = user
@@ -506,9 +506,9 @@ def main():
     parser = argparse.ArgumentParser(description="Tiki.vn Product Crawler")
     parser.add_argument("--host", default="mysql-primary", help="MySQL host")
     parser.add_argument("--port", type=int, default=3306, help="MySQL port")
-    parser.add_argument("--user", default="shopee", help="MySQL user")
-    parser.add_argument("--password", default="shopee_dev", help="MySQL password")
-    parser.add_argument("--database", default="shopee_platform", help="MySQL database")
+    parser.add_argument("--user", default="tiki", help="MySQL user")
+    parser.add_argument("--password", default="tiki_dev", help="MySQL password")
+    parser.add_argument("--database", default="tiki_platform", help="MySQL database")
     parser.add_argument("--max-pages", type=int, default=5, help="Max pages per category")
     parser.add_argument("--delay-min", type=float, default=1.5, help="Min delay between requests")
     parser.add_argument("--delay-max", type=float, default=3.5, help="Max delay between requests")

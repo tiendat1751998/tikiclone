@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/events"
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/metrics"
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/recommender"
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/types"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/events"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/metrics"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/recommender"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/types"
 )
 
 type recommendRequest struct {

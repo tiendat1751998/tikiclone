@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/catalog-product/internal/domain"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/catalog-product/internal/domain"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.opentelemetry.io/otel"
@@ -150,4 +150,23 @@ func (r *CategoryRepository) buildTree(categories []domain.Category) []domain.Ca
 	}
 
 	return roots
+}
+
+// GetBySlug retrieves a category by slug directly - avoids loading all categories for slug lookup
+func (r *CategoryRepository) GetBySlug(ctx context.Context, slug string) (*domain.Category, error) {
+	ctx, span := otel.Tracer("catalog-product").Start(ctx, "repository.category.get_by_slug")
+	defer span.End()
+
+	span.SetAttributes(attribute.String("slug", slug))
+
+	var category domain.Category
+	err := r.collection.FindOne(ctx, bson.M{"slug": slug}).Decode(&category)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &category, nil
 }

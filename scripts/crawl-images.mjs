@@ -85,7 +85,7 @@ async function crawlProducts() {
     let products;
     try {
       const res = await fetch(`${API_BASE}/products?page=${page}&size=50`, {
-        headers: { "User-Agent": "shopeeclone-crawler/1.0" },
+        headers: { "User-Agent": "tikiclone-crawler/1.0" },
       });
       const data = await res.json();
       products = data.products || data.data?.products || [];
@@ -165,7 +165,7 @@ async function crawlCategories() {
   console.log("\n=== Crawling category images ===\n");
   try {
     const res = await fetch(`${API_BASE}/categories/tree`, {
-      headers: { "User-Agent": "shopeeclone-crawler/1.0" },
+      headers: { "User-Agent": "tikiclone-crawler/1.0" },
     });
     const data = await res.json();
     const categories = data.data || data || [];

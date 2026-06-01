@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/events"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/events"
 )
 
 type Service struct {

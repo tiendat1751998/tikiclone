@@ -7,8 +7,8 @@ const config: Config = {
     extend: {
       colors: {
         tiki: {
-          blue: "#1A94FF",
-          "blue-dark": "#0066D6",
+          blue: "#0A68FF",
+          "blue-dark": "#0052CC",
           red: "#FF424E",
           "red-dark": "#D6303C",
           green: "#00AB56",
@@ -16,7 +16,7 @@ const config: Config = {
           orange: "#FC820A",
           bg: "#F5F5FA",
           text: "#27272A",
-          "text-secondary": "#808089",
+          "text-secondary": "#787880",
           border: "#EBEBF0",
           "card-bg": "#FFFFFF",
         },

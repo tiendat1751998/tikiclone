@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/transcoding"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/transcoding"
 )
 
 func TestTranscodeCreateJob(t *testing.T) {

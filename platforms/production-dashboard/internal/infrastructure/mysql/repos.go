@@ -5,7 +5,7 @@ import (
 	"database/sql"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/platforms/production-dashboard/internal/domain"
+	"github.com/tikiclone/tiki/platforms/production-dashboard/internal/domain"
 )
 
 type ServiceHealthRepository struct {

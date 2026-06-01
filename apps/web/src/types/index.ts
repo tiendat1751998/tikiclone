@@ -93,6 +93,8 @@ export interface CartItem {
   stock: number;
   is_selected: boolean;
   sku_name?: string;
+  shop_id?: string;
+  shop_name?: string;
 }
 
 export interface Cart {
@@ -287,7 +289,7 @@ export interface SearchResult {
 export interface CartStore {
   items: CartItem[];
   isLoading: boolean;
-  addItem: (item: Omit<CartItem, "id">) => Promise<void>;
+  addItem: (item: Omit<CartItem, "id" | "is_selected"> & { is_selected?: boolean }) => Promise<void>;
   removeItem: (id: string) => Promise<void>;
   updateQuantity: (id: string, quantity: number) => Promise<void>;
   toggleSelect: (id: string) => void;

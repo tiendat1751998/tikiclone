@@ -1,6 +1,6 @@
 # Elasticsearch Product Search Index Configurations
 
-To allow lightning-fast search in Vietnamese (tone-marks extraction, autocorrection), the `shopee_products` index must use specialized analysis mappings.
+To allow lightning-fast search in Vietnamese (tone-marks extraction, autocorrection), the `tiki_products` index must use specialized analysis mappings.
 
 ## Elasticsearch Settings & Analysis Mapping (`index_settings.json`)
 ```json

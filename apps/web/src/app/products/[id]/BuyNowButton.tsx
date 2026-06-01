@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/stores/cart";
 import { useUIStore } from "@/stores/ui";
 
-export function BuyNowButton({ product }: { product: { id: string; name: string; image_url: string; price: number; stock?: number } }) {
+export function BuyNowButton({ product }: { product: { id: string; name: string; image_url: string; price: number; stock?: number; shop_id?: string; shop_name?: string } }) {
   const [isBuying, setIsBuying] = useState(false);
   const addItem = useCartStore((s) => s.addItem);
   const clearCart = useCartStore((s) => s.clearCart);
@@ -15,18 +15,18 @@ export function BuyNowButton({ product }: { product: { id: string; name: string;
   const handleBuyNow = async () => {
     setIsBuying(true);
     try {
-      // Clear cart first, then add this item as the only item
       clearCart();
       await addItem({
         product_id: product.id,
-        sku_id: "default",
+        sku_id: product.id,
         name: product.name,
         image_url: product.image_url,
         price: product.price,
         quantity: 1,
         stock: product.stock || 0,
         is_selected: true,
-        sku_name: "default",
+        shop_id: product.shop_id,
+        shop_name: product.shop_name,
       });
       addToast({ type: "success", title: "Đã thêm vào giỏ hàng", message: product.name });
       router.push("/cart");

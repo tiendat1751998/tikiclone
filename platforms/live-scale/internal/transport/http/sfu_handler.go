@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/sfu"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/sfu"
 )
 
 func (h *Handler) RegisterSFUNode(c *gin.Context) {

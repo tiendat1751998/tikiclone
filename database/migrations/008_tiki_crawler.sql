@@ -1,9 +1,9 @@
 -- ============================================================
 -- TIKI PRODUCTS CRAWLER DATABASE SCHEMA
--- Database: shopee_platform (MySQL 8.0)
+-- Database: tiki_platform (MySQL 8.0)
 -- ============================================================
 
-USE shopee_platform;
+USE tiki_platform;
 
 -- ============================================================
 -- Tiki Categories (crawled from tiki.vn)

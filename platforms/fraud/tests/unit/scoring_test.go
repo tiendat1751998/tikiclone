@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/core"
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/rules"
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/scoring"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/core"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/rules"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/scoring"
 )
 
 func TestCalculateScoreNoRules(t *testing.T) {

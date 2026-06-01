@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/budget"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/budget"
 )
 
 func TestCheckBudgetWithinLimits(t *testing.T) {

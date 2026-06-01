@@ -1,13 +1,13 @@
 package http
 
 import (
-	analyticsSvc "github.com/shopee-clone/shopee/platforms/analytics/internal/analytics"
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/cohort"
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/dashboard"
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/events"
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/funnel"
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/report_scheduler"
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/session"
+	analyticsSvc "github.com/tikiclone/tiki/platforms/analytics/internal/analytics"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/cohort"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/dashboard"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/events"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/funnel"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/report_scheduler"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/session"
 )
 
 type Handler struct {

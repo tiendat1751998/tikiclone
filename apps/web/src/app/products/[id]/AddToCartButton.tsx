@@ -5,7 +5,7 @@ import { useUIStore } from "@/stores/ui";
 import { useAuthStore } from "@/stores/auth";
 import Link from "next/link";
 
-export function AddToCartButton({ product }: { product: { id: string; name: string; image_url: string; price: number; stock?: number } }) {
+export function AddToCartButton({ product, quantity: qty = 1 }: { product: { id: string; name: string; image_url: string; price: number; stock?: number; shop_id?: string; shop_name?: string }; quantity?: number }) {
   const [isAdding, setIsAdding] = useState(false);
   const addItem = useCartStore((s) => s.addItem);
   const addToast = useUIStore((s) => s.addToast);
@@ -17,9 +17,9 @@ export function AddToCartButton({ product }: { product: { id: string; name: stri
     setIsAdding(true);
     try {
       await addItem({
-        product_id: product.id, sku_id: "default", name: product.name,
-        image_url: product.image_url, price: product.price, quantity: 1,
-        stock: product.stock || 0, is_selected: true, sku_name: "default",
+        product_id: product.id, sku_id: product.id, name: product.name,
+        image_url: product.image_url, price: product.price, quantity: qty,
+        stock: product.stock || 0, shop_id: product.shop_id, shop_name: product.shop_name,
       });
       addToast({ type: "success", title: "Đã thêm vào giỏ hàng", message: product.name });
     } catch {

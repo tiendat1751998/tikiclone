@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/global-infra/internal/multiregion"
+	"github.com/tikiclone/tiki/platforms/global-infra/internal/multiregion"
 )
 
 func TestMultiRegionCreate(t *testing.T) {

@@ -1,4 +1,4 @@
-module github.com/shopee-clone/shopee/services/product
+module github.com/tikiclone/tiki/services/product
 
 go 1.26.3
 
@@ -9,7 +9,7 @@ require (
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/segmentio/kafka-go v0.4.47
-	github.com/shopee-clone/shopee/packages/go-shared v0.0.0-00010101000000-000000000000
+	github.com/tikiclone/tiki/packages/go-shared v0.0.0-00010101000000-000000000000
 	go.opentelemetry.io/otel v1.32.0
 	go.opentelemetry.io/otel/trace v1.32.0
 	go.uber.org/automaxprocs v1.6.0
@@ -75,4 +75,4 @@ require (
 )
 
 // Replace with local shared package when available
-replace github.com/shopee-clone/shopee/packages/go-shared => ../../packages/go-shared
+replace github.com/tikiclone/tiki/packages/go-shared => ../../packages/go-shared

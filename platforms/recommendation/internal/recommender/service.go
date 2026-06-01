@@ -4,12 +4,12 @@ import (
 	"context"
 	"sort"
 
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/collaborative"
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/content"
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/personalization"
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/reranker"
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/trending"
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/types"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/collaborative"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/content"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/personalization"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/reranker"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/trending"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/types"
 )
 
 type Service interface {

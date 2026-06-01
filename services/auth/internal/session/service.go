@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/auth/internal/config"
-	"github.com/shopee-clone/shopee/services/auth/internal/domain"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/auth/internal/config"
+	"github.com/tikiclone/tiki/services/auth/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.uber.org/zap"
 )
@@ -129,7 +129,7 @@ func (s *Service) Touch(ctx context.Context, session *domain.Session) error {
 }
 
 func (s *Service) HandleTokenReuse(ctx context.Context, userID, ip string) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "session.handle_reuse")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "session.handle_reuse")
 	defer span.End()
 
 	sessions, err := s.repo.FindActiveByUserID(ctx, userID)

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/shopee-clone/shopee/services/order/internal/domain"
+	"github.com/tikiclone/tiki/services/order/internal/domain"
 )
 
 func TestStateMachine_ValidTransitions(t *testing.T) {

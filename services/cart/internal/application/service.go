@@ -8,10 +8,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/shopee-clone/shopee/services/cart/internal/domain"
-	"github.com/shopee-clone/shopee/services/cart/internal/infrastructure/redis"
-	"github.com/shopee-clone/shopee/services/cart/internal/metrics"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/cart/internal/domain"
+	"github.com/tikiclone/tiki/services/cart/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/services/cart/internal/metrics"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.uber.org/zap"
@@ -60,7 +60,7 @@ func NewCartService(
 
 // GetOrCreateCart gets existing cart or creates a new one
 func (s *CartService) GetOrCreateCart(ctx context.Context, userID, sessionID, currency string) (*domain.Cart, error) {
-	ctx, span := otel.Tracer("shopee-cart").Start(ctx, "cart.get_or_create")
+	ctx, span := otel.Tracer("tiki-cart").Start(ctx, "cart.get_or_create")
 	defer span.End()
 
 	// Try to find existing active cart
@@ -118,7 +118,7 @@ func (s *CartService) GetOrCreateCart(ctx context.Context, userID, sessionID, cu
 
 // AddItem adds an item to the cart
 func (s *CartService) AddItem(ctx context.Context, cartID string, req AddItemRequest) (*domain.CartItem, error) {
-	ctx, span := otel.Tracer("shopee-cart").Start(ctx, "cart.add_item")
+	ctx, span := otel.Tracer("tiki-cart").Start(ctx, "cart.add_item")
 	defer span.End()
 
 	span.SetAttributes(
@@ -211,7 +211,7 @@ func (s *CartService) AddItem(ctx context.Context, cartID string, req AddItemReq
 
 // UpdateItemQuantity updates the quantity of a cart item
 func (s *CartService) UpdateItemQuantity(ctx context.Context, cartID, itemID string, quantity int) error {
-	ctx, span := otel.Tracer("shopee-cart").Start(ctx, "cart.update_item")
+	ctx, span := otel.Tracer("tiki-cart").Start(ctx, "cart.update_item")
 	defer span.End()
 
 	item, err := s.itemRepo.FindByID(ctx, itemID)
@@ -256,7 +256,7 @@ func (s *CartService) UpdateItemQuantity(ctx context.Context, cartID, itemID str
 
 // RemoveItem removes an item from the cart
 func (s *CartService) RemoveItem(ctx context.Context, cartID, itemID string) error {
-	ctx, span := otel.Tracer("shopee-cart").Start(ctx, "cart.remove_item")
+	ctx, span := otel.Tracer("tiki-cart").Start(ctx, "cart.remove_item")
 	defer span.End()
 
 	item, err := s.itemRepo.FindByID(ctx, itemID)
@@ -290,7 +290,7 @@ func (s *CartService) RemoveItem(ctx context.Context, cartID, itemID string) err
 
 // ClearCart removes all items from the cart
 func (s *CartService) ClearCart(ctx context.Context, cartID string) error {
-	ctx, span := otel.Tracer("shopee-cart").Start(ctx, "cart.clear")
+	ctx, span := otel.Tracer("tiki-cart").Start(ctx, "cart.clear")
 	defer span.End()
 
 	if err := s.itemRepo.DeleteByCartID(ctx, cartID); err != nil {
@@ -323,7 +323,7 @@ func (s *CartService) ClearCart(ctx context.Context, cartID string) error {
 
 // MergeCarts merges a source cart into a target cart (e.g., guest -> user)
 func (s *CartService) MergeCarts(ctx context.Context, sourceCartID, targetCartID, userID string) error {
-	ctx, span := otel.Tracer("shopee-cart").Start(ctx, "cart.merge")
+	ctx, span := otel.Tracer("tiki-cart").Start(ctx, "cart.merge")
 	defer span.End()
 
 	sourceItems, err := s.itemRepo.FindByCartID(ctx, sourceCartID)
@@ -421,7 +421,7 @@ func (s *CartService) MergeCarts(ctx context.Context, sourceCartID, targetCartID
 
 // PrepareCheckout creates a checkout preview with seller grouping
 func (s *CartService) PrepareCheckout(ctx context.Context, cartID, userID, idempotencyKey string) (*domain.CheckoutPreview, error) {
-	ctx, span := otel.Tracer("shopee-cart").Start(ctx, "cart.prepare_checkout")
+	ctx, span := otel.Tracer("tiki-cart").Start(ctx, "cart.prepare_checkout")
 	defer span.End()
 
 	// Check idempotency

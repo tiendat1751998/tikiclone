@@ -79,7 +79,7 @@ func envFloat64(key string, fallback float64) float64 {
 
 func Load() *Config {
 	return &Config{
-		AppName:  env("APP_NAME", "shopee-billing"),
+		AppName:  env("APP_NAME", "tiki-billing"),
 		AppEnv:   env("APP_ENV", "development"),
 		LogLevel: env("LOG_LEVEL", "info"),
 		HTTPPort: envInt("HTTP_PORT", 8080),
@@ -91,14 +91,14 @@ func Load() *Config {
 			PoolSize: envInt("REDIS_POOL_SIZE", 100),
 		},
 		Postgres: PostgresConfig{
-			DSN: env("DATABASE_DSN", "postgres://shopee:shopee_dev@localhost:5432/shopee_billing?sslmode=disable"),
+			DSN: env("DATABASE_DSN", "postgres://tiki:tiki_dev@localhost:5432/tiki_billing?sslmode=disable"),
 		},
 		Kafka: KafkaConfig{
 			Brokers: strings.Split(env("KAFKA_BROKERS", "localhost:9092"), ","),
 		},
 		OpenTelemetry: OTELConfig{
 			Endpoint:    env("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318"),
-			ServiceName: env("OTEL_SERVICE_NAME", "shopee-billing"),
+			ServiceName: env("OTEL_SERVICE_NAME", "tiki-billing"),
 			TraceRatio:  0.1,
 		},
 		Settlement: SettlementConfig{

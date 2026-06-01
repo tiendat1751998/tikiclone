@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/platforms/production-dashboard/internal/domain"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/platforms/production-dashboard/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.uber.org/zap"
@@ -92,7 +92,7 @@ func (s *DashboardService) publishEvent(ctx context.Context, evt *domain.Dashboa
 // === Dashboard Summary ===
 
 func (s *DashboardService) GetSummary(ctx context.Context) (*domain.DashboardSummary, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.get_summary")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.get_summary")
 	defer span.End()
 
 	if s.cache != nil {
@@ -181,7 +181,7 @@ type RegisterServiceRequest struct {
 }
 
 func (s *DashboardService) RegisterService(ctx context.Context, req RegisterServiceRequest, actor string) (*domain.ServiceHealth, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.register_service")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.register_service")
 	defer span.End()
 
 	existing, err := s.healthRepo.FindByServiceName(ctx, req.ServiceName)
@@ -215,7 +215,7 @@ type UpdateServiceHealthRequest struct {
 }
 
 func (s *DashboardService) UpdateServiceHealth(ctx context.Context, serviceID string, req UpdateServiceHealthRequest) (*domain.ServiceHealth, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.update_service_health")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.update_service_health")
 	defer span.End()
 
 	health, err := s.healthRepo.FindByID(ctx, serviceID)
@@ -262,7 +262,7 @@ func (s *DashboardService) UpdateServiceHealth(ctx context.Context, serviceID st
 }
 
 func (s *DashboardService) GetServiceHealth(ctx context.Context, serviceID string) (*domain.ServiceHealth, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.get_service_health")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.get_service_health")
 	defer span.End()
 
 	health, err := s.healthRepo.FindByID(ctx, serviceID)
@@ -276,7 +276,7 @@ func (s *DashboardService) GetServiceHealth(ctx context.Context, serviceID strin
 }
 
 func (s *DashboardService) ListServices(ctx context.Context) ([]*domain.ServiceHealth, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.list_services")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.list_services")
 	defer span.End()
 
 	return s.healthRepo.FindAll(ctx)
@@ -295,7 +295,7 @@ type CreateDeploymentRequest struct {
 }
 
 func (s *DashboardService) CreateDeployment(ctx context.Context, req CreateDeploymentRequest, actor string) (*domain.Deployment, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.create_deployment")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.create_deployment")
 	defer span.End()
 
 	strategy := req.Strategy
@@ -335,7 +335,7 @@ type UpdateDeploymentRequest struct {
 }
 
 func (s *DashboardService) UpdateDeployment(ctx context.Context, deploymentID string, req UpdateDeploymentRequest, actor string) (*domain.Deployment, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.update_deployment")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.update_deployment")
 	defer span.End()
 
 	deployment, err := s.deployRepo.FindByID(ctx, deploymentID)
@@ -387,7 +387,7 @@ func (s *DashboardService) UpdateDeployment(ctx context.Context, deploymentID st
 }
 
 func (s *DashboardService) GetDeployment(ctx context.Context, deploymentID string) (*domain.Deployment, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.get_deployment")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.get_deployment")
 	defer span.End()
 
 	deployment, err := s.deployRepo.FindByID(ctx, deploymentID)
@@ -401,7 +401,7 @@ func (s *DashboardService) GetDeployment(ctx context.Context, deploymentID strin
 }
 
 func (s *DashboardService) ListDeployments(ctx context.Context, serviceName string, limit int) ([]*domain.Deployment, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.list_deployments")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.list_deployments")
 	defer span.End()
 
 	if serviceName != "" {
@@ -411,7 +411,7 @@ func (s *DashboardService) ListDeployments(ctx context.Context, serviceName stri
 }
 
 func (s *DashboardService) ListActiveDeployments(ctx context.Context) ([]*domain.Deployment, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.list_active_deployments")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.list_active_deployments")
 	defer span.End()
 
 	return s.deployRepo.FindActive(ctx)
@@ -427,7 +427,7 @@ type CreateIncidentRequest struct {
 }
 
 func (s *DashboardService) CreateIncident(ctx context.Context, req CreateIncidentRequest, actor string) (*domain.Incident, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.create_incident")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.create_incident")
 	defer span.End()
 
 	span.SetAttributes(
@@ -464,7 +464,7 @@ type AcknowledgeIncidentRequest struct {
 }
 
 func (s *DashboardService) AcknowledgeIncident(ctx context.Context, incidentID string, req AcknowledgeIncidentRequest, actor string) (*domain.Incident, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.acknowledge_incident")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.acknowledge_incident")
 	defer span.End()
 
 	incident, err := s.incidentRepo.FindByID(ctx, incidentID)
@@ -502,7 +502,7 @@ type ResolveIncidentRequest struct {
 }
 
 func (s *DashboardService) ResolveIncident(ctx context.Context, incidentID string, req ResolveIncidentRequest, actor string) (*domain.Incident, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.resolve_incident")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.resolve_incident")
 	defer span.End()
 
 	incident, err := s.incidentRepo.FindByID(ctx, incidentID)
@@ -540,7 +540,7 @@ func (s *DashboardService) ResolveIncident(ctx context.Context, incidentID strin
 }
 
 func (s *DashboardService) CloseIncident(ctx context.Context, incidentID string, actor string) (*domain.Incident, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.close_incident")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.close_incident")
 	defer span.End()
 
 	incident, err := s.incidentRepo.FindByID(ctx, incidentID)
@@ -565,7 +565,7 @@ func (s *DashboardService) CloseIncident(ctx context.Context, incidentID string,
 }
 
 func (s *DashboardService) GetIncident(ctx context.Context, incidentID string) (*domain.Incident, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.get_incident")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.get_incident")
 	defer span.End()
 
 	incident, err := s.incidentRepo.FindByID(ctx, incidentID)
@@ -579,14 +579,14 @@ func (s *DashboardService) GetIncident(ctx context.Context, incidentID string) (
 }
 
 func (s *DashboardService) ListActiveIncidents(ctx context.Context) ([]*domain.Incident, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.list_active_incidents")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.list_active_incidents")
 	defer span.End()
 
 	return s.incidentRepo.FindActive(ctx)
 }
 
 func (s *DashboardService) ListRecentIncidents(ctx context.Context, limit int) ([]*domain.Incident, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.list_recent_incidents")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.list_recent_incidents")
 	defer span.End()
 
 	return s.incidentRepo.FindRecent(ctx, limit)
@@ -607,7 +607,7 @@ type CreateAlertRuleRequest struct {
 }
 
 func (s *DashboardService) CreateAlertRule(ctx context.Context, req CreateAlertRuleRequest, actor string) (*domain.AlertRule, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.create_alert_rule")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.create_alert_rule")
 	defer span.End()
 
 	count, err := s.alertRepo.Count(ctx)
@@ -647,7 +647,7 @@ type UpdateAlertRuleRequest struct {
 }
 
 func (s *DashboardService) UpdateAlertRule(ctx context.Context, ruleID string, req UpdateAlertRuleRequest, actor string) (*domain.AlertRule, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.update_alert_rule")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.update_alert_rule")
 	defer span.End()
 
 	rule, err := s.alertRepo.FindByID(ctx, ruleID)
@@ -697,7 +697,7 @@ func (s *DashboardService) UpdateAlertRule(ctx context.Context, ruleID string, r
 }
 
 func (s *DashboardService) DeleteAlertRule(ctx context.Context, ruleID string, actor string) error {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.delete_alert_rule")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.delete_alert_rule")
 	defer span.End()
 
 	rule, err := s.alertRepo.FindByID(ctx, ruleID)
@@ -718,7 +718,7 @@ func (s *DashboardService) DeleteAlertRule(ctx context.Context, ruleID string, a
 }
 
 func (s *DashboardService) GetAlertRule(ctx context.Context, ruleID string) (*domain.AlertRule, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.get_alert_rule")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.get_alert_rule")
 	defer span.End()
 
 	rule, err := s.alertRepo.FindByID(ctx, ruleID)
@@ -732,7 +732,7 @@ func (s *DashboardService) GetAlertRule(ctx context.Context, ruleID string) (*do
 }
 
 func (s *DashboardService) ListAlertRules(ctx context.Context) ([]*domain.AlertRule, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.list_alert_rules")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.list_alert_rules")
 	defer span.End()
 
 	return s.alertRepo.FindAll(ctx)
@@ -741,14 +741,14 @@ func (s *DashboardService) ListAlertRules(ctx context.Context) ([]*domain.AlertR
 // === Audit Log Operations ===
 
 func (s *DashboardService) ListAuditLogs(ctx context.Context, limit int) ([]*domain.AuditLog, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.list_audit_logs")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.list_audit_logs")
 	defer span.End()
 
 	return s.auditRepo.FindRecent(ctx, limit)
 }
 
 func (s *DashboardService) ListAuditLogsByActor(ctx context.Context, actor string, limit int) ([]*domain.AuditLog, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.list_audit_logs_by_actor")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.list_audit_logs_by_actor")
 	defer span.End()
 
 	return s.auditRepo.FindByActor(ctx, actor, limit)
@@ -764,7 +764,7 @@ type AddDependencyRequest struct {
 }
 
 func (s *DashboardService) AddServiceDependency(ctx context.Context, req AddDependencyRequest, actor string) (*domain.ServiceDependency, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.add_dependency")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.add_dependency")
 	defer span.End()
 
 	depType := req.DependencyType
@@ -784,14 +784,14 @@ func (s *DashboardService) AddServiceDependency(ctx context.Context, req AddDepe
 }
 
 func (s *DashboardService) GetServiceDependencies(ctx context.Context, serviceName string) ([]*domain.ServiceDependency, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.get_dependencies")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.get_dependencies")
 	defer span.End()
 
 	return s.depRepo.FindByService(ctx, serviceName)
 }
 
 func (s *DashboardService) GetAllDependencies(ctx context.Context) ([]*domain.ServiceDependency, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.get_all_dependencies")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.get_all_dependencies")
 	defer span.End()
 
 	return s.depRepo.FindAll(ctx)
@@ -808,7 +808,7 @@ type RecordCapacityRequest struct {
 }
 
 func (s *DashboardService) RecordCapacityMetric(ctx context.Context, req RecordCapacityRequest) (*domain.CapacityMetric, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.record_capacity")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.record_capacity")
 	defer span.End()
 
 	metric := domain.NewCapacityMetric(req.ServiceName, req.ResourceType, req.CurrentValue, req.MaxValue, req.Unit)
@@ -819,14 +819,14 @@ func (s *DashboardService) RecordCapacityMetric(ctx context.Context, req RecordC
 }
 
 func (s *DashboardService) GetCapacityMetrics(ctx context.Context, serviceName string) ([]*domain.CapacityMetric, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.get_capacity")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.get_capacity")
 	defer span.End()
 
 	return s.capacityRepo.FindByService(ctx, serviceName)
 }
 
 func (s *DashboardService) GetLatestCapacity(ctx context.Context) ([]*domain.CapacityMetric, error) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(ctx, "dashboard.get_latest_capacity")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(ctx, "dashboard.get_latest_capacity")
 	defer span.End()
 
 	return s.capacityRepo.FindLatest(ctx)

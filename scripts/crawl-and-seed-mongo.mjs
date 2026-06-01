@@ -161,7 +161,7 @@ async function main() {
     // Step 3: Build MongoDB insert script
     const now = new Date().toISOString();
     let mongoScript = `
-use shopee_catalog;
+use tiki_catalog;
 
 // Clear existing data
 db.products.deleteMany({});
@@ -247,8 +247,8 @@ db.categories.deleteMany({});
     // Step 4: Execute against MongoDB
     console.log('Executing MongoDB seed...\n');
     try {
-      const result = execSync('docker compose exec mongodb mongosh shopee_catalog /tmp/seed-mongo.js', {
-        cwd: process.env.HOME || '/home/datdt/shopeeclone',
+      const result = execSync('docker compose exec mongodb mongosh tiki_catalog /tmp/seed-mongo.js', {
+        cwd: process.env.HOME || '/home/datdt/tikiclone',
         encoding: 'utf8',
         timeout: 120000,
       });
@@ -256,7 +256,7 @@ db.categories.deleteMany({});
     } catch (err) {
       console.error('Failed to execute MongoDB seed:', err.message);
       console.log('Script saved at /tmp/seed-mongo.js - run manually with:');
-      console.log('  docker compose exec -T mongodb mongosh shopee_catalog < /tmp/seed-mongo.js');
+      console.log('  docker compose exec -T mongodb mongosh tiki_catalog < /tmp/seed-mongo.js');
     }
 
     console.log(`\nDone! Crawled ${detailed.length} products.`);

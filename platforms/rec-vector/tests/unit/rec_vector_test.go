@@ -5,12 +5,12 @@ import (
 	"math"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/collabvector"
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/itemembedding"
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/realtime"
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/similarity"
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/userembedding"
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/vectorstore"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/collabvector"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/itemembedding"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/realtime"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/similarity"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/userembedding"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/vectorstore"
 )
 
 func TestVectorStoreInsertAndGet(t *testing.T) {

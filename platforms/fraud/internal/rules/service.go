@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/core"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/core"
 )
 
 type Service struct {

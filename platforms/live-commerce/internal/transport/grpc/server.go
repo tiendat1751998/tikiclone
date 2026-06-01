@@ -6,7 +6,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/application"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/application"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health/grpc_health_v1"

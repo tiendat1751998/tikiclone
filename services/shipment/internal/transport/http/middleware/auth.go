@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/shopee-clone/shopee/services/shipment/internal/config"
+	"github.com/tikiclone/tiki/services/shipment/internal/config"
 )
 
 func JWTAuth(cfg config.JWTConfig) gin.HandlerFunc {

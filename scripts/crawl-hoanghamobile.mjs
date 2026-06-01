@@ -5,9 +5,9 @@ import { v4 as uuidv4 } from 'uuid';
 const DB_CONFIG = {
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '3306'),
-  user: process.env.DB_USER || 'shopee',
-  password: process.env.DB_PASSWORD || 'shopee_dev',
-  database: process.env.DB_NAME || 'shopee_platform',
+  user: process.env.DB_USER || 'tiki',
+  password: process.env.DB_PASSWORD || 'tiki_dev',
+  database: process.env.DB_NAME || 'tiki_platform',
 };
 
 const BASE_URL = 'https://hoanghamobile.com';

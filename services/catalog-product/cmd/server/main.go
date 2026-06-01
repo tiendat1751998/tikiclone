@@ -11,16 +11,16 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	sharedConfig "github.com/shopee-clone/shopee/packages/go-shared/pkg/config"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/health"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/kafka"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/middleware"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	sharedRedis "github.com/shopee-clone/shopee/packages/go-shared/pkg/redis"
-	catalogGrpc "github.com/shopee-clone/shopee/services/catalog-product/internal/delivery/grpc"
-	catalogHttp "github.com/shopee-clone/shopee/services/catalog-product/internal/delivery/http"
-	"github.com/shopee-clone/shopee/services/catalog-product/internal/repository"
-	"github.com/shopee-clone/shopee/services/catalog-product/internal/usecase"
+	sharedConfig "github.com/tikiclone/tiki/packages/go-shared/pkg/config"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/health"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/kafka"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/middleware"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	sharedRedis "github.com/tikiclone/tiki/packages/go-shared/pkg/redis"
+	catalogGrpc "github.com/tikiclone/tiki/services/catalog-product/internal/delivery/grpc"
+	catalogHttp "github.com/tikiclone/tiki/services/catalog-product/internal/delivery/http"
+	"github.com/tikiclone/tiki/services/catalog-product/internal/repository"
+	"github.com/tikiclone/tiki/services/catalog-product/internal/usecase"
 	"go.uber.org/zap"
 	automaxprocs "go.uber.org/automaxprocs/maxprocs"
 	"google.golang.org/grpc"
@@ -76,8 +76,9 @@ func main() {
 	productRepo := repository.NewProductRepository(mongoClient, cfg.MongoDB.Database)
 	categoryRepo := repository.NewCategoryRepository(mongoClient, cfg.MongoDB.Database)
 	productCache := repository.NewProductCache(redisClient)
+	categoryCache := repository.NewCategoryCache(redisClient)
 	productUseCase := usecase.NewProductUseCase(productRepo, productCache, kafkaProducer)
-	categoryUseCase := usecase.NewCategoryUseCase(categoryRepo, kafkaProducer)
+	categoryUseCase := usecase.NewCategoryUseCase(categoryRepo, categoryCache, kafkaProducer)
 
 	healthChecker := health.NewChecker("catalog-product", version)
 	healthChecker.AddCheck("mongodb", func(ctx context.Context) error {
@@ -113,6 +114,7 @@ func main() {
 			products.GET("/search", httpHandler.SearchProducts)
 			products.GET("/featured", httpHandler.GetFeaturedProducts)
 			products.GET("/deals", httpHandler.GetDealsProducts)
+			products.GET("/flash-sale", httpHandler.GetFlashSale)
 			products.GET("/:spu_id", httpHandler.GetProduct)
 			products.POST("", httpHandler.CreateProduct)
 			products.PUT("/:spu_id", httpHandler.UpdateProduct)
@@ -126,11 +128,13 @@ func main() {
 	}
 
 	httpServer := &http.Server{
-		Addr:         fmt.Sprintf(":%d", cfg.Port),
-		Handler:      router,
-		ReadTimeout:       5 * time.Second,
-		WriteTimeout:      10 * time.Second,
-		IdleTimeout:       120 * time.Second,
+		Addr:              fmt.Sprintf(":%d", cfg.Port),
+		Handler:           router,
+		ReadTimeout:       2 * time.Second,
+		WriteTimeout:      5 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		ReadHeaderTimeout: 1 * time.Second,
+		MaxHeaderBytes:    1 << 20,
 	}
 
 	grpcServer := grpc.NewServer(

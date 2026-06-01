@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/services/order/internal/domain"
+	"github.com/tikiclone/tiki/services/order/internal/domain"
 )
 
 type OutboxRepository struct {

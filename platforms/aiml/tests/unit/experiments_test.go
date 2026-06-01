@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/experiments"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/experiments"
 )
 
 func TestCreateExperiment(t *testing.T) {

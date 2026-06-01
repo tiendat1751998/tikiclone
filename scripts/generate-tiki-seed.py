@@ -29,9 +29,9 @@ from datetime import datetime
 DB_CONFIG = {
     'host': 'localhost',
     'port': 3306,
-    'user': 'shopee',
-    'password': 'shopee_dev',
-    'database': 'shopee_platform'
+    'user': 'tiki',
+    'password': 'tiki_dev',
+    'database': 'tiki_platform'
 }
 
 def generate_id(prefix='prod'):
@@ -220,7 +220,7 @@ def generate_sql():
     sql_lines.append('-- Source: tiki.vn (Vietnam e-commerce platform)')
     sql_lines.append('-- ============================================================')
     sql_lines.append('')
-    sql_lines.append('USE shopee_platform;')
+    sql_lines.append('USE tiki_platform;')
     sql_lines.append('')
     
     # Insert categories

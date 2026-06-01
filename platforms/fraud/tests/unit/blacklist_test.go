@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/blacklist"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/blacklist"
 )
 
 func TestAddBlacklistEntry(t *testing.T) {

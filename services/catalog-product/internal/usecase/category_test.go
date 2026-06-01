@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/services/catalog-product/internal/domain"
+	"github.com/tikiclone/tiki/services/catalog-product/internal/domain"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -36,9 +36,40 @@ func (m *mockCategoryRepo) Update(ctx context.Context, category *domain.Category
 	return args.Error(0)
 }
 
+func (m *mockCategoryRepo) GetBySlug(ctx context.Context, slug string) (*domain.Category, error) {
+	args := m.Called(ctx, slug)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*domain.Category), args.Error(1)
+}
+
+type mockCategoryCache struct {
+	mock.Mock
+}
+
+func (m *mockCategoryCache) GetAll(ctx context.Context) ([]domain.Category, error) {
+	args := m.Called(ctx)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]domain.Category), args.Error(1)
+}
+
+func (m *mockCategoryCache) SetAll(ctx context.Context, categories []domain.Category) error {
+	args := m.Called(ctx, categories)
+	return args.Error(0)
+}
+
+func (m *mockCategoryCache) DeleteAll(ctx context.Context) error {
+	args := m.Called(ctx)
+	return args.Error(0)
+}
+
 func TestCategoryUseCase_Create(t *testing.T) {
 	repo := new(mockCategoryRepo)
-	uc := NewCategoryUseCase(repo, nil)
+	cache := new(mockCategoryCache)
+	uc := NewCategoryUseCase(repo, cache, nil)
 
 	t.Run("success", func(t *testing.T) {
 		category := &domain.Category{
@@ -65,7 +96,8 @@ func TestCategoryUseCase_Create(t *testing.T) {
 
 func TestCategoryUseCase_GetByID(t *testing.T) {
 	repo := new(mockCategoryRepo)
-	uc := NewCategoryUseCase(repo, nil)
+	cache := new(mockCategoryCache)
+	uc := NewCategoryUseCase(repo, cache, nil)
 
 	t.Run("found", func(t *testing.T) {
 		expected := &domain.Category{CategoryID: "cat-1", Name: "Electronics"}
@@ -87,7 +119,8 @@ func TestCategoryUseCase_GetByID(t *testing.T) {
 
 func TestCategoryUseCase_List(t *testing.T) {
 	repo := new(mockCategoryRepo)
-	uc := NewCategoryUseCase(repo, nil)
+	cache := new(mockCategoryCache)
+	uc := NewCategoryUseCase(repo, cache, nil)
 
 	t.Run("list root categories", func(t *testing.T) {
 		categories := []domain.Category{

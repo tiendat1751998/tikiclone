@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/report_scheduler"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/report_scheduler"
 )
 
 func TestScheduleReport(t *testing.T) {
@@ -16,7 +16,7 @@ func TestScheduleReport(t *testing.T) {
 	r, err := svc.ScheduleReport(context.Background(), "Weekly Report", "Weekly analytics report",
 		map[string]interface{}{"metrics": []string{"revenue", "orders"}},
 		report_scheduler.FreqWeekly, report_scheduler.ChannelEmail,
-		[]string{"admin@shopee.com"}, "", "csv", "UTC", "user-1", "org-1")
+		[]string{"admin@tiki.com"}, "", "csv", "UTC", "user-1", "org-1")
 
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

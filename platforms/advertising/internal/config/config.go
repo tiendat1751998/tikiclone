@@ -46,7 +46,7 @@ type PostgresConfig struct {
 
 func Load() *Config {
 	return &Config{
-		AppName:  getEnv("APP_NAME", "shopee-advertising"),
+		AppName:  getEnv("APP_NAME", "tiki-advertising"),
 		AppEnv:   getEnv("APP_ENV", "development"),
 		LogLevel: getEnv("LOG_LEVEL", "info"),
 		HTTPPort: getEnvInt("ADV_HTTP_PORT", 8080),
@@ -67,11 +67,11 @@ func Load() *Config {
 		},
 		OpenTelemetry: OTELConfig{
 			Endpoint:    getEnv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318"),
-			ServiceName: "shopee-advertising",
+			ServiceName: "tiki-advertising",
 			TraceRatio:  getEnvFloat("OTEL_TRACES_SAMPLER_ARG", 0.1),
 		},
 		Postgres: PostgresConfig{
-			DSN: getEnv("POSTGRES_DSN", "postgres://postgres:postgres@localhost:5432/shopee_advertising?sslmode=disable"),
+			DSN: getEnv("POSTGRES_DSN", "postgres://postgres:postgres@localhost:5432/tiki_advertising?sslmode=disable"),
 		},
 	}
 }

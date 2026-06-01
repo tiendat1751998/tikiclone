@@ -11,9 +11,9 @@ import zlib
 DB_CONFIG = {
     'host': os.environ.get('MYSQL_HOST', 'localhost'),
     'port': int(os.environ.get('MYSQL_PORT', '3306')),
-    'user': os.environ.get('MYSQL_USER', 'shopee'),
-    'password': os.environ.get('MYSQL_PASSWORD', 'shopee_dev'),
-    'database': os.environ.get('MYSQL_DATABASE', 'shopee_platform'),
+    'user': os.environ.get('MYSQL_USER', 'tiki'),
+    'password': os.environ.get('MYSQL_PASSWORD', 'tiki_dev'),
+    'database': os.environ.get('MYSQL_DATABASE', 'tiki_platform'),
 }
 
 IMAGE_DIR = os.path.join(os.path.dirname(__file__), '..', 'apps', 'web', 'public', 'images', 'products')

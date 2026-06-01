@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"time"
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/application"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/domain"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/application"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/domain"
 )
 
 type Handler struct {

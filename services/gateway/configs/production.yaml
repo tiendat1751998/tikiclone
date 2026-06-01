@@ -1,5 +1,5 @@
 app:
-  name: shopee-gateway
+  name: tiki-gateway
   env: production
   log_level: info
 
@@ -18,7 +18,7 @@ server:
     - 192.168.0.0/16
 
 redis:
-  addr: redis-cluster.shopee-data:6379
+  addr: redis-cluster.tiki-data:6379
   password: "${REDIS_PASSWORD}"
   db: 0
   pool_size: 200
@@ -39,27 +39,27 @@ rate_limit:
   window: 1s
 
 auth:
-  jwks_endpoint: http://identity-auth.shopee-services:8080/.well-known/jwks.json
+  jwks_endpoint: http://identity-auth.tiki-services:8080/.well-known/jwks.json
   access_ttl: 15m
   refresh_ttl: 168h
   rbac_enabled: true
   token_blacklist_ttl: 24h
 
 otel:
-  endpoint: http://otel-collector.shopee-observability:4318
-  service_name: shopee-gateway
+  endpoint: http://otel-collector.tiki-observability:4318
+  service_name: tiki-gateway
   trace_ratio: 0.05
-  metrics_prefix: shopee_gateway
+  metrics_prefix: tiki_gateway
 
 upstreams:
-  auth_service: identity-auth.shopee-services:8080
-  catalog_service: catalog-product.shopee-services:8080
-  cart_service: shopping-cart.shopee-services:8080
-  order_service: order-processing.shopee-services:8080
-  inventory_service: inventory-flashsale.shopee-services:8080
-  payment_service: payment-ledger.shopee-services:8080
-  search_service: search-indexing.shopee-services:8080
-  recommendation_service: recommendation-ml.shopee-services:8080
+  auth_service: identity-auth.tiki-services:8080
+  catalog_service: catalog-product.tiki-services:8080
+  cart_service: shopping-cart.tiki-services:8080
+  order_service: order-processing.tiki-services:8080
+  inventory_service: inventory-flashsale.tiki-services:8080
+  payment_service: payment-ledger.tiki-services:8080
+  search_service: search-indexing.tiki-services:8080
+  recommendation_service: recommendation-ml.tiki-services:8080
   default_timeout: 30s
   max_idle_conns: 200
   idle_conn_timeout: 90s
@@ -74,8 +74,8 @@ upstreams:
 
 cors:
   allowed_origins:
-    - https://shopee-clone.com
-    - https://admin.shopee-clone.com
+    - https://tiki-clone.com
+    - https://admin.tiki-clone.com
   allowed_methods:
     - GET
     - POST

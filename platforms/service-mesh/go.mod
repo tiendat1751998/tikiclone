@@ -1,4 +1,4 @@
-module github.com/shopee-clone/shopee/platforms/service-mesh
+module github.com/tikiclone/tiki/platforms/service-mesh
 
 go 1.26.3
 

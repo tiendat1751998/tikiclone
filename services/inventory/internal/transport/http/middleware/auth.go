@@ -8,7 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/shopee-clone/shopee/services/inventory/internal/config"
+	"github.com/tikiclone/tiki/services/inventory/internal/config"
 )
 
 // JWTAuth validates JWT tokens and extracts user context.

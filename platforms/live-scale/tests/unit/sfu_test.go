@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/sfu"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/sfu"
 )
 
 func TestSFURegisterNode(t *testing.T) {

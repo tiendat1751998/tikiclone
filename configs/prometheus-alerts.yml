@@ -1,5 +1,5 @@
 groups:
-  - name: shopee-service-alerts
+  - name: tiki-service-alerts
     interval: 30s
     rules:
       - alert: HighErrorRate
@@ -47,7 +47,7 @@ groups:
           summary: "High memory usage on {{ $labels.pod }}"
           description: "Memory usage is above 90% for 5 minutes"
 
-  - name: shopee-kafka-alerts
+  - name: tiki-kafka-alerts
     interval: 30s
     rules:
       - alert: KafkaConsumerLag
@@ -68,7 +68,7 @@ groups:
           summary: "Kafka partition under-replicated"
           description: "Topic {{ $labels.topic }} partition {{ $labels.partition }} is under-replicated"
 
-  - name: shopee-redis-alerts
+  - name: tiki-redis-alerts
     interval: 30s
     rules:
       - alert: RedisMemoryHigh
@@ -89,7 +89,7 @@ groups:
           summary: "Redis instance down"
           description: "Redis {{ $labels.instance }} is unreachable"
 
-  - name: shopee-infra-alerts
+  - name: tiki-infra-alerts
     interval: 30s
     rules:
       - alert: DiskSpaceLow
@@ -110,7 +110,7 @@ groups:
           summary: "Pod {{ $labels.pod }} restarting frequently"
           description: "Pod {{ $labels.pod }} has restarted {{ $value }} times in the last hour"
 
-  - name: shopee-business-alerts
+  - name: tiki-business-alerts
     interval: 15s
     rules:
       - alert: OrderFailureRateHigh

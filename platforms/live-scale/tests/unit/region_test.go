@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/region"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/region"
 )
 
 func TestRegionGetNearestSameRegion(t *testing.T) {

@@ -1,11 +1,11 @@
-app_name: shopee-live-scale
+app_name: tiki-live-scale
 env: development
 version: "1.0.0"
 http_port: 8081
 grpc_port: 9091
 
 postgres:
-  dsn: "postgres://shopee:shopee_dev@localhost:5432/shopee_live_scale?sslmode=disable"
+  dsn: "postgres://shopee:tiki_dev@localhost:5432/tiki_live_scale?sslmode=disable"
 
 redis:
   addr: "localhost:6379"
@@ -17,7 +17,7 @@ kafka:
 
 otel:
   endpoint: "http://localhost:4318"
-  service_name: "shopee-live-scale"
+  service_name: "tiki-live-scale"
 
 sfu:
   heartbeat_interval: 10s

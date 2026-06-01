@@ -1,10 +1,10 @@
 -- ============================================================
 -- TIKI PRODUCTS SEED DATA
 -- Sản phẩm crawl từ tiki.vn + mock data cho các danh mục khác
--- Database: shopee_platform
+-- Database: tiki_platform
 -- ============================================================
 
-USE shopee_platform;
+USE tiki_platform;
 
 -- ============================================================
 -- 1. TIKI CATEGORIES

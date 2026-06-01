@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/search/internal/search"
+	"github.com/tikiclone/tiki/platforms/search/internal/search"
 )
 
 type searchRequest struct {

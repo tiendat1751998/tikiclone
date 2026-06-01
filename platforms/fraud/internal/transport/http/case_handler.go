@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	fraudcase "github.com/shopee-clone/shopee/platforms/fraud/internal/case"
+	fraudcase "github.com/tikiclone/tiki/platforms/fraud/internal/case"
 )
 
 type createCaseRequest struct {

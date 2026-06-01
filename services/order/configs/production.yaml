@@ -1,5 +1,5 @@
 app:
-  name: shopee-order
+  name: tiki-order
   env: production
   log_level: warn
   http_port: 8083
@@ -29,15 +29,15 @@ redis:
 
 kafka:
   brokers: ${KAFKA_BROKERS}
-  topic_prefix: shopee.orders
-  consumer_group: shopee-order-service
-  dlq_topic: shopee.orders.dlq
+  topic_prefix: tiki.orders
+  consumer_group: tiki-order-service
+  dlq_topic: tiki.orders.dlq
 
 jwt:
   access_secret: ${JWT_ACCESS_SECRET}
   access_ttl: 15m
-  issuer: shopee-auth
-  audience: shopee-clone
+  issuer: tiki-auth
+  audience: tiki-clone
 
 order:
   default_currency: SGD
@@ -49,7 +49,7 @@ order:
 
 otel:
   endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT}
-  service_name: shopee-order
+  service_name: tiki-order
   trace_ratio: 0.05
 
 audit:

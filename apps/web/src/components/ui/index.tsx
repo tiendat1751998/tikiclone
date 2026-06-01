@@ -302,3 +302,6 @@ export function TabPanel({ value, children }: { value: string; children: React.R
   if (ctx.activeTab !== value) return null;
   return <div className="py-4">{children}</div>;
 }
+
+// Re-exports
+export { default as Pagination } from "./Pagination";

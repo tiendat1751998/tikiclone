@@ -1,11 +1,11 @@
 package http
 
 import (
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/analytics"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/bidding"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/campaign"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/creative"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/events"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/analytics"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/bidding"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/campaign"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/creative"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/events"
 )
 
 type Handler struct {

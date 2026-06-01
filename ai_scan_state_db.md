@@ -31,7 +31,7 @@
 
 ### Covering Indexes: COMPLETE
 - 4 new migration files created (cart, shipment, promotion, notification)
-- 14+ indexes on shopee_platform master schema
+- 14+ indexes on tiki_platform master schema
 - All hot-path queries have covering index support
 
 ### Migration Files Created

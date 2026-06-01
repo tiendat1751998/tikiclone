@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/pipeline"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/pipeline"
 )
 
 func TestCreatePipeline(t *testing.T) {

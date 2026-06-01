@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/stream_health"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/stream_health"
 )
 
 func TestStreamHealthReport(t *testing.T) {

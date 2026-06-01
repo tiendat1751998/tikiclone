@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/core"
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/streaming"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/core"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/streaming"
 )
 
 func TestProcessEvent(t *testing.T) {

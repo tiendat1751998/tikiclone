@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/pipeline"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/pipeline"
 )
 
 type createPipelineRequest struct {

@@ -3,9 +3,10 @@ package mysql
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/services/promotion/internal/domain"
+	"github.com/tikiclone/tiki/services/promotion/internal/domain"
 )
 
 type VoucherRepository struct{ db *sqlx.DB }
@@ -17,7 +18,7 @@ func (r *VoucherRepository) BeginTx(ctx context.Context) (*sql.Tx, error) {
 
 func (r *VoucherRepository) FindByCodeForUpdate(ctx context.Context, tx *sql.Tx, code string) (*domain.Voucher, error) {
 	var v domain.Voucher
-	err := tx.QueryRowContext(ctx, "SELECT * FROM vouchers WHERE code = ? FOR UPDATE", code).Scan(
+	err := tx.QueryRowContext(ctx, "SELECT id, code, title, description, type, discount_value, min_spend, max_discount, usage_limit, usage_count, per_user_limit, scope, shop_id, category_id, sku, region, payment_method, start_time, end_time, status, stackable, priority, created_at, updated_at FROM vouchers WHERE code = ? FOR UPDATE").Scan(
 		&v.ID, &v.Code, &v.Title, &v.Description, &v.Type, &v.DiscountValue,
 		&v.MinSpend, &v.MaxDiscount, &v.UsageLimit, &v.UsageCount, &v.PerUserLimit,
 		&v.Scope, &v.ShopID, &v.CategoryID, &v.SKU, &v.Region, &v.PaymentMethod,
@@ -95,7 +96,9 @@ func (r *VoucherRepository) ListActive(ctx context.Context, offset, limit int) (
 	if limit < 1 { limit = 20 }
 	if limit > 200 { limit = 200 }
 	var total int64
-	r.db.GetContext(ctx, &total, "SELECT COUNT(*) FROM vouchers WHERE status = 'active' AND end_time > NOW()")
+	if err := r.db.GetContext(ctx, &total, "SELECT COUNT(*) FROM vouchers WHERE status = 'active' AND end_time > NOW()"); err != nil {
+		return nil, 0, fmt.Errorf("count active vouchers: %w", err)
+	}
 	var vouchers []*domain.Voucher
 	err := r.db.SelectContext(ctx, &vouchers, "SELECT id, code, title, description, type, discount_value, min_spend, max_discount, usage_limit, usage_count, per_user_limit, scope, shop_id, category_id, sku, region, payment_method, start_time, end_time, status, stackable, priority, created_at, updated_at FROM vouchers WHERE status = 'active' AND end_time > NOW() ORDER BY priority DESC LIMIT ? OFFSET ?", limit, offset)
 	return vouchers, total, err

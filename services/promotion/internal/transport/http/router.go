@@ -2,9 +2,9 @@ package http
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/health"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/middleware"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/health"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/middleware"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 )
 
 type Router struct {
@@ -20,8 +20,8 @@ func (r *Router) Setup(engine *gin.Engine) {
 	engine.Use(
 		middleware.Recovery(), middleware.ErrorHandler(),
 		middleware.RequestID(), middleware.CORS(),
-		middleware.OTelMiddleware("shopee-promotion"),
-		observability.ObserveHTTPMetrics("shopee-promotion"),
+		middleware.OTelMiddleware("tiki-promotion"),
+		observability.ObserveHTTPMetrics("tiki-promotion"),
 	)
 
 	engine.GET("/health", r.health.LivenessHandler())

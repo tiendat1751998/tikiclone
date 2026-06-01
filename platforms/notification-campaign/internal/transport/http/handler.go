@@ -1,11 +1,11 @@
 package http
 
 import (
-	"github.com/shopee-clone/shopee/platforms/notification-campaign/internal/audience"
-	"github.com/shopee-clone/shopee/platforms/notification-campaign/internal/campaign"
-	"github.com/shopee-clone/shopee/platforms/notification-campaign/internal/content"
-	"github.com/shopee-clone/shopee/platforms/notification-campaign/internal/deliveryopt"
-	"github.com/shopee-clone/shopee/platforms/notification-campaign/internal/reporting"
+	"github.com/tikiclone/tiki/platforms/notification-campaign/internal/audience"
+	"github.com/tikiclone/tiki/platforms/notification-campaign/internal/campaign"
+	"github.com/tikiclone/tiki/platforms/notification-campaign/internal/content"
+	"github.com/tikiclone/tiki/platforms/notification-campaign/internal/deliveryopt"
+	"github.com/tikiclone/tiki/platforms/notification-campaign/internal/reporting"
 )
 
 type Handler struct {

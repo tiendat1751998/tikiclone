@@ -2,16 +2,16 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: argocd-cm
-  namespace: shopee-gitops
+  namespace: tiki-gitops
   labels:
     app.kubernetes.io/name: argocd-cm
 data:
-  url: https://argocd.shopee-clone.com
+  url: https://argocd.tiki-clone.com
   statusbadge.enabled: "true"
   repositories: |
-    - url: https://github.com/shopee-clone/shopee-clone
+    - url: https://github.com/tiki-clone/tiki-clone
       type: git
-      name: shopee-clone
+      name: tiki-clone
   resource.customizations: |
     networking.k8s.io/NetworkPolicy:
       health.lua: |
@@ -29,7 +29,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: argocd-rbac-cm
-  namespace: shopee-gitops
+  namespace: tiki-gitops
 data:
   policy.default: role:readonly
   policy.csv: |
@@ -43,4 +43,4 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: argocd-ssh-known-hosts-cm
-  namespace: shopee-gitops
+  namespace: tiki-gitops

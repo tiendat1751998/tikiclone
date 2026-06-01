@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/notification/internal/template"
+	"github.com/tikiclone/tiki/platforms/notification/internal/template"
 )
 
 func TestCreateTemplate(t *testing.T) {

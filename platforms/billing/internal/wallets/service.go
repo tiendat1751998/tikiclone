@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 	"github.com/google/uuid"
-	"github.com/shopee-clone/shopee/platforms/billing/internal/domain"
-	"github.com/shopee-clone/shopee/platforms/billing/internal/events"
+	"github.com/tikiclone/tiki/platforms/billing/internal/domain"
+	"github.com/tikiclone/tiki/platforms/billing/internal/events"
 )
 
 type Service struct {

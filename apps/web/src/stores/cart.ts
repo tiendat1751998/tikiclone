@@ -16,7 +16,6 @@ export const useCartStore = create<CartStore>()(
         const prev = get().items;
         set({ isLoading: true });
 
-        // Optimistic update
         const existing = prev.find(
           (i) => i.product_id === item.product_id && i.sku_id === item.sku_id
         );
@@ -32,12 +31,25 @@ export const useCartStore = create<CartStore>()(
           set({
             items: [
               ...prev,
-              { ...item, id: crypto.randomUUID(), is_selected: true },
+              {
+                id: crypto.randomUUID(),
+                product_id: item.product_id,
+                sku_id: item.sku_id,
+                name: item.name,
+                image_url: item.image_url,
+                price: item.price,
+                original_price: item.original_price,
+                quantity: item.quantity,
+                stock: item.stock || 0,
+                is_selected: true,
+                sku_name: item.sku_name,
+                shop_id: item.shop_id,
+                shop_name: item.shop_name,
+              },
             ],
           });
         }
 
-        // Only call API if user is authenticated
         const isAuthenticated = useAuthStore.getState().isAuthenticated;
         if (!isAuthenticated) {
           set({ isLoading: false });
@@ -45,12 +57,21 @@ export const useCartStore = create<CartStore>()(
         }
 
         try {
-          const cart = await cartApi.addItem(
-            item.product_id,
-            item.sku_id,
-            item.quantity
-          );
-          set({ items: cart.items ?? [], isLoading: false });
+          const cart = await cartApi.addItem({
+            product_id: item.product_id,
+            sku_id: item.sku_id,
+            quantity: item.quantity,
+            name: item.name,
+            price: item.price,
+            image_url: item.image_url,
+            shop_id: item.shop_id || "",
+            shop_name: item.shop_name || "",
+          });
+          if (cart && cart.items) {
+            set({ items: cart.items, isLoading: false });
+          } else {
+            set({ isLoading: false });
+          }
         } catch {
           set({ items: prev, isLoading: false });
         }
@@ -60,11 +81,8 @@ export const useCartStore = create<CartStore>()(
         const prev = get().items;
         set({ items: prev.filter((i) => i.id !== id) });
 
-        // Only call API if user is authenticated
         const isAuthenticated = useAuthStore.getState().isAuthenticated;
-        if (!isAuthenticated) {
-          return;
-        }
+        if (!isAuthenticated) return;
 
         try {
           await cartApi.removeItem(id);
@@ -81,11 +99,8 @@ export const useCartStore = create<CartStore>()(
           ),
         });
 
-        // Only call API if user is authenticated
         const isAuthenticated = useAuthStore.getState().isAuthenticated;
-        if (!isAuthenticated) {
-          return;
-        }
+        if (!isAuthenticated) return;
 
         try {
           await cartApi.updateItem(id, quantity);
@@ -110,11 +125,8 @@ export const useCartStore = create<CartStore>()(
         const prev = get().items;
         set({ items: [] });
 
-        // Only call API if user is authenticated
         const isAuthenticated = useAuthStore.getState().isAuthenticated;
-        if (!isAuthenticated) {
-          return;
-        }
+        if (!isAuthenticated) return;
 
         cartApi.clear().catch(() => {
           set({ items: prev });
@@ -131,7 +143,7 @@ export const useCartStore = create<CartStore>()(
       getTotal: () => get().getSubtotal(),
     }),
     {
-      name: "shopee-cart",
+      name: "tiki-cart",
       partialize: (state) => ({ items: state.items }),
     }
   )

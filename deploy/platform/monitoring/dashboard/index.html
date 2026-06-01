@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shopee Clone — Operations Dashboard</title>
+<title>Tiki Clone — Operations Dashboard</title>
 <style>
   :root {
     --bg: #0d1117;
@@ -71,7 +71,7 @@
 <div class="header">
   <div style="display:flex;align-items:center;gap:12px;">
     <span style="font-size:24px;color:var(--blue);">S</span>
-    <h1>Shopee Clone — Operations Dashboard</h1>
+    <h1>Tiki Clone — Operations Dashboard</h1>
     <div class="status">
       <div class="status-dot" id="overall-status-dot"></div>
       <span id="overall-status-text" style="font-size:13px;">Loading...</span>
@@ -86,9 +86,9 @@
 <div class="container">
   <!-- Grafana Links -->
   <div class="grafana-links">
-    <a class="grafana-link" href="http://localhost:3000/d/shopee-services-overview" target="_blank">📊 Services Overview</a>
-    <a class="grafana-link" href="http://localhost:3000/d/shopee-k8s-cluster" target="_blank">☸️ K8s Cluster</a>
-    <a class="grafana-link" href="http://localhost:3000/d/shopee-business-metrics" target="_blank">💰 Business Metrics</a>
+    <a class="grafana-link" href="http://localhost:3000/d/tiki-services-overview" target="_blank">📊 Services Overview</a>
+    <a class="grafana-link" href="http://localhost:3000/d/tiki-k8s-cluster" target="_blank">☸️ K8s Cluster</a>
+    <a class="grafana-link" href="http://localhost:3000/d/tiki-business-metrics" target="_blank">💰 Business Metrics</a>
     <a class="grafana-link" href="http://localhost:9090" target="_blank">🔥 Prometheus</a>
     <a class="grafana-link" href="http://localhost:3000/explore?left=%7B%22datasource%22:%22Loki%22%7D" target="_blank">📝 Loki Logs</a>
     <a class="grafana-link" href="http://localhost:3200" target="_blank">🔍 Tempo Traces</a>
@@ -264,13 +264,13 @@ async function updateMetrics() {
   }
 
   // K8s pods
-  const pods = await queryProm('sum(kube_pod_status_phase{namespace=~"shopee.*", phase="Running"})');
+  const pods = await queryProm('sum(kube_pod_status_phase{namespace=~"tiki.*", phase="Running"})');
   document.getElementById('k8s-pods').textContent = pods !== null ? Math.round(pods) : 'N/A';
 
-  const cpu = await queryProm('avg(sum(rate(container_cpu_usage_seconds_total{namespace=~"shopee.*"}[5m])) by (pod) / on(pod) kube_pod_container_resource_limits{resource="cpu"}) * 100');
+  const cpu = await queryProm('avg(sum(rate(container_cpu_usage_seconds_total{namespace=~"tiki.*"}[5m])) by (pod) / on(pod) kube_pod_container_resource_limits{resource="cpu"}) * 100');
   document.getElementById('k8s-cpu').textContent = cpu !== null ? cpu.toFixed(1) + '%' : 'N/A';
 
-  const mem = await queryProm('sum(container_memory_working_set_bytes{namespace=~"shopee.*"}) / 1024 / 1024 / 1024');
+  const mem = await queryProm('sum(container_memory_working_set_bytes{namespace=~"tiki.*"}) / 1024 / 1024 / 1024');
   document.getElementById('k8s-mem').textContent = mem !== null ? mem.toFixed(1) + ' GB' : 'N/A';
 
   // Kafka

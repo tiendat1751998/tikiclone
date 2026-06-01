@@ -3,7 +3,7 @@ package targeting
 import (
 	"context"
 
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/campaign"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/campaign"
 )
 
 type Service interface {

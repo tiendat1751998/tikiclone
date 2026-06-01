@@ -48,13 +48,55 @@ func (s *OrderStatus) Scan(value interface{}) error {
 }
 
 type Address struct {
-	Street1    string `json:"street1"`
-	Street2    string `json:"street2,omitempty"`
-	City       string `json:"city"`
-	State      string `json:"state"`
-	PostalCode string `json:"postal_code"`
-	Country    string `json:"country"`
-	Phone      string `json:"phone,omitempty"`
+	Name         string `json:"name,omitempty"`
+	Street1      string `json:"street1"`
+	AddressLine1 string `json:"address_line1,omitempty"`
+	Street2      string `json:"street2,omitempty"`
+	City         string `json:"city"`
+	State        string `json:"state"`
+	PostalCode   string `json:"postal_code"`
+	Country      string `json:"country"`
+	Phone        string `json:"phone,omitempty"`
+}
+
+// MarshalJSON handles both new and old field names for frontend compatibility
+func (a Address) MarshalJSON() ([]byte, error) {
+	type Alias Address
+	aux := &struct {
+		AddressLine1 string `json:"address_line1"`
+		Alias
+	}{
+		AddressLine1: a.Street1,
+		Alias:        (Alias)(a),
+	}
+	if aux.AddressLine1 == "" {
+		aux.AddressLine1 = a.AddressLine1
+	}
+	if aux.Name == "" {
+		aux.Name = a.Phone
+	}
+	return json.Marshal(aux)
+}
+
+// UnmarshalJSON accepts both "address_line1" and "street1" field names
+func (a *Address) UnmarshalJSON(data []byte) error {
+	type Alias Address
+	aux := &struct {
+		AddressLine1 string `json:"address_line1"`
+		*Alias
+	}{
+		Alias: (*Alias)(a),
+	}
+	if err := json.Unmarshal(data, aux); err != nil {
+		return err
+	}
+	if aux.AddressLine1 != "" && a.Street1 == "" {
+		a.Street1 = aux.AddressLine1
+	}
+	if a.Name == "" && a.Phone != "" {
+		a.Name = a.Phone
+	}
+	return nil
 }
 
 func (a Address) Value() (driver.Value, error) {
@@ -78,7 +120,11 @@ type Order struct {
 	UserID           string          `db:"user_id" json:"user_id"`
 	SellerID         string          `db:"seller_id" json:"seller_id"`
 	Status           OrderStatus     `db:"status" json:"status"`
-	TotalAmount      int64           `db:"total_amount" json:"total_amount"`
+	TotalAmount      int64           `db:"total_amount" json:"total_amount,omitempty"`
+	Subtotal         int64           `db:"-" json:"subtotal"`
+	ShippingFee      int64           `db:"-" json:"shipping_fee"`
+	Discount         int64           `db:"-" json:"discount"`
+	Total            int64           `db:"-" json:"total"`
 	Currency         string          `db:"currency" json:"currency"`
 	ShippingAddress  Address         `db:"shipping_address" json:"shipping_address"`
 	BillingAddress   Address         `db:"billing_address" json:"billing_address"`
@@ -91,6 +137,40 @@ type Order struct {
 	UpdatedAt        time.Time       `db:"updated_at" json:"updated_at"`
 	DeletedAt        *time.Time      `db:"deleted_at" json:"deleted_at,omitempty"`
 	Items            []OrderItem     `json:"items,omitempty"`
+}
+
+func EnrichOrderItems(items []OrderItem) {
+	for i := range items {
+		if items[i].Snapshot != nil {
+			var snap SnapshotItem
+			if err := json.Unmarshal(items[i].Snapshot, &snap); err == nil {
+				if items[i].Name == "" {
+					items[i].Name = snap.Name
+				}
+				if items[i].Price == 0 {
+					items[i].Price = snap.UnitPrice
+				}
+				items[i].Total = items[i].TotalPrice
+				if items[i].Total == 0 && items[i].Price > 0 {
+					items[i].Total = items[i].Price * int64(items[i].Quantity)
+				}
+			}
+		}
+		if items[i].Price == 0 {
+			items[i].Price = items[i].UnitPrice
+		}
+		if items[i].Total == 0 {
+			items[i].Total = items[i].TotalPrice
+		}
+	}
+}
+
+func EnrichOrder(order *Order) {
+	EnrichOrderItems(order.Items)
+	order.Subtotal = order.TotalAmount
+	order.Total = order.TotalAmount
+	order.ShippingFee = 0
+	order.Discount = 0
 }
 
 func NewOrder(userID, sellerID, currency, idempotencyKey string, shippingAddr, billingAddr Address, items []OrderItem) *Order {

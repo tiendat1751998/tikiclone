@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/analytics"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/events"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/metrics"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/analytics"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/events"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/metrics"
 )
 
 type recordImpressionRequest struct {

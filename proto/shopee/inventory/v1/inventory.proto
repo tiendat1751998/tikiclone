@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package shopee.inventory.v1;
 
-option go_package = "github.com/shopee-clone/shopee/proto/inventory/v1;inventoryv1";
+option go_package = "github.com/tikiclone/tiki/proto/inventory/v1;inventoryv1";
 
 import "validate/validate.proto";
 

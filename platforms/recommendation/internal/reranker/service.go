@@ -5,7 +5,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/types"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/types"
 )
 
 type Service interface {

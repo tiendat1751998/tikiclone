@@ -1,4 +1,4 @@
-module github.com/shopee-clone/shopee/services/admin-panel
+module github.com/tiki-clone/shopee/services/admin-panel
 
 go 1.26.3
 

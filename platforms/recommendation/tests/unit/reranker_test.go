@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/reranker"
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/types"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/reranker"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/types"
 )
 
 func TestDiversityReRanking(t *testing.T) {

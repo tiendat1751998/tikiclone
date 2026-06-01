@@ -9,9 +9,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_CONFIG = {
   host: process.env.MYSQL_HOST || 'localhost',
   port: parseInt(process.env.MYSQL_PORT || '3306', 10),
-  user: process.env.MYSQL_USER || 'shopee',
-  password: process.env.MYSQL_PASSWORD || 'shopee_dev',
-  database: process.env.MYSQL_DATABASE || 'shopee_platform',
+  user: process.env.MYSQL_USER || 'tiki',
+  password: process.env.MYSQL_PASSWORD || 'tiki_dev',
+  database: process.env.MYSQL_DATABASE || 'tiki_platform',
 };
 
 const IMAGE_DIR = path.resolve(__dirname, '..', 'apps', 'web', 'public', 'images', 'products');

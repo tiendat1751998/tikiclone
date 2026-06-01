@@ -6,7 +6,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/shopee-clone/shopee/services/payment/internal/config"
+	"github.com/tikiclone/tiki/services/payment/internal/config"
 	"go.uber.org/zap"
 )
 

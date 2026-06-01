@@ -11,15 +11,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/collabvector"
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/config"
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/health"
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/itemembedding"
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/realtime"
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/similarity"
-	httptransport "github.com/shopee-clone/shopee/platforms/rec-vector/internal/transport/http"
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/userembedding"
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/vectorstore"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/collabvector"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/config"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/health"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/itemembedding"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/realtime"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/similarity"
+	httptransport "github.com/tikiclone/tiki/platforms/rec-vector/internal/transport/http"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/userembedding"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/vectorstore"
 	automaxprocs "go.uber.org/automaxprocs/maxprocs"
 )
 

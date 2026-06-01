@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/oms-fulfillment/internal/inventory"
+	"github.com/tikiclone/tiki/platforms/oms-fulfillment/internal/inventory"
 )
 
 func (h *Handler) ReserveInventory(c *gin.Context) {

@@ -1,0 +1,39 @@
+{
+  "name": "@shopee/admin-panel",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.23.8",
+    "zustand": "^5.0.2",
+    "recharts": "^2.13.3",
+    "js-cookie": "^3.0.5",
+    "next-themes": "^0.4.3",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.5",
+    "@shopee/ui-system": "workspace:*",
+    "@shopee/shared-auth": "workspace:*",
+    "@shopee/shared-utils": "workspace:*",
+    "@shopee/shared-config": "workspace:*",
+    "@shopee/design-tokens": "workspace:*",
+    "@shopee/shared-query": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
+    "@types/node": "^22.10.2",
+    "@types/js-cookie": "^3.0.6",
+    "tailwindcss": "^3.4.16",
+    "postcss": "^8.4.49",
+    "autoprefixer": "^10.4.20"
+  }
+}

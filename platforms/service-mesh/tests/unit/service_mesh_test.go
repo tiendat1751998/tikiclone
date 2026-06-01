@@ -12,12 +12,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/discovery"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/loadbalancer"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/mtls"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/resilience"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/telemetry"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/traffic"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/discovery"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/loadbalancer"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/mtls"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/resilience"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/telemetry"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/traffic"
 )
 
 func TestRegisterService(t *testing.T) {
@@ -189,7 +189,7 @@ func TestIssueCertificate(t *testing.T) {
 	mgr := mtls.NewCertManager(ca)
 	ctx := context.Background()
 
-	cert, err := mgr.IssueCert(ctx, "service-a", "service-a.local", "Shopee", 90, true)
+	cert, err := mgr.IssueCert(ctx, "service-a", "service-a.local", "Tiki", 90, true)
 	if err != nil {
 		t.Fatalf("IssueCert failed: %v", err)
 	}
@@ -209,7 +209,7 @@ func TestIssueClientCertificate(t *testing.T) {
 	mgr := mtls.NewCertManager(ca)
 	ctx := context.Background()
 
-	cert, err := mgr.IssueCert(ctx, "client-a", "client-a.local", "Shopee", 30, false)
+	cert, err := mgr.IssueCert(ctx, "client-a", "client-a.local", "Tiki", 30, false)
 	if err != nil {
 		t.Fatalf("IssueCert failed: %v", err)
 	}
@@ -226,7 +226,7 @@ func TestRenewCertificate(t *testing.T) {
 	mgr := mtls.NewCertManager(ca)
 	ctx := context.Background()
 
-	orig, _ := mgr.IssueCert(ctx, "svc1", "svc1.local", "Shopee", 90, true)
+	orig, _ := mgr.IssueCert(ctx, "svc1", "svc1.local", "Tiki", 90, true)
 	renewed, err := mgr.RenewCert(ctx, orig.ID, 180)
 	if err != nil {
 		t.Fatalf("RenewCert failed: %v", err)
@@ -241,7 +241,7 @@ func TestRevokeCertificate(t *testing.T) {
 	mgr := mtls.NewCertManager(ca)
 	ctx := context.Background()
 
-	cert, _ := mgr.IssueCert(ctx, "svc1", "svc1.local", "Shopee", 90, true)
+	cert, _ := mgr.IssueCert(ctx, "svc1", "svc1.local", "Tiki", 90, true)
 
 	err := mgr.RevokeCert(ctx, cert.ID)
 	if err != nil {
@@ -259,7 +259,7 @@ func TestVerifyCertificate(t *testing.T) {
 	mgr := mtls.NewCertManager(ca)
 	ctx := context.Background()
 
-	cert, _ := mgr.IssueCert(ctx, "svc1", "svc1.local", "Shopee", 90, true)
+	cert, _ := mgr.IssueCert(ctx, "svc1", "svc1.local", "Tiki", 90, true)
 
 	err := mgr.VerifyCert(ctx, cert.ID)
 	if err != nil {
@@ -283,8 +283,8 @@ func TestListCertificates(t *testing.T) {
 	mgr := mtls.NewCertManager(ca)
 	ctx := context.Background()
 
-	mgr.IssueCert(ctx, "s1", "s1.local", "Shopee", 90, true)
-	mgr.IssueCert(ctx, "s2", "s2.local", "Shopee", 90, false)
+	mgr.IssueCert(ctx, "s1", "s1.local", "Tiki", 90, true)
+	mgr.IssueCert(ctx, "s2", "s2.local", "Tiki", 90, false)
 
 	certs := mgr.ListCerts(ctx)
 	if len(certs) != 3 {

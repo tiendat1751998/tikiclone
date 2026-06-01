@@ -2,9 +2,9 @@ package http
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/middleware"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/platforms/billing/internal/health"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/middleware"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/platforms/billing/internal/health"
 )
 
 type Router struct {
@@ -20,8 +20,8 @@ func (r *Router) Setup(e *gin.Engine) {
 	e.Use(middleware.Recovery())
 	e.Use(middleware.RequestID())
 	e.Use(middleware.CORS())
-	e.Use(middleware.OTelMiddleware("shopee-billing"))
-	e.Use(observability.ObserveHTTPMetrics("shopee-billing"))
+	e.Use(middleware.OTelMiddleware("tiki-billing"))
+	e.Use(observability.ObserveHTTPMetrics("tiki-billing"))
 
 	e.GET("/healthz", r.health.LivenessHandler())
 	e.GET("/readyz", r.health.ReadinessHandler())

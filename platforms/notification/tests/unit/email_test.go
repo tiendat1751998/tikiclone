@@ -4,20 +4,20 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/notification/internal/email"
-	"github.com/shopee-clone/shopee/platforms/notification/internal/events"
+	"github.com/tikiclone/tiki/platforms/notification/internal/email"
+	"github.com/tikiclone/tiki/platforms/notification/internal/events"
 )
 
 func TestSendEmail(t *testing.T) {
 	repo := email.NewInMemoryRepository()
 	pub := events.NewNoOpPublisher()
-	svc := email.NewService(repo, pub, "noreply@shopee-clone.com")
+	svc := email.NewService(repo, pub, "noreply@tiki-clone.com")
 	ctx := context.Background()
 
 	req := &email.SendEmailRequest{
 		To:        []string{"user@example.com"},
 		Subject:   "Welcome!",
-		PlainText: "Welcome to Shopee Clone",
+		PlainText: "Welcome to Tiki Clone",
 		HTML:      "<h1>Welcome!</h1>",
 	}
 
@@ -39,7 +39,7 @@ func TestSendEmail(t *testing.T) {
 func TestSendEmailWithCCBCC(t *testing.T) {
 	repo := email.NewInMemoryRepository()
 	pub := events.NewNoOpPublisher()
-	svc := email.NewService(repo, pub, "noreply@shopee-clone.com")
+	svc := email.NewService(repo, pub, "noreply@tiki-clone.com")
 	ctx := context.Background()
 
 	req := &email.SendEmailRequest{
@@ -65,7 +65,7 @@ func TestSendEmailWithCCBCC(t *testing.T) {
 func TestBulkEmail(t *testing.T) {
 	repo := email.NewInMemoryRepository()
 	pub := events.NewNoOpPublisher()
-	svc := email.NewService(repo, pub, "noreply@shopee-clone.com")
+	svc := email.NewService(repo, pub, "noreply@tiki-clone.com")
 	ctx := context.Background()
 
 	reqs := []*email.SendEmailRequest{
@@ -85,7 +85,7 @@ func TestBulkEmail(t *testing.T) {
 func TestEmailStatusTracking(t *testing.T) {
 	repo := email.NewInMemoryRepository()
 	pub := events.NewNoOpPublisher()
-	svc := email.NewService(repo, pub, "noreply@shopee-clone.com")
+	svc := email.NewService(repo, pub, "noreply@tiki-clone.com")
 	ctx := context.Background()
 
 	msg, _ := svc.SendEmail(ctx, &email.SendEmailRequest{
@@ -116,7 +116,7 @@ func TestEmailStatusTracking(t *testing.T) {
 func TestTemplatedEmail(t *testing.T) {
 	repo := email.NewInMemoryRepository()
 	pub := events.NewNoOpPublisher()
-	svc := email.NewService(repo, pub, "noreply@shopee-clone.com")
+	svc := email.NewService(repo, pub, "noreply@tiki-clone.com")
 	ctx := context.Background()
 
 	req := &email.SendEmailRequest{

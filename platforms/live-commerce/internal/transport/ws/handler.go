@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	ws "github.com/shopee-clone/shopee/platforms/live-commerce/internal/infrastructure/websocket"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	ws "github.com/tikiclone/tiki/platforms/live-commerce/internal/infrastructure/websocket"
 	"go.uber.org/zap"
 )
 

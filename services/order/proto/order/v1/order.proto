@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package shopee.order.v1;
 
-option go_package = "github.com/shopee-clone/shopee/services/order/proto/order/v1";
+option go_package = "github.com/tikiclone/tiki/services/order/proto/order/v1";
 
 service OrderService {
   rpc CreateOrder(CreateOrderRequest) returns (OrderResponse);

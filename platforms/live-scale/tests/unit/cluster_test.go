@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/websocket_cluster"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/websocket_cluster"
 )
 
 func TestWSClusterRegisterNode(t *testing.T) {

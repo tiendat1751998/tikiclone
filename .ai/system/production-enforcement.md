@@ -1,7 +1,7 @@
 # PRODUCTION ENFORCEMENT RULES
 
 This platform is intended to simulate REAL large-scale production systems similar to:
-- Shopee
+- Tiki
 - Lazada
 - Tokopedia
 - Grab

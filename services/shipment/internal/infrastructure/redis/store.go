@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/services/shipment/internal/config"
+	"github.com/tikiclone/tiki/services/shipment/internal/config"
 )
 
 type Store struct {

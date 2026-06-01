@@ -3,7 +3,7 @@
 Internal service-to-service communication requires maximum performance and security.
 
 ## 1. Protobuf Styling & Validation
-- **Package Names**: Follow `shopee.service_name.v1` convention.
+- **Package Names**: Follow `tiki.service_name.v1` convention.
 - **Validation Annotations**: Use `protoc-gen-validate` (PGV) annotations to enforce parameters checking at compilation/gRPC receiver layer:
   ```protobuf
   import "validate/validate.proto";

@@ -5,7 +5,7 @@ test.describe('Home Page', () => {
     await page.goto('/');
 
     // Hero banner
-    await expect(page.getByText('Welcome to Shopee')).toBeVisible();
+    await expect(page.getByText('Welcome to Tiki')).toBeVisible();
     await expect(page.getByText('Discover millions of products from trusted sellers')).toBeVisible();
 
     // Shop Now button

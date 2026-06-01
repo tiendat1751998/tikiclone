@@ -1,5 +1,5 @@
 app:
-  name: shopee-search
+  name: tiki-search
   env: development
   log_level: info
 
@@ -30,5 +30,5 @@ elasticsearch:
 
 otel:
   endpoint: http://localhost:4318
-  service_name: shopee-search
+  service_name: tiki-search
   trace_ratio: 0.1

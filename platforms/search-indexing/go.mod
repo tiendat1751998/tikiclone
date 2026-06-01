@@ -1,4 +1,4 @@
-module github.com/shopee-clone/shopee/platforms/search-indexing
+module github.com/tikiclone/tiki/platforms/search-indexing
 
 go 1.26.3
 

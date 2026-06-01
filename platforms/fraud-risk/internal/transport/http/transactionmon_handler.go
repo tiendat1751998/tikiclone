@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/transactionmon"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/transactionmon"
 )
 
 type recordTransactionRequest struct {

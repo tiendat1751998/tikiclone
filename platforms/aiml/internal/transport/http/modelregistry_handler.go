@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/modelregistry"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/modelregistry"
 )
 
 type registerModelRequest struct {

@@ -5,7 +5,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/global-infra/internal/ratelimit"
+	"github.com/tikiclone/tiki/platforms/global-infra/internal/ratelimit"
 )
 
 func TestRateLimitRuleCreate(t *testing.T) {

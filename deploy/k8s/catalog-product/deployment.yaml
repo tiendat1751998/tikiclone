@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: catalog-product
-  namespace: shopee
+  namespace: tiki
   labels:
     app: catalog-product
     service: catalog-product
@@ -46,7 +46,7 @@ spec:
             capabilities:
               drop:
                 - ALL
-          image: ghcr.io/shopee-clone/catalog-product:latest
+          image: ghcr.io/tiki-clone/catalog-product:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -66,7 +66,7 @@ spec:
                   name: catalog-secrets
                   key: mongodb-uri
             - name: MONGODB_DATABASE
-              value: "shopee_catalog"
+              value: "tiki_catalog"
             - name: REDIS_ADDR
               value: "redis-cluster:6379"
             - name: KAFKA_BROKERS

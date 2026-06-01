@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/shopee-clone/shopee/services/auth/internal/application"
-	"github.com/shopee-clone/shopee/services/auth/internal/domain"
-	pb "github.com/shopee-clone/shopee/services/auth/proto/auth/v1"
+	"github.com/tikiclone/tiki/services/auth/internal/application"
+	"github.com/tikiclone/tiki/services/auth/internal/domain"
+	pb "github.com/tikiclone/tiki/services/auth/proto/auth/v1"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	grpccodes "google.golang.org/grpc/codes"

@@ -1,4 +1,4 @@
-module github.com/shopee-clone/shopee/services/catalog-product
+module github.com/tikiclone/tiki/services/catalog-product
 
 go 1.26.3
 
@@ -6,8 +6,8 @@ require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/google/uuid v1.6.0
 	github.com/redis/go-redis/v9 v9.7.0
-	github.com/shopee-clone/shopee/packages/go-shared v0.0.0
-	github.com/shopee-clone/shopee/proto v0.0.0-00010101000000-000000000000
+	github.com/tikiclone/tiki/packages/go-shared v0.0.0
+	github.com/tikiclone/tiki/proto v0.0.0-00010101000000-000000000000
 	github.com/stretchr/testify v1.11.1
 	go.mongodb.org/mongo-driver v1.15.0
 	go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo v0.50.0
@@ -83,6 +83,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/shopee-clone/shopee/packages/go-shared => ../../packages/go-shared
+replace github.com/tikiclone/tiki/packages/go-shared => ../../packages/go-shared
 
-replace github.com/shopee-clone/shopee/proto => ../../proto
+replace github.com/tikiclone/tiki/proto => ../../proto

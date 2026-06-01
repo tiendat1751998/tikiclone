@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/global-infra/internal/registry"
+	"github.com/tikiclone/tiki/platforms/global-infra/internal/registry"
 )
 
 func TestServiceRegister(t *testing.T) {

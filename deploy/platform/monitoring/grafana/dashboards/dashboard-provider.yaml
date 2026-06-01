@@ -1,14 +1,14 @@
 apiVersion: 1
 
 providers:
-  - name: 'shopee-dashboards'
+  - name: 'tiki-dashboards'
     orgId: 1
-    folder: 'Shopee Platform'
-    folderUid: 'shopee'
+    folder: 'Tiki Platform'
+    folderUid: 'tiki'
     type: file
     disableDeletion: true
     updateIntervalSeconds: 30
     allowUiUpdates: true
     options:
-      path: /var/lib/grafana/dashboards/shopee
+      path: /var/lib/grafana/dashboards/tiki
       foldersFromFilesStructure: false

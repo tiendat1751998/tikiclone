@@ -34,6 +34,25 @@ type SnapshotItem struct {
 	ImageURL  string `json:"image_url,omitempty"`
 }
 
+// UnmarshalJSON handles both "unit_price" and "price" field names
+func (s *SnapshotItem) UnmarshalJSON(data []byte) error {
+	type Alias SnapshotItem
+	aux := &struct {
+		Price int64 `json:"price"`
+		*Alias
+	}{
+		Alias: (*Alias)(s),
+	}
+	if err := json.Unmarshal(data, aux); err != nil {
+		return err
+	}
+	// If unit_price is 0 but price is set, use price
+	if s.UnitPrice == 0 && aux.Price != 0 {
+		s.UnitPrice = aux.Price
+	}
+	return nil
+}
+
 func NewOrderSnapshot(orderID string, cart *CartSnapshot) (*OrderSnapshot, error) {
 	data, err := json.Marshal(cart)
 	if err != nil {

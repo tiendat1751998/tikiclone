@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/checkout/internal/application"
-	"github.com/shopee-clone/shopee/services/checkout/internal/domain"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/checkout/internal/application"
+	"github.com/tikiclone/tiki/services/checkout/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.uber.org/zap"
 )
@@ -21,7 +21,7 @@ func NewHandler(service *application.CheckoutService) *Handler {
 }
 
 func (h *Handler) InitiateCheckout(c *gin.Context) {
-	ctx, _ := otel.Tracer("shopee-checkout").Start(c.Request.Context(), "http.initiate_checkout")
+	ctx, _ := otel.Tracer("tiki-checkout").Start(c.Request.Context(), "http.initiate_checkout")
 
 	var req application.InitiateRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -52,7 +52,7 @@ func (h *Handler) InitiateCheckout(c *gin.Context) {
 }
 
 func (h *Handler) GetCheckoutStatus(c *gin.Context) {
-	ctx, _ := otel.Tracer("shopee-checkout").Start(c.Request.Context(), "http.get_status")
+	ctx, _ := otel.Tracer("tiki-checkout").Start(c.Request.Context(), "http.get_status")
 
 	checkoutID := c.Param("checkout_id")
 	checkout, err := h.service.GetCheckoutStatus(ctx, checkoutID)
@@ -65,7 +65,7 @@ func (h *Handler) GetCheckoutStatus(c *gin.Context) {
 }
 
 func (h *Handler) RetryCheckout(c *gin.Context) {
-	ctx, _ := otel.Tracer("shopee-checkout").Start(c.Request.Context(), "http.retry_checkout")
+	ctx, _ := otel.Tracer("tiki-checkout").Start(c.Request.Context(), "http.retry_checkout")
 
 	checkoutID := c.Param("checkout_id")
 	userID, exists := c.Get("user_id")

@@ -1,7 +1,7 @@
 # 🏗️ Architect Agent — System Coordinator
 
 ## Role
-The **Architect Agent** is the central orchestration hub for the Shopee Clone monorepo. It reads all AI/MD files, understands the system state, and coordinates subagents to fix bugs, implement features, and ensure quality.
+The **Architect Agent** is the central orchestration hub for the Tiki Clone monorepo. It reads all AI/MD files, understands the system state, and coordinates subagents to fix bugs, implement features, and ensure quality.
 
 ## Responsibilities
 1. **Read & Analyze** — Reads all `.ai/` files, `QA_BUG_REPORT.md`, `BUG_FIX_REPORT.md`, `SECURITY_AUDIT_REPORT.md`, etc.

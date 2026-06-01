@@ -8,7 +8,7 @@ import (
 
 	"github.com/bytedance/sonic"
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/services/product/internal/domain"
+	"github.com/tikiclone/tiki/services/product/internal/domain"
 )
 
 var productPool = sync.Pool{

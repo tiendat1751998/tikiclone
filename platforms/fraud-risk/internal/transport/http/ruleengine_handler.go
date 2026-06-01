@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/core"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/ruleengine"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/core"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/ruleengine"
 )
 
 type createRuleRequest struct {

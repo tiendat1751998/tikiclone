@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: shopee-analytics
+  name: tiki-analytics
   labels:
-    app: shopee-analytics
+    app: tiki-analytics
     version: v1
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: shopee-analytics
+      app: tiki-analytics
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,21 +18,21 @@ spec:
   template:
     metadata:
       labels:
-        app: shopee-analytics
+        app: tiki-analytics
         version: v1
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8098"
     spec:
-      serviceAccountName: shopee-analytics
+      serviceAccountName: tiki-analytics
       terminationGracePeriodSeconds: 60
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         fsGroup: 1000
       containers:
-        - name: shopee-analytics
-          image: shopee-clone/shopee-analytics:latest
+        - name: tiki-analytics
+          image: tiki-clone/tiki-analytics:latest
           imagePullPolicy: Always
           ports:
             - name: http
@@ -41,9 +41,9 @@ spec:
               containerPort: 9098
           envFrom:
             - configMapRef:
-                name: shopee-analytics-config
+                name: tiki-analytics-config
             - secretRef:
-                name: shopee-analytics-secrets
+                name: tiki-analytics-secrets
           resources:
             requests:
               cpu: 500m

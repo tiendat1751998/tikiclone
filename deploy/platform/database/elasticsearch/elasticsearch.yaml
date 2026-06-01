@@ -2,13 +2,13 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: elasticsearch-config
-  namespace: shopee-infra
+  namespace: tiki-infra
 data:
   elasticsearch.yml: |
-    cluster.name: shopee-search
+    cluster.name: tiki-search
     node.name: "${HOSTNAME}"
     network.host: 0.0.0.0
-    discovery.seed_hosts: elasticsearch-0.elasticsearch.shopee-infra.svc.cluster.local,elasticsearch-1.elasticsearch.shopee-infra.svc.cluster.local,elasticsearch-2.elasticsearch.shopee-infra.svc.cluster.local
+    discovery.seed_hosts: elasticsearch-0.elasticsearch.tiki-infra.svc.cluster.local,elasticsearch-1.elasticsearch.tiki-infra.svc.cluster.local,elasticsearch-2.elasticsearch.tiki-infra.svc.cluster.local
     cluster.initial_master_nodes: elasticsearch-0,elasticsearch-1,elasticsearch-2
     xpack.security.enabled: true
     xpack.security.transport.ssl.enabled: true
@@ -24,7 +24,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: elasticsearch
-  namespace: shopee-infra
+  namespace: tiki-infra
   labels:
     app: elasticsearch
 spec:
@@ -43,7 +43,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: elasticsearch
-  namespace: shopee-infra
+  namespace: tiki-infra
 spec:
   serviceName: elasticsearch
   replicas: 3
@@ -115,7 +115,7 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        storageClassName: shopee-fast
+        storageClassName: tiki-fast
         resources:
           requests:
             storage: 200Gi

@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/api-gateway/internal/ratelimit"
+	"github.com/tikiclone/tiki/platforms/api-gateway/internal/ratelimit"
 )
 
 func TestRateLimitCreateRule(t *testing.T) {

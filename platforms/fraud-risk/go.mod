@@ -1,4 +1,4 @@
-module github.com/shopee-clone/shopee/platforms/fraud-risk
+module github.com/tiki-clone/shopee/platforms/fraud-risk
 
 go 1.26.3
 

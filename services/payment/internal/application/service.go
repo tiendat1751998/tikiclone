@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/shopee-clone/shopee/services/payment/internal/config"
-	"github.com/shopee-clone/shopee/services/payment/internal/domain"
-	"github.com/shopee-clone/shopee/services/payment/internal/infrastructure/kafka"
-	"github.com/shopee-clone/shopee/services/payment/internal/infrastructure/mysql"
-	redisinfra "github.com/shopee-clone/shopee/services/payment/internal/infrastructure/redis"
-	"github.com/shopee-clone/shopee/services/payment/internal/metrics"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/payment/internal/config"
+	"github.com/tikiclone/tiki/services/payment/internal/domain"
+	"github.com/tikiclone/tiki/services/payment/internal/infrastructure/kafka"
+	"github.com/tikiclone/tiki/services/payment/internal/infrastructure/mysql"
+	redisinfra "github.com/tikiclone/tiki/services/payment/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/services/payment/internal/metrics"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -42,7 +42,7 @@ type AuthorizePaymentRequest struct {
 }
 
 func (s *PaymentService) AuthorizePayment(ctx context.Context, req *AuthorizePaymentRequest) (*domain.Payment, error) {
-	ctx, span := otel.Tracer("shopee-payment").Start(ctx, "PaymentService.AuthorizePayment")
+	ctx, span := otel.Tracer("tiki-payment").Start(ctx, "PaymentService.AuthorizePayment")
 	defer span.End()
 
 	start := time.Now()
@@ -143,7 +143,7 @@ func (s *PaymentService) AuthorizePayment(ctx context.Context, req *AuthorizePay
 }
 
 func (s *PaymentService) CapturePayment(ctx context.Context, paymentID, actorID string) (*domain.Payment, error) {
-	ctx, span := otel.Tracer("shopee-payment").Start(ctx, "PaymentService.CapturePayment")
+	ctx, span := otel.Tracer("tiki-payment").Start(ctx, "PaymentService.CapturePayment")
 	defer span.End()
 
 	start := time.Now()
@@ -182,7 +182,7 @@ func (s *PaymentService) CapturePayment(ctx context.Context, paymentID, actorID 
 }
 
 func (s *PaymentService) RefundPayment(ctx context.Context, paymentID, reason, idempotencyKey string, amount int64, actorID string) (*domain.Refund, error) {
-	ctx, span := otel.Tracer("shopee-payment").Start(ctx, "PaymentService.RefundPayment")
+	ctx, span := otel.Tracer("tiki-payment").Start(ctx, "PaymentService.RefundPayment")
 	defer span.End()
 
 	payment, err := s.paymentRepo.FindByID(ctx, paymentID)
@@ -248,7 +248,7 @@ func (s *PaymentService) GetPayment(ctx context.Context, paymentID string) (*dom
 
 // [FIX A3] Webhook handler - now properly processes PSP events
 func (s *PaymentService) HandleWebhook(ctx context.Context, pspProvider, eventType string, payload []byte, signature, idempotencyKey string) error {
-	ctx, span := otel.Tracer("shopee-payment").Start(ctx, "PaymentService.HandleWebhook")
+	ctx, span := otel.Tracer("tiki-payment").Start(ctx, "PaymentService.HandleWebhook")
 	defer span.End()
 
 	start := time.Now()

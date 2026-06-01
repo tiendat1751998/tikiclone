@@ -75,6 +75,6 @@ export const useAuthStore = create<AuthState>()(
         }
       },
     }),
-    { name: "shopee-auth" }
+    { name: "tiki-auth" }
   )
 );

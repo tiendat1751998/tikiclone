@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package shopee.catalog.v1;
 
-option go_package = "github.com/shopee-clone/shopee/services/product-catalog/proto/productcatalog/v1";
+option go_package = "github.com/tikiclone/tiki/services/product-catalog/proto/productcatalog/v1";
 
 service CatalogService {
   rpc CreateProduct(CreateProductRequest) returns (ProductResponse);

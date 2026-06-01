@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/cart/internal/application"
-	"github.com/shopee-clone/shopee/services/cart/internal/domain"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/cart/internal/application"
+	"github.com/tikiclone/tiki/services/cart/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.uber.org/zap"
@@ -56,7 +56,7 @@ func toCartResponse(cart *domain.Cart, items []*domain.CartItem) cartResponse {
 	for _, item := range items {
 		cur := cart.Currency
 		if cur == "" {
-			cur = "SGD"
+			cur = "VND"
 		}
 		resp.Items = append(resp.Items, cartItemResponse{
 			ID:         item.ID,
@@ -67,7 +67,7 @@ func toCartResponse(cart *domain.Cart, items []*domain.CartItem) cartResponse {
 			ImageURL:   item.ImageURL,
 			Price:      float64(item.UnitPrice),
 			Quantity:   item.Quantity,
-			Stock:      99,
+			Stock:      0, // Stock should be fetched from inventory service via gRPC integration
 			SkuName:    item.ProductName,
 			IsSelected: item.IsSelected,
 			ShopName:   item.ShopName,
@@ -80,13 +80,23 @@ func toCartResponse(cart *domain.Cart, items []*domain.CartItem) cartResponse {
 	return resp
 }
 
-func (h *Handler) getOrCreateUserCart(c *gin.Context) (*domain.Cart, error) {
+func (h *Handler) getUserID(c *gin.Context) string {
 	userID := c.GetString("user_id")
+	if userID != "" {
+		return userID
+	}
+	// Fallback: read from gateway-injected header
+	userID = c.GetHeader("X-User-ID")
+	return userID
+}
+
+func (h *Handler) getOrCreateUserCart(c *gin.Context) (*domain.Cart, error) {
+	userID := h.getUserID(c)
 	if userID == "" {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error_code": "UNAUTHORIZED", "message": "authentication required"})
 		return nil, errors.New("unauthorized")
 	}
-	cart, err := h.service.GetOrCreateCart(c.Request.Context(), userID, "", "SGD")
+	cart, err := h.service.GetOrCreateCart(c.Request.Context(), userID, "", "VND")
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +104,7 @@ func (h *Handler) getOrCreateUserCart(c *gin.Context) (*domain.Cart, error) {
 }
 
 func (h *Handler) GetCart(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-cart").Start(c.Request.Context(), "http.get_cart")
+	ctx, span := otel.Tracer("tiki-cart").Start(c.Request.Context(), "http.get_cart")
 	defer span.End()
 
 	cart, err := h.getOrCreateUserCart(c)
@@ -112,7 +122,7 @@ func (h *Handler) GetCart(c *gin.Context) {
 }
 
 func (h *Handler) AddItem(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-cart").Start(c.Request.Context(), "http.add_item")
+	ctx, span := otel.Tracer("tiki-cart").Start(c.Request.Context(), "http.add_item")
 	defer span.End()
 
 	var req struct {
@@ -151,11 +161,18 @@ func (h *Handler) AddItem(c *gin.Context) {
 	}
 
 	span.SetAttributes(attribute.String("item_id", item.ID))
-	c.JSON(http.StatusCreated, gin.H{"id": item.ID, "message": "item added"})
+
+	// Return the updated cart so the frontend can reconcile
+	_, updatedItems, err := h.service.GetCartWithItems(ctx, cart.ID)
+	if err != nil {
+		handleError(c, err)
+		return
+	}
+	c.JSON(http.StatusOK, toCartResponse(cart, updatedItems))
 }
 
 func (h *Handler) UpdateItem(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-cart").Start(c.Request.Context(), "http.update_item")
+	ctx, span := otel.Tracer("tiki-cart").Start(c.Request.Context(), "http.update_item")
 	defer span.End()
 
 	itemID := c.Param("item_id")
@@ -178,11 +195,16 @@ func (h *Handler) UpdateItem(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "item updated"})
+	updatedCart, updatedItems, err := h.service.GetCartWithItems(ctx, cart.ID)
+	if err != nil {
+		handleError(c, err)
+		return
+	}
+	c.JSON(http.StatusOK, toCartResponse(updatedCart, updatedItems))
 }
 
 func (h *Handler) RemoveItem(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-cart").Start(c.Request.Context(), "http.remove_item")
+	ctx, span := otel.Tracer("tiki-cart").Start(c.Request.Context(), "http.remove_item")
 	defer span.End()
 
 	itemID := c.Param("item_id")
@@ -197,11 +219,16 @@ func (h *Handler) RemoveItem(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "item removed"})
+	updatedCart, updatedItems, err := h.service.GetCartWithItems(ctx, cart.ID)
+	if err != nil {
+		handleError(c, err)
+		return
+	}
+	c.JSON(http.StatusOK, toCartResponse(updatedCart, updatedItems))
 }
 
 func (h *Handler) ClearCart(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-cart").Start(c.Request.Context(), "http.clear_cart")
+	ctx, span := otel.Tracer("tiki-cart").Start(c.Request.Context(), "http.clear_cart")
 	defer span.End()
 
 	cart, err := h.getOrCreateUserCart(c)
@@ -214,14 +241,14 @@ func (h *Handler) ClearCart(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "cart cleared"})
+	c.JSON(http.StatusOK, toCartResponse(cart, nil))
 }
 
 func (h *Handler) MergeCarts(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-cart").Start(c.Request.Context(), "http.merge_carts")
+	ctx, span := otel.Tracer("tiki-cart").Start(c.Request.Context(), "http.merge_carts")
 	defer span.End()
 
-	userID := c.GetString("user_id")
+	userID := h.getUserID(c)
 	if userID == "" {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error_code": "UNAUTHORIZED", "message": "authentication required"})
 		return
@@ -245,10 +272,10 @@ func (h *Handler) MergeCarts(c *gin.Context) {
 }
 
 func (h *Handler) CheckoutPreview(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-cart").Start(c.Request.Context(), "http.checkout_preview")
+	ctx, span := otel.Tracer("tiki-cart").Start(c.Request.Context(), "http.checkout_preview")
 	defer span.End()
 
-	userID := c.GetString("user_id")
+	userID := h.getUserID(c)
 	if userID == "" {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error_code": "UNAUTHORIZED", "message": "authentication required"})
 		return

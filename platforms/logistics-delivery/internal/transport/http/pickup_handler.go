@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/pickups"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/pickups"
 )
 
 func (h *Handler) CreatePickup(c *gin.Context) {

@@ -1,5 +1,5 @@
 app:
-  name: shopee-advertising
+  name: tiki-advertising
   env: development
   log_level: info
 
@@ -24,8 +24,8 @@ kafka:
 
 otel:
   endpoint: http://localhost:4318
-  service_name: shopee-advertising
+  service_name: tiki-advertising
   trace_ratio: 0.1
 
 postgres:
-  dsn: postgres://postgres:postgres@localhost:5432/shopee_advertising?sslmode=disable
+  dsn: postgres://postgres:postgres@localhost:5432/tiki_advertising?sslmode=disable

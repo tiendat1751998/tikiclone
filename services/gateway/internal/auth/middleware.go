@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/services/gateway/internal/middleware"
+	"github.com/tikiclone/tiki/services/gateway/internal/middleware"
 )
 
 type AuthMiddleware struct {

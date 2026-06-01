@@ -10,20 +10,20 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 	"go.uber.org/zap"
 	automaxprocs "go.uber.org/automaxprocs/maxprocs"
 
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/cdn"
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/config"
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/health"
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/logging"
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/region"
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/sfu"
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/stream_health"
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/transcoding"
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/websocket_cluster"
-	httpTransport "github.com/shopee-clone/shopee/platforms/live-scale/internal/transport/http"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/cdn"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/config"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/health"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/logging"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/region"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/sfu"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/stream_health"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/transcoding"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/websocket_cluster"
+	httpTransport "github.com/tikiclone/tiki/platforms/live-scale/internal/transport/http"
 )
 
 func init() {

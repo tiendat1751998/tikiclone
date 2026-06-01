@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/shopee-clone/shopee/platforms/rec-vector/internal/vectorstore"
+	"github.com/tikiclone/tiki/platforms/rec-vector/internal/vectorstore"
 )
 
 type Service struct {

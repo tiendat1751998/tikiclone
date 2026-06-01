@@ -1,12 +1,12 @@
 package http
 
 import (
-	"github.com/shopee-clone/shopee/platforms/api-gateway/internal/auth"
-	"github.com/shopee-clone/shopee/platforms/api-gateway/internal/circuitbreaker"
-	"github.com/shopee-clone/shopee/platforms/api-gateway/internal/edgecache"
-	"github.com/shopee-clone/shopee/platforms/api-gateway/internal/ratelimit"
-	"github.com/shopee-clone/shopee/platforms/api-gateway/internal/routes"
-	"github.com/shopee-clone/shopee/platforms/api-gateway/internal/transform"
+	"github.com/tikiclone/tiki/platforms/api-gateway/internal/auth"
+	"github.com/tikiclone/tiki/platforms/api-gateway/internal/circuitbreaker"
+	"github.com/tikiclone/tiki/platforms/api-gateway/internal/edgecache"
+	"github.com/tikiclone/tiki/platforms/api-gateway/internal/ratelimit"
+	"github.com/tikiclone/tiki/platforms/api-gateway/internal/routes"
+	"github.com/tikiclone/tiki/platforms/api-gateway/internal/transform"
 )
 
 type Handler struct {

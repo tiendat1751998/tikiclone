@@ -298,7 +298,7 @@ Generate:
 - rate limiting strategy
 
 The flash-sale architecture MUST resemble:
-- Shopee
+- Tiki
 - Lazada
 - TikTok Shop
 

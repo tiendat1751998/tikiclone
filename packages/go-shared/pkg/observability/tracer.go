@@ -58,7 +58,7 @@ func InitTracer(serviceName, otlpEndpoint string) (func(), error) {
 }
 
 func StartSpan(ctx context.Context, name string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-	return otel.Tracer("shopee-clone").Start(ctx, name, opts...)
+	return otel.Tracer("tiki-clone").Start(ctx, name, opts...)
 }
 
 func SpanFromContext(ctx context.Context) trace.Span {

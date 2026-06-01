@@ -1,5 +1,5 @@
 {
-  "name": "@shopee/ui-system",
+  "name": "@tiki/ui-system",
   "version": "0.1.0",
   "private": true,
   "main": "./src/index.ts",

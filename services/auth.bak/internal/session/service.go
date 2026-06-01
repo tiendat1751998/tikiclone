@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/auth/internal/config"
-	"github.com/shopee-clone/shopee/services/auth/internal/domain"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/auth/internal/config"
+	"github.com/tikiclone/tiki/services/auth/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.uber.org/zap"
 )

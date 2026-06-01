@@ -5,7 +5,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: devops@shopee-clone.com
+    email: devops@tiki-clone.com
     privateKeySecretRef:
       name: letsencrypt-prod-key
     solvers:
@@ -16,14 +16,14 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: shopee-tls-cert
-  namespace: shopee-ingress
+  name: tiki-tls-cert
+  namespace: tiki-ingress
 spec:
-  secretName: shopee-tls-cert
+  secretName: tiki-tls-cert
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
-  commonName: api.shopee-clone.com
+  commonName: api.tiki-clone.com
   dnsNames:
-    - api.shopee-clone.com
-    - "*.shopee-clone.com"
+    - api.tiki-clone.com
+    - "*.tiki-clone.com"

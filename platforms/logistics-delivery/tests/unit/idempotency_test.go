@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/replay"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/replay"
 )
 
 func TestReplayDedup(t *testing.T) {

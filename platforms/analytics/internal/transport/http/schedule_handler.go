@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/report_scheduler"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/report_scheduler"
 )
 
 type createScheduleRequest struct {

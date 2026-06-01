@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/cohort"
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/events"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/cohort"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/events"
 )
 
 func setupCohortTest(t *testing.T) (*cohort.Service, *events.Service) {

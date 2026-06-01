@@ -7,7 +7,7 @@ import (
 
 	"github.com/bytedance/sonic"
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/domain"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/domain"
 )
 
 type Store struct {

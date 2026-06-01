@@ -1,5 +1,5 @@
 app:
-  name: shopee-shipment
+  name: tiki-shipment
   env: production
   log_level: warn
   http_port: 8085
@@ -16,8 +16,8 @@ redis:
   db: 5
 kafka:
   brokers: ${KAFKA_BROKERS}
-  topic_prefix: shopee.shipments
-  consumer_group: shopee-shipment-service
+  topic_prefix: tiki.shipments
+  consumer_group: tiki-shipment-service
 jwt:
   access_secret: ${JWT_ACCESS_SECRET}
   access_ttl: 15m
@@ -27,4 +27,4 @@ shipment:
   webhook_secret: ${WEBHOOK_SECRET}
 otel:
   endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT}
-  service_name: shopee-shipment
+  service_name: tiki-shipment

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/trending"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/trending"
 )
 
 func TestTrendingVelocityScoring(t *testing.T) {

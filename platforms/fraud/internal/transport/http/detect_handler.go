@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/core"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/core"
 )
 
 type evaluateRequest struct {

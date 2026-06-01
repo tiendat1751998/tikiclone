@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/fanout"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/websocket"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/fanout"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/websocket"
 )
 
 func BenchmarkJSONMarshalStdlib(b *testing.B) {

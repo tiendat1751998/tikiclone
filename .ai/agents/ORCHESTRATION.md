@@ -1,7 +1,7 @@
 # 🔄 Orchestration Workflow — How Agents Collaborate
 
 ## Overview
-This document defines how the Architect Agent coordinates with QA, DEV, Test, Review, Security, Performance, and Fix subagents to safely fix bugs and improve the Shopee Clone monorepo in production environments.
+This document defines how the Architect Agent coordinates with QA, DEV, Test, Review, Security, Performance, and Fix subagents to safely fix bugs and improve the Tiki Clone monorepo in production environments.
 
 The orchestration system is designed for:
 - autonomous debugging

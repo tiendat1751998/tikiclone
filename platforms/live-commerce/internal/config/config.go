@@ -76,7 +76,7 @@ func envBool(key string, fallback bool) bool {
 
 func Load() *Config {
 	return &Config{
-		AppName:  env("APP_NAME", "shopee-live-commerce"),
+		AppName:  env("APP_NAME", "tiki-live-commerce"),
 		AppEnv:   env("APP_ENV", "development"),
 		LogLevel: env("LOG_LEVEL", "info"),
 		HTTPPort: envInt("HTTP_PORT", 8080),
@@ -93,10 +93,10 @@ func Load() *Config {
 			MaxRetries:   3,
 		},
 		Postgres: PostgresConfig{
-			DSN: env("DATABASE_DSN", "postgres://shopee:shopee_dev@localhost:5432/shopee_live?sslmode=disable"),
+			DSN: env("DATABASE_DSN", "postgres://tiki:tiki_dev@localhost:5432/tiki_live?sslmode=disable"),
 		},
 		ClickHouse: ClickHouseConfig{
-			DSN:     env("CLICKHOUSE_DSN", "clickhouse://localhost:9000/shopee_analytics?sslmode=disable"),
+			DSN:     env("CLICKHOUSE_DSN", "clickhouse://localhost:9000/tiki_analytics?sslmode=disable"),
 			Enabled: envBool("CLICKHOUSE_ENABLED", true),
 		},
 		Kafka: KafkaConfig{
@@ -104,7 +104,7 @@ func Load() *Config {
 		},
 		OpenTelemetry: OTELConfig{
 			Endpoint:    env("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318"),
-			ServiceName: env("OTEL_SERVICE_NAME", "shopee-live-commerce"),
+			ServiceName: env("OTEL_SERVICE_NAME", "tiki-live-commerce"),
 			TraceRatio:  0.1,
 		},
 	}

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/inference"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/inference"
 )
 
 func TestInferencePredict(t *testing.T) {

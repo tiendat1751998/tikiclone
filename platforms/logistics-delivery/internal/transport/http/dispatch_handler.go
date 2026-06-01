@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/dispatch"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/dispatch"
 )
 
 func (h *Handler) CreateDispatch(c *gin.Context) {

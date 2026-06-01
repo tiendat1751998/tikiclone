@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package fraud.v1;
 
-option go_package = "github.com/shopee-clone/shopee/platforms/fraud/proto/fraud/v1;fraudv1";
+option go_package = "github.com/tikiclone/tiki/platforms/fraud/proto/fraud/v1;fraudv1";
 
 service FraudDetectionService {
   rpc Evaluate(EvaluateRequest) returns (EvaluateResponse);

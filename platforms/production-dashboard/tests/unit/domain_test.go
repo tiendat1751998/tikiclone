@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/production-dashboard/internal/domain"
+	"github.com/tikiclone/tiki/platforms/production-dashboard/internal/domain"
 )
 
 func TestNewServiceHealth(t *testing.T) {
@@ -61,7 +61,7 @@ func TestServiceHealth_MarkUnhealthy(t *testing.T) {
 }
 
 func TestNewDeployment(t *testing.T) {
-	d := domain.NewDeployment("auth", "2.0.0", "production", "admin@example.com", "ghcr.io/shopee/auth:2.0.0", 3, "rolling")
+	d := domain.NewDeployment("auth", "2.0.0", "production", "admin@example.com", "ghcr.io/tiki/auth:2.0.0", 3, "rolling")
 	if d.ServiceName != "auth" {
 		t.Errorf("expected auth, got %s", d.ServiceName)
 	}
@@ -80,7 +80,7 @@ func TestNewDeployment(t *testing.T) {
 }
 
 func TestDeployment_MarkSucceeded(t *testing.T) {
-	d := domain.NewDeployment("auth", "2.0.0", "production", "admin@example.com", "ghcr.io/shopee/auth:2.0.0", 3, "rolling")
+	d := domain.NewDeployment("auth", "2.0.0", "production", "admin@example.com", "ghcr.io/tiki/auth:2.0.0", 3, "rolling")
 	d.MarkInProgress()
 	if d.Status != domain.DeploymentStatusInProgress {
 		t.Errorf("expected in_progress, got %s", d.Status)
@@ -98,7 +98,7 @@ func TestDeployment_MarkSucceeded(t *testing.T) {
 }
 
 func TestDeployment_MarkRolledBack(t *testing.T) {
-	d := domain.NewDeployment("auth", "2.0.0", "production", "admin@example.com", "ghcr.io/shopee/auth:2.0.0", 3, "rolling")
+	d := domain.NewDeployment("auth", "2.0.0", "production", "admin@example.com", "ghcr.io/tiki/auth:2.0.0", 3, "rolling")
 	d.MarkRolledBack()
 	if d.Status != domain.DeploymentStatusRolledBack {
 		t.Errorf("expected rolled_back, got %s", d.Status)

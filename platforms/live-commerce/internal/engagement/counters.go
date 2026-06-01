@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/fanout"
-	redi "github.com/shopee-clone/shopee/platforms/live-commerce/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/fanout"
+	redi "github.com/tikiclone/tiki/platforms/live-commerce/internal/infrastructure/redis"
 	"go.uber.org/zap"
 )
 

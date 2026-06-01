@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/segmentio/kafka-go"
-	"github.com/shopee-clone/shopee/services/shipment/internal/config"
-	"github.com/shopee-clone/shopee/services/shipment/internal/domain"
-	"github.com/shopee-clone/shopee/services/shipment/internal/metrics"
+	"github.com/tikiclone/tiki/services/shipment/internal/config"
+	"github.com/tikiclone/tiki/services/shipment/internal/domain"
+	"github.com/tikiclone/tiki/services/shipment/internal/metrics"
 )
 
 type Producer struct {

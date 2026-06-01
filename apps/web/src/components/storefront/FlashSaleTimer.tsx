@@ -2,34 +2,44 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { productsApi } from "@/lib/api/client";
+
+interface FlashSaleData {
+  end_time: string;
+  products: { id: string; name: string; image_url: string; price: number; original_price: number }[];
+}
 
 export function FlashSaleTimer() {
+  const [flashSale, setFlashSale] = useState<FlashSaleData | null>(null);
+
+  useEffect(() => {
+    productsApi.getFlashSale()
+      .then((data) => setFlashSale(data as FlashSaleData))
+      .catch(() => {
+        const endTime = new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString();
+        setFlashSale({ end_time: endTime, products: [] });
+      });
+  }, []);
+
   const calculateTimeLeft = useCallback(() => {
-    const endTime = new Date().getTime() + 2 * 60 * 60 * 1000;
-    const now = new Date().getTime();
+    if (!flashSale) return { hours: "00", minutes: "00", seconds: "00" };
+    const endTime = new Date(flashSale.end_time).getTime();
+    const now = Date.now();
     const diff = endTime - now;
 
-    if (diff <= 0) {
-      return { hours: "00", minutes: "00", seconds: "00" };
-    }
-
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    if (diff <= 0) return { hours: "00", minutes: "00", seconds: "00" };
 
     return {
-      hours: String(hours).padStart(2, "0"),
-      minutes: String(minutes).padStart(2, "0"),
-      seconds: String(seconds).padStart(2, "0"),
+      hours: String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, "0"),
+      minutes: String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, "0"),
+      seconds: String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, "0"),
     };
-  }, []);
+  }, [flashSale]);
 
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
+    const timer = setInterval(() => setTimeLeft(calculateTimeLeft()), 1000);
     return () => clearInterval(timer);
   }, [calculateTimeLeft]);
 

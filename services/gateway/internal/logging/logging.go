@@ -1,8 +1,8 @@
 package logging
 
 import (
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/gateway/internal/config"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/gateway/internal/config"
 	"go.uber.org/zap"
 )
 

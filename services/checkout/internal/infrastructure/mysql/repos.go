@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/services/checkout/internal/domain"
+	"github.com/tikiclone/tiki/services/checkout/internal/domain"
 )
 
 type CheckoutRepository struct{ db *sqlx.DB }

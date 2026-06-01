@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/shopee-clone/shopee/services/gateway/internal/config"
+	"github.com/tikiclone/tiki/services/gateway/internal/config"
 )
 
 func generateTestKey() (*rsa.PrivateKey, *rsa.PublicKey, error) {

@@ -1,9 +1,9 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: shopee-api-gateway
+  name: tiki-api-gateway
 spec:
   minAvailable: 2
   selector:
     matchLabels:
-      app: shopee-api-gateway
+      app: tiki-api-gateway

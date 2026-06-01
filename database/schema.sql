@@ -1,6 +1,6 @@
 -- ============================================================
 -- SHOPEE CLONE — MASTER DATABASE SCHEMA
--- Database: shopee_platform (MySQL 8.0)
+-- Database: tiki_platform (MySQL 8.0)
 -- Charset: utf8mb4
 -- Collation: utf8mb4_unicode_ci
 -- Engine: InnoDB
@@ -1522,7 +1522,7 @@ INSERT IGNORE INTO role_permissions (role_id, permission_id) VALUES
 
 -- Default system config
 INSERT IGNORE INTO system_config (id, config_key, config_value, value_type, description) VALUES
-    ('cfg_001', 'platform.name', 'Shopee Clone', 'string', 'Platform display name'),
+    ('cfg_001', 'platform.name', 'Tiki Clone', 'string', 'Platform display name'),
     ('cfg_002', 'platform.currency', 'VND', 'string', 'Default currency'),
     ('cfg_003', 'inventory.reservation_ttl_minutes', '15', 'int', 'Reservation expiration time'),
     ('cfg_004', 'payment.idempotency_ttl_hours', '24', 'int', 'Payment idempotency key TTL'),

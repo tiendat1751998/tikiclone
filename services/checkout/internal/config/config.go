@@ -69,7 +69,7 @@ type OTELConfig struct {
 
 func Load() *Config {
 	return &Config{
-		AppName:  getEnv("APP_NAME", "shopee-checkout"),
+		AppName:  getEnv("APP_NAME", "tiki-checkout"),
 		AppEnv:   getEnv("APP_ENV", "development"),
 		LogLevel: getEnv("LOG_LEVEL", "info"),
 		HTTPPort: getEnvInt("CHECKOUT_HTTP_PORT", 8080),
@@ -77,9 +77,9 @@ func Load() *Config {
 		MySQL: MySQLConfig{
 			Host:         getEnv("MYSQL_HOST", "localhost"),
 			Port:         getEnvInt("MYSQL_PORT", 3306),
-			User:         getEnv("MYSQL_USER", "shopee"),
+			User:         getEnv("MYSQL_USER", "tiki"),
 			Password:     requireEnv("MYSQL_PASSWORD"),
-			Database:     getEnv("MYSQL_DATABASE", "shopee_checkout"),
+			Database:     getEnv("MYSQL_DATABASE", "tiki_checkout"),
 			MaxOpenConns: getEnvInt("MYSQL_MAX_OPEN_CONNS", 25),
 			MaxIdleConns: getEnvInt("MYSQL_MAX_IDLE_CONNS", 10),
 			MaxLifetime:  getEnvDuration("MYSQL_MAX_LIFETIME", 5*time.Minute),
@@ -107,13 +107,13 @@ func Load() *Config {
 		IdempotencyTTL:     getEnvDuration("IDEMPOTENCY_TTL", 24*time.Hour),
 		MaxRetries:         getEnvInt("MAX_RETRIES", 3),
 
-		InventoryServiceAddr: getEnv("INVENTORY_SERVICE_ADDR", "shopee-inventory:9090"),
-		PromotionServiceAddr: getEnv("PROMOTION_SERVICE_ADDR", "shopee-promotion:9090"),
-		OrderServiceAddr:     getEnv("ORDER_SERVICE_ADDR", "shopee-order:9090"),
+		InventoryServiceAddr: getEnv("INVENTORY_SERVICE_ADDR", "tiki-inventory:9090"),
+		PromotionServiceAddr: getEnv("PROMOTION_SERVICE_ADDR", "tiki-promotion:9090"),
+		OrderServiceAddr:     getEnv("ORDER_SERVICE_ADDR", "tiki-order:9090"),
 
 		OpenTelemetry: OTELConfig{
 			Endpoint:    getEnv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318"),
-			ServiceName: getEnv("OTEL_SERVICE_NAME", "shopee-checkout"),
+			ServiceName: getEnv("OTEL_SERVICE_NAME", "tiki-checkout"),
 			TraceRatio:  getEnvFloat("OTEL_TRACES_SAMPLER_ARG", 0.1),
 		},
 	}

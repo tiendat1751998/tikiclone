@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/cohort"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/cohort"
 )
 
 type analyzeCohortRequest struct {

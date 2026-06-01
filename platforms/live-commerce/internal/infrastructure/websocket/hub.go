@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/metrics"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/metrics"
 	"go.uber.org/zap"
 )
 

@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/global-infra/internal/featureflag"
+	"github.com/tikiclone/tiki/platforms/global-infra/internal/featureflag"
 )
 
 type createFlagRequest struct {

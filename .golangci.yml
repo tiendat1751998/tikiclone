@@ -91,7 +91,7 @@ linters-settings:
   gofumpt:
     extra-rules: true
   goimports:
-    local-prefixes: github.com/shopee-clone/shopee
+    local-prefixes: github.com/tiki-clone/shopee
   gocyclo:
     min-complexity: 15
   gocognit:

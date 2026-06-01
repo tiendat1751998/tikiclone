@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: identity-auth
-  namespace: shopee
+  namespace: tiki
   labels:
     app: identity-auth
     service: identity-auth
@@ -44,7 +44,7 @@ spec:
             capabilities:
               drop:
                 - ALL
-          image: ghcr.io/shopee-clone/identity-auth:latest
+          image: ghcr.io/tiki-clone/identity-auth:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -61,7 +61,7 @@ spec:
             - name: POSTGRES_PORT
               value: "5432"
             - name: POSTGRES_DB
-              value: "shopee_auth"
+              value: "tiki_auth"
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
@@ -153,7 +153,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: identity-auth
-  namespace: shopee
+  namespace: tiki
   labels:
     app: identity-auth
 spec:
@@ -174,7 +174,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: identity-auth
-  namespace: shopee
+  namespace: tiki
   labels:
     app: identity-auth
 ---
@@ -182,7 +182,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: identity-auth
-  namespace: shopee
+  namespace: tiki
   labels:
     app: identity-auth
 spec:
@@ -223,7 +223,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: identity-auth
-  namespace: shopee
+  namespace: tiki
   labels:
     app: identity-auth
 spec:

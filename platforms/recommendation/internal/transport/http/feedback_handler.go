@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/events"
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/metrics"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/events"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/metrics"
 )
 
 type feedbackRequest struct {

@@ -5,7 +5,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/embeddings"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/embeddings"
 )
 
 func TestEmbeddingGeneration(t *testing.T) {

@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/devicefp"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/transactionmon"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/devicefp"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/transactionmon"
 )
 
 func TestRecordTransactionNewUser(t *testing.T) {

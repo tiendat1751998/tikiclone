@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/search/internal/ranking"
-	"github.com/shopee-clone/shopee/platforms/search/internal/search"
+	"github.com/tikiclone/tiki/platforms/search/internal/ranking"
+	"github.com/tikiclone/tiki/platforms/search/internal/search"
 )
 
 func TestRankingScoreCalculation(t *testing.T) {

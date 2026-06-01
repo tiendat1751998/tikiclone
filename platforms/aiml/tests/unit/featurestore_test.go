@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/featurestore"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/featurestore"
 )
 
 func TestFeatureRegistration(t *testing.T) {

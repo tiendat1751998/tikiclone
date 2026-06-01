@@ -12,13 +12,13 @@ import (
 	"go.uber.org/zap"
 	automaxprocs "go.uber.org/automaxprocs/maxprocs"
 
-	"github.com/shopee-clone/shopee/platforms/notification-campaign/internal/audience"
-	"github.com/shopee-clone/shopee/platforms/notification-campaign/internal/campaign"
-	"github.com/shopee-clone/shopee/platforms/notification-campaign/internal/content"
-	"github.com/shopee-clone/shopee/platforms/notification-campaign/internal/deliveryopt"
-	"github.com/shopee-clone/shopee/platforms/notification-campaign/internal/health"
-	"github.com/shopee-clone/shopee/platforms/notification-campaign/internal/reporting"
-	httpTransport "github.com/shopee-clone/shopee/platforms/notification-campaign/internal/transport/http"
+	"github.com/tikiclone/tiki/platforms/notification-campaign/internal/audience"
+	"github.com/tikiclone/tiki/platforms/notification-campaign/internal/campaign"
+	"github.com/tikiclone/tiki/platforms/notification-campaign/internal/content"
+	"github.com/tikiclone/tiki/platforms/notification-campaign/internal/deliveryopt"
+	"github.com/tikiclone/tiki/platforms/notification-campaign/internal/health"
+	"github.com/tikiclone/tiki/platforms/notification-campaign/internal/reporting"
+	httpTransport "github.com/tikiclone/tiki/platforms/notification-campaign/internal/transport/http"
 )
 
 func init() {

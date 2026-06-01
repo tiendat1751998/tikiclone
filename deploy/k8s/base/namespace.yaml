@@ -10,8 +10,8 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: shopee-dev
+  name: tiki-dev
   labels:
-    name: shopee-dev
+    name: tiki-dev
     environment: development
     istio-injection: enabled

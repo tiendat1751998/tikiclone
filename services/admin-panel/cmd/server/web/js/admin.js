@@ -1,4 +1,4 @@
-/* Shopee Admin Panel — Complete SPA Application */
+/* Tiki Admin Panel */
 (function() {
   'use strict';
 

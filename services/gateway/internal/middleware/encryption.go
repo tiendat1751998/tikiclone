@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/encrypt"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/encrypt"
 )
 
 func DecryptBody(cipher *encrypt.Cipher) gin.HandlerFunc {

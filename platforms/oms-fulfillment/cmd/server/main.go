@@ -9,12 +9,12 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/oms-fulfillment/internal/inventory"
-	"github.com/shopee-clone/shopee/platforms/oms-fulfillment/internal/ordermanagement"
-	"github.com/shopee-clone/shopee/platforms/oms-fulfillment/internal/pickpack"
-	"github.com/shopee-clone/shopee/platforms/oms-fulfillment/internal/returns"
-	httptransport "github.com/shopee-clone/shopee/platforms/oms-fulfillment/internal/transport/http"
-	"github.com/shopee-clone/shopee/platforms/oms-fulfillment/internal/warehouse"
+	"github.com/tikiclone/tiki/platforms/oms-fulfillment/internal/inventory"
+	"github.com/tikiclone/tiki/platforms/oms-fulfillment/internal/ordermanagement"
+	"github.com/tikiclone/tiki/platforms/oms-fulfillment/internal/pickpack"
+	"github.com/tikiclone/tiki/platforms/oms-fulfillment/internal/returns"
+	httptransport "github.com/tikiclone/tiki/platforms/oms-fulfillment/internal/transport/http"
+	"github.com/tikiclone/tiki/platforms/oms-fulfillment/internal/warehouse"
 	automaxprocs "go.uber.org/automaxprocs/maxprocs"
 )
 

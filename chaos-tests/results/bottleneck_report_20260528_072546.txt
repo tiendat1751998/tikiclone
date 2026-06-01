@@ -1,0 +1,77 @@
+══════════════════════════════════════════════════════════════════════
+TIKI-CLONE LOAD TEST / BOTTLENECK ANALYSIS REPORT
+Generated: 2026-05-28T07:25:46.051687
+══════════════════════════════════════════════════════════════════════
+
+── RPS SCALING SUMMARY ─────────────────────────────────────────────
+  Target TPS   Actual RPS     Avg RT     p95 RT     p99 RT   Failures     Status
+          10          N/A
+
+── CONTAINER RESOURCE USAGE ──────────────────────────────────────────
+
+  At 10 TPS:
+  Service                        CPU before  CPU after    CPU Δ    Mem after
+  tikiclone-web-tls-1                  0.0%       0.0%    +0.0%        0.1%
+  tikiclone-gateway-1                  0.1%       0.0%    -0.0%        0.1%
+  tikiclone-web-1                      0.0%       0.0%    +0.0%        0.3%
+  tikiclone-product-1                  0.0%       0.0%    +0.0%        0.1%
+  tikiclone-cart-1                     0.0%       0.0%    +0.0%        0.1%
+  tikiclone-order-1                    0.1%       0.0%    -0.1%        0.0%
+  tikiclone-payment-1                  0.1%       0.0%    -0.1%        0.0%
+  tikiclone-inventory-1                0.0%       0.0%    -0.0%        0.0%
+  tikiclone-auth-1                     0.1%       0.1%    +0.0%        0.1%
+  tikiclone-identity-auth-1            0.0%       0.2%    +0.2%        0.0%
+  tikiclone-mysql-primary-1            1.1%       1.0%    -0.1%        2.4%
+  tikiclone-redis-master-1             0.7%       0.7%    +0.0%        0.0%
+  tikiclone-mongodb-1                  0.8%       0.7%    -0.1%        1.0%
+  tikiclone-kafka-1                    0.7%       0.6%    -0.1%        2.1%
+  ollama                               0.0%       0.0%    +0.0%        0.1%
+
+── ERROR LOG SUMMARY ────────────────────────────────────────────────
+
+  At 10 TPS:
+    tikiclone-gateway-1:
+      github.com/tikiclone/tiki/services/gateway/internal/routing.(*Router).Setup.ErrorHandler.func2
+      2026-05-28T07:24:08.270Z	[33mWARN[0m	gin@v1.10.0/context.go:185	client error	{"service": "tiki-gateway", "trace_id": "
+      github.com/tikiclone/tiki/services/gateway/internal/routing.(*Router).Setup.ErrorHandler.func2
+    tikiclone-web-1:
+      ReferenceError: location is not defined
+       ⨯ uncaughtException:  ReferenceError: location is not defined
+    tikiclone-product-1:
+      2026-05-27T17:54:20.164Z	[31mFATAL[0m	runtime/proc.go:290	failed to connect to mysql	{"service": "product-service", "e
+    tikiclone-cart-1:
+      2026-05-28T07:24:08.644Z	[31mERROR[0m	application/service.go:197	failed to publish cart event	{"service": "tiki-cart",
+      github.com/tikiclone/tiki/services/cart/internal/transport/http.(*Router).Setup.ErrorHandler.func2
+    tikiclone-payment-1:
+      2026-05-28T01:56:19.226Z	[31mERROR[0m	http/handler.go:38	failed to save fraud check	{"service": "tiki-payment", "trace
+      2026-05-28T02:45:17.620Z	[31mERROR[0m	http/handler.go:38	failed to save fraud check	{"service": "tiki-payment", "trace
+      2026-05-28T03:33:26.190Z	[31mERROR[0m	http/handler.go:38	failed to save fraud check	{"service": "tiki-payment", "trace
+    tikiclone-auth-1:
+      2026-05-28T01:50:31.666Z	[31mERROR[0m	mysql/audit_repo.go:156	audit flush failed	{"service": "tiki-auth", "count": 2, 
+      2026-05-28T01:50:36.666Z	[31mERROR[0m	mysql/audit_repo.go:156	audit flush failed	{"service": "tiki-auth", "count": 2, 
+      2026-05-28T01:50:41.666Z	[31mERROR[0m	mysql/audit_repo.go:156	audit flush failed	{"service": "tiki-auth", "count": 2, 
+      2026-05-28T01:50:46.667Z	[31mERROR[0m	mysql/audit_repo.go:156	audit flush failed	{"service": "tiki-auth", "count": 2, 
+      2026-05-28T01:50:51.666Z	[31mERROR[0m	mysql/audit_repo.go:156	audit flush failed	{"service": "tiki-auth", "count": 2, 
+    tikiclone-identity-auth-1:
+      2026-05-27T17:54:20.097Z	[31mFATAL[0m	runtime/proc.go:290	failed to connect to mysql	{"service": "shopee-auth", "error
+      2026-05-27T17:56:02.300Z	[33mWARN[0m	runtime/proc.go:290	redis not available, continuing without redis	{"service": "sh
+    tikiclone-kafka-1:
+      org.apache.zookeeper.ClientCnxn$SessionTimeoutException: Client session timed out, have not heard from server in 12005ms
+      [2026-05-28 04:47:33,698] INFO Session establishment complete on server zookeeper/172.19.0.6:2181, session id = 0x1000dc
+    ollama:
+      time=2026-05-28T06:42:18.334Z level=INFO source=routes.go:1802 msg="server config" env="map[CUDA_VISIBLE_DEVICES: GGML_V
+      time=2026-05-28T06:42:39.743Z level=INFO source=routes.go:1802 msg="server config" env="map[CUDA_VISIBLE_DEVICES: GGML_V
+      time=2026-05-28T06:46:05.003Z level=INFO source=routes.go:1802 msg="server config" env="map[CUDA_VISIBLE_DEVICES: GGML_V
+
+── BOTTLENECK DIAGNOSIS ────────────────────────────────────────────
+  ✓ No bottleneck detected within tested range
+
+── RECOMMENDATIONS ─────────────────────────────────────────────────
+  1. Scale the primary bottleneck service horizontally
+  2. Add connection pooling to database-facing services
+  3. Enable response caching at gateway level
+  4. Add Redis caching for frequently accessed data
+  5. Consider CDN for static assets (images, JS, CSS)
+  6. Profile slow endpoints with pprof/trace
+
+══════════════════════════════════════════════════════════════════════

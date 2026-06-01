@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/events"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/events"
 )
 
 type Service struct {

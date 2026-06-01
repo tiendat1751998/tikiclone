@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/services/gateway/internal/config"
+	"github.com/tikiclone/tiki/services/gateway/internal/config"
 )
 
 func CORS(cfg config.CORSConfig) gin.HandlerFunc {

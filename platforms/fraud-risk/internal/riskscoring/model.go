@@ -1,6 +1,6 @@
 package riskscoring
 
-import "github.com/shopee-clone/shopee/platforms/fraud-risk/internal/core"
+import "github.com/tikiclone/tiki/platforms/fraud-risk/internal/core"
 
 type RiskFactor struct {
 	Name         string  `json:"name"`

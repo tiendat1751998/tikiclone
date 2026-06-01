@@ -3,11 +3,11 @@ package orderpublic
 import (
 	"github.com/jmoiron/sqlx"
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/services/order/internal/application"
-	"github.com/shopee-clone/shopee/services/order/internal/config"
-	"github.com/shopee-clone/shopee/services/order/internal/domain"
-	"github.com/shopee-clone/shopee/services/order/internal/infrastructure/mysql"
-	redisinfra "github.com/shopee-clone/shopee/services/order/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/services/order/internal/application"
+	"github.com/tikiclone/tiki/services/order/internal/config"
+	"github.com/tikiclone/tiki/services/order/internal/domain"
+	"github.com/tikiclone/tiki/services/order/internal/infrastructure/mysql"
+	redisinfra "github.com/tikiclone/tiki/services/order/internal/infrastructure/redis"
 )
 
 type OrderService = application.OrderService

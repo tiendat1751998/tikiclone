@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/shopee-clone/shopee/services/auth/internal/config"
+	"github.com/tikiclone/tiki/services/auth/internal/config"
 	"golang.org/x/crypto/argon2"
 	"golang.org/x/crypto/bcrypt"
 )

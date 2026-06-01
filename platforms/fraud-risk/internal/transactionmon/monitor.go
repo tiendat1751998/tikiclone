@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/core"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/devicefp"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/core"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/devicefp"
 )
 
 const (

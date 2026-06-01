@@ -1,5 +1,5 @@
 package mysql
-import ("context"; "database/sql"; "github.com/jmoiron/sqlx"; "github.com/shopee-clone/shopee/services/product-catalog/internal/domain")
+import ("context"; "database/sql"; "github.com/jmoiron/sqlx"; "github.com/tikiclone/tiki/services/product-catalog/internal/domain")
 
 type ProductRepository struct{ db *sqlx.DB }
 func NewProductRepository(db *sqlx.DB) *ProductRepository { return &ProductRepository{db: db} }

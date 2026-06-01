@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/creative"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/creative"
 )
 
 type createCreativeRequest struct {

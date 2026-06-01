@@ -1,4 +1,4 @@
-module github.com/shopee-clone/shopee/platforms/payment-ledger
+module github.com/tikiclone/tiki/platforms/payment-ledger
 
 go 1.26.3
 

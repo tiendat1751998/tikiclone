@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/api-gateway/internal/edgecache"
+	"github.com/tikiclone/tiki/platforms/api-gateway/internal/edgecache"
 )
 
 func TestCacheSetAndGet(t *testing.T) {

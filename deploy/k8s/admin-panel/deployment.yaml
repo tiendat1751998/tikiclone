@@ -39,7 +39,7 @@ spec:
         allowPrivilegeEscalation: false
       containers:
         - name: admin-panel
-          image: ghcr.io/shopee-clone/admin-panel:latest
+          image: ghcr.io/tiki-clone/admin-panel:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 3001

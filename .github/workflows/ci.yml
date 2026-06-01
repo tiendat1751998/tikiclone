@@ -111,8 +111,8 @@ jobs:
           context: ./services/${{ matrix.service }}
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: |
-            ghcr.io/shopee-clone/${{ matrix.service }}:latest
-            ghcr.io/shopee-clone/${{ matrix.service }}:${{ github.sha }}
+            ghcr.io/tiki-clone/${{ matrix.service }}:latest
+            ghcr.io/tiki-clone/${{ matrix.service }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

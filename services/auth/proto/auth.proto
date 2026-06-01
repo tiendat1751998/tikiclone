@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package shopee.auth.v1;
 
-option go_package = "github.com/shopee-clone/shopee/services/auth/proto/auth/v1";
+option go_package = "github.com/tikiclone/tiki/services/auth/proto/auth/v1";
 
 service AuthService {
   rpc Register(RegisterRequest) returns (RegisterResponse);

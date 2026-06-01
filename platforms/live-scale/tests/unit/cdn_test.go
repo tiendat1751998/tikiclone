@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/cdn"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/cdn"
 )
 
 func TestCDNPurgeCache(t *testing.T) {

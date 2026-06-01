@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package shopee.search.v1;
 
-option go_package = "github.com/shopee-clone/shopee/platforms/search/proto/search/v1;searchpb";
+option go_package = "github.com/tikiclone/tiki/platforms/search/proto/search/v1;searchpb";
 
 import "google/protobuf/timestamp.proto";
 

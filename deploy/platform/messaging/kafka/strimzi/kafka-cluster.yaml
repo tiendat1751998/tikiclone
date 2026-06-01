@@ -2,9 +2,9 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaNodePool
 metadata:
   name: dual-role
-  namespace: shopee
+  namespace: tiki
   labels:
-    strimzi.io/cluster: shopee-kafka
+    strimzi.io/cluster: tiki-kafka
 spec:
   replicas: 3
   roles:
@@ -21,8 +21,8 @@ spec:
 apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
-  name: shopee-kafka
-  namespace: shopee
+  name: tiki-kafka
+  namespace: tiki
 spec:
   kafka:
     version: 3.7.0
@@ -74,7 +74,7 @@ spec:
                       - key: app.kubernetes.io/name
                         operator: In
                         values:
-                          - shopee-kafka
+                          - tiki-kafka
                   topologyKey: kubernetes.io/hostname
   zookeeper:
     replicas: 3
@@ -96,9 +96,9 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
   name: orders
-  namespace: shopee
+  namespace: tiki
   labels:
-    strimzi.io/cluster: shopee-kafka
+    strimzi.io/cluster: tiki-kafka
 spec:
   partitions: 10
   replicas: 3
@@ -110,9 +110,9 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
   name: payments
-  namespace: shopee
+  namespace: tiki
   labels:
-    strimzi.io/cluster: shopee-kafka
+    strimzi.io/cluster: tiki-kafka
 spec:
   partitions: 10
   replicas: 3
@@ -124,9 +124,9 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
   name: products
-  namespace: shopee
+  namespace: tiki
   labels:
-    strimzi.io/cluster: shopee-kafka
+    strimzi.io/cluster: tiki-kafka
 spec:
   partitions: 6
   replicas: 3
@@ -138,9 +138,9 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
   name: inventory
-  namespace: shopee
+  namespace: tiki
   labels:
-    strimzi.io/cluster: shopee-kafka
+    strimzi.io/cluster: tiki-kafka
 spec:
   partitions: 10
   replicas: 3
@@ -152,9 +152,9 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
   name: notifications
-  namespace: shopee
+  namespace: tiki
   labels:
-    strimzi.io/cluster: shopee-kafka
+    strimzi.io/cluster: tiki-kafka
 spec:
   partitions: 6
   replicas: 3
@@ -166,9 +166,9 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
   name: search-indexing
-  namespace: shopee
+  namespace: tiki
   labels:
-    strimzi.io/cluster: shopee-kafka
+    strimzi.io/cluster: tiki-kafka
 spec:
   partitions: 6
   replicas: 3
@@ -180,9 +180,9 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
   name: user-behavior
-  namespace: shopee
+  namespace: tiki
   labels:
-    strimzi.io/cluster: shopee-kafka
+    strimzi.io/cluster: tiki-kafka
 spec:
   partitions: 12
   replicas: 3
@@ -194,9 +194,9 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
   name: fraud-events
-  namespace: shopee
+  namespace: tiki
   labels:
-    strimzi.io/cluster: shopee-kafka
+    strimzi.io/cluster: tiki-kafka
 spec:
   partitions: 6
   replicas: 3
@@ -208,9 +208,9 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
   name: checkout
-  namespace: shopee
+  namespace: tiki
   labels:
-    strimzi.io/cluster: shopee-kafka
+    strimzi.io/cluster: tiki-kafka
 spec:
   partitions: 10
   replicas: 3

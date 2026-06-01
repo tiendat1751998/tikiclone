@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v5"
-	"github.com/shopee-clone/shopee/platforms/billing/internal/domain"
+	"github.com/tikiclone/tiki/platforms/billing/internal/domain"
 )
 
 type AccountRepo struct{ pool *Pool }

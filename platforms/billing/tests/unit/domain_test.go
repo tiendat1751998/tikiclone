@@ -2,7 +2,7 @@ package unit
 
 import (
 	"testing"
-	"github.com/shopee-clone/shopee/platforms/billing/internal/domain"
+	"github.com/tikiclone/tiki/platforms/billing/internal/domain"
 )
 
 func TestNewAccount(t *testing.T) {

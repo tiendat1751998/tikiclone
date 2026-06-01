@@ -33,7 +33,7 @@ private ProductServiceGrpc.ProductServiceBlockingStub productService;
 ### 🚫 Forbidden (Anti-Pattern)
 ```yaml
 jwt:
-  secret: "my-super-secret-shopee-key-12345-that-is-hardcoded"
+  secret: "my-super-secret-tiki-key-12345-that-is-hardcoded"
 ```
 ### ✅ Standard (Best Practice)
 ```yaml

@@ -1,7 +1,7 @@
 "use client";
 import { forwardRef, type ButtonHTMLAttributes } from "react";
 import { clsx } from "clsx";
-import { colors, transition, borderRadius, typography } from "@shopee/design-tokens";
+import { colors, transition, borderRadius, typography } from "@tiki/design-tokens";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";

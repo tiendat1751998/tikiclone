@@ -1,6 +1,6 @@
 # Local Development Gateway Configuration
 app:
-  name: shopee-gateway
+  name: tiki-gateway
   env: development
   log_level: debug
 

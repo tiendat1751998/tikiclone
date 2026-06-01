@@ -2,8 +2,8 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
-    cluster: shopee-clone
-    namespace: shopee
+    cluster: tiki-clone
+    namespace: tiki
 
 alerting:
   alertmanagers:

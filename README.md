@@ -1,3 +1,3 @@
-# shopeeclone
+# tikiclone
 go build .
 yarn dev

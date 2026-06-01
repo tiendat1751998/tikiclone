@@ -10,7 +10,7 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/discovery"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/discovery"
 )
 
 type Algorithm string

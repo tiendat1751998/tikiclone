@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/content"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/content"
 )
 
 func TestContentCategoryFullMatch(t *testing.T) {

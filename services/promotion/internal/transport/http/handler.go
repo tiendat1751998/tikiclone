@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/promotion/internal/application"
-	"github.com/shopee-clone/shopee/services/promotion/internal/domain"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/promotion/internal/application"
+	"github.com/tikiclone/tiki/services/promotion/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.uber.org/zap"
 )
@@ -21,7 +21,7 @@ func NewHandler(service *application.PromotionService) *Handler {
 }
 
 func (h *Handler) ValidateVoucher(c *gin.Context) {
-	ctx, _ := otel.Tracer("shopee-promotion").Start(c.Request.Context(), "http.validate_voucher")
+	ctx, _ := otel.Tracer("tiki-promotion").Start(c.Request.Context(), "http.validate_voucher")
 
 	var req struct {
 		Code          string `json:"code" binding:"required"`
@@ -48,7 +48,7 @@ func (h *Handler) ValidateVoucher(c *gin.Context) {
 }
 
 func (h *Handler) RedeemVoucher(c *gin.Context) {
-	ctx, _ := otel.Tracer("shopee-promotion").Start(c.Request.Context(), "http.redeem_voucher")
+	ctx, _ := otel.Tracer("tiki-promotion").Start(c.Request.Context(), "http.redeem_voucher")
 
 	var req struct {
 		Code           string `json:"code" binding:"required"`
@@ -77,7 +77,7 @@ func (h *Handler) RedeemVoucher(c *gin.Context) {
 }
 
 func (h *Handler) EvaluatePromotions(c *gin.Context) {
-	ctx, _ := otel.Tracer("shopee-promotion").Start(c.Request.Context(), "http.evaluate_promotions")
+	ctx, _ := otel.Tracer("tiki-promotion").Start(c.Request.Context(), "http.evaluate_promotions")
 
 	var req struct {
 		UserID        string `json:"user_id" binding:"required"`
@@ -103,7 +103,7 @@ func (h *Handler) EvaluatePromotions(c *gin.Context) {
 }
 
 func (h *Handler) GetActiveCampaigns(c *gin.Context) {
-	ctx, _ := otel.Tracer("shopee-promotion").Start(c.Request.Context(), "http.get_campaigns")
+	ctx, _ := otel.Tracer("tiki-promotion").Start(c.Request.Context(), "http.get_campaigns")
 	campaigns, err := h.service.GetActiveCampaigns(ctx)
 	if err != nil {
 		handleError(c, err)
@@ -113,7 +113,7 @@ func (h *Handler) GetActiveCampaigns(c *gin.Context) {
 }
 
 func (h *Handler) CreateVoucher(c *gin.Context) {
-	ctx, _ := otel.Tracer("shopee-promotion").Start(c.Request.Context(), "http.create_voucher")
+	ctx, _ := otel.Tracer("tiki-promotion").Start(c.Request.Context(), "http.create_voucher")
 	var voucher domain.Voucher
 	if err := c.ShouldBindJSON(&voucher); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error_code": "INVALID_REQUEST", "message": err.Error()})

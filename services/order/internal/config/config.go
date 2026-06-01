@@ -95,7 +95,7 @@ type AuditConfig struct {
 
 func Load() *Config {
 	return &Config{
-		AppName:  getEnv("APP_NAME", "shopee-order"),
+		AppName:  getEnv("APP_NAME", "tiki-order"),
 		AppEnv:   getEnv("APP_ENV", "development"),
 		LogLevel: getEnv("LOG_LEVEL", "info"),
 		HTTPPort: getEnvInt("ORDER_HTTP_PORT", 8083),
@@ -104,9 +104,9 @@ func Load() *Config {
 		MySQL: MySQLConfig{
 			Host:         getEnv("MYSQL_HOST", "localhost"),
 			Port:         getEnvInt("MYSQL_PORT", 3306),
-			User:         getEnv("MYSQL_USER", "shopee"),
+			User:         getEnv("MYSQL_USER", "tiki"),
 			Password:     requireEnv("MYSQL_PASSWORD"),
-			Database:     getEnv("MYSQL_DATABASE", "shopee_orders"),
+			Database:     getEnv("MYSQL_DATABASE", "tiki_orders"),
 			MaxOpenConns: getEnvInt("MYSQL_MAX_OPEN_CONNS", 25),
 			MaxIdleConns: getEnvInt("MYSQL_MAX_IDLE_CONNS", 10),
 			MaxLifetime:  getEnvDuration("MYSQL_MAX_LIFETIME", 5*time.Minute),
@@ -127,16 +127,16 @@ func Load() *Config {
 
 		Kafka: KafkaConfig{
 			Brokers:       getEnvSlice("KAFKA_BROKERS", ","),
-			TopicPrefix:   getEnv("KAFKA_TOPIC_PREFIX", "shopee.orders"),
-			ConsumerGroup: getEnv("KAFKA_CONSUMER_GROUP", "shopee-order-service"),
-			DLQTopic:      getEnv("KAFKA_DLQ_TOPIC", "shopee.orders.dlq"),
+			TopicPrefix:   getEnv("KAFKA_TOPIC_PREFIX", "tiki.orders"),
+			ConsumerGroup: getEnv("KAFKA_CONSUMER_GROUP", "tiki-order-service"),
+			DLQTopic:      getEnv("KAFKA_DLQ_TOPIC", "tiki.orders.dlq"),
 		},
 
 		JWT: JWTConfig{
 			AccessSecret: requireEnv("JWT_ACCESS_SECRET"),
 			AccessTTL:    getEnvDuration("JWT_ACCESS_TTL", 15*time.Minute),
-			Issuer:       getEnv("JWT_ISSUER", "shopee-auth"),
-			Audience:     getEnv("JWT_AUDIENCE", "shopee-clone"),
+			Issuer:       getEnv("JWT_ISSUER", "tiki-auth"),
+			Audience:     getEnv("JWT_AUDIENCE", "tiki-clone"),
 		},
 
 		Order: OrderConfig{
@@ -154,7 +154,7 @@ func Load() *Config {
 
 		OpenTelemetry: OTELConfig{
 			Endpoint:    getEnv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318"),
-			ServiceName: getEnv("OTEL_SERVICE_NAME", "shopee-order"),
+			ServiceName: getEnv("OTEL_SERVICE_NAME", "tiki-order"),
 			TraceRatio:  getEnvFloat("OTEL_TRACES_SAMPLER_ARG", 0.1),
 		},
 

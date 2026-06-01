@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/platforms/production-dashboard/internal/config"
+	"github.com/tikiclone/tiki/platforms/production-dashboard/internal/config"
 )
 
 type Store struct {

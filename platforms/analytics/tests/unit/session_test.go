@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/events"
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/session"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/events"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/session"
 )
 
 func TestSessionTracking(t *testing.T) {

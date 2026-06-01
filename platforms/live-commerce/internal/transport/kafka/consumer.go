@@ -6,8 +6,8 @@ import (
 
 	"github.com/bytedance/sonic"
 	"github.com/segmentio/kafka-go"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/application"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/application"
 	"go.uber.org/zap"
 )
 

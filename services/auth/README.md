@@ -1,6 +1,6 @@
 # Auth Service
 
-Centralized authentication and authorization service for the Shopee Clone platform.
+Centralized authentication and authorization service for the Tiki Clone platform.
 
 ## Architecture
 

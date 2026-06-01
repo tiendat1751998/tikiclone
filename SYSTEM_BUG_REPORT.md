@@ -1,6 +1,6 @@
 # SYSTEM-WIDE BUG REPORT
 **Date:** May 21, 2026  
-**Scope:** All Go microservices in Shopee Clone monorepo
+**Scope:** All Go microservices in Tiki Clone monorepo
 
 ---
 
@@ -236,10 +236,10 @@ func (r *CheckoutRepository) FindExpired(ctx context.Context, before time.Time, 
 
 ### M5: Hardcoded MySQL password defaults
 **Files:** Multiple config files  
-**Issue:** Default passwords like `shopee_dev` in code:
+**Issue:** Default passwords like `tiki_dev` in code:
 
 ```go
-Password: getEnv("MYSQL_PASSWORD", "shopee_dev"),
+Password: getEnv("MYSQL_PASSWORD", "tiki_dev"),
 ```
 
 **Impact:** Security risk if env vars not set.

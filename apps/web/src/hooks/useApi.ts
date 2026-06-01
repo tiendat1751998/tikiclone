@@ -4,6 +4,7 @@ import {
   useQuery,
   useMutation,
   useQueryClient,
+  useInfiniteQuery,
 } from "@tanstack/react-query";
 import { productsApi, categoriesApi, cartApi, ordersApi, authApi, customersApi, dashboardApi } from "@/lib/api/client";
 import { useCartStore, useAuthStore } from "@/stores";
@@ -95,9 +96,11 @@ export function useCategory(slug: string) {
 }
 
 export function useCart() {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   return useQuery({
     queryKey: [queryKeys.cart],
     queryFn: () => cartApi.get(),
+    enabled: isAuthenticated,
     staleTime: 30000,
   });
 }
@@ -119,18 +122,21 @@ export function useAddToCart() {
 }
 
 export function useOrders(params: Record<string, string> = {}) {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   return useQuery({
     queryKey: [queryKeys.orders, params],
     queryFn: () => ordersApi.list(params),
+    enabled: isAuthenticated,
     staleTime: 60000,
   });
 }
 
 export function useOrder(id: string) {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   return useQuery({
     queryKey: queryKeys.order(id),
     queryFn: () => ordersApi.getById(id),
-    enabled: !!id,
+    enabled: !!id && isAuthenticated,
     staleTime: 30000,
   });
 }
@@ -220,5 +226,86 @@ export function useRealtimeStats() {
     queryFn: () => dashboardApi.getRealtimeStats(),
     staleTime: 10000,
     refetchInterval: 10000,
+  });
+}
+
+// ============================================================
+// Infinite scroll / load-more for product listing pages
+// ============================================================
+
+const PRODUCT_PAGE_SIZE = 20;
+
+export interface ProductListPage {
+  products: Product[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+}
+
+async function fetchProductPage(
+  path: string,
+  page: number,
+  extraParams: Record<string, string> = {}
+): Promise<ProductListPage> {
+  const sp = new URLSearchParams({ page: String(page), size: String(PRODUCT_PAGE_SIZE), page_size: String(PRODUCT_PAGE_SIZE), ...extraParams });
+  const res = await fetch(`/api/v1${path}?${sp}`, { cache: "no-store" });
+  const data = await res.json();
+
+  if (Array.isArray(data)) {
+    const products = data as Product[];
+    return { products, total: products.length, page: 1, page_size: PRODUCT_PAGE_SIZE, total_pages: 1 };
+  }
+
+  const obj = data as Record<string, unknown>;
+  // { data: [...], total, page, size }
+  if (obj.data && Array.isArray(obj.data)) {
+    return {
+      products: obj.data as Product[],
+      total: (obj.total as number) || 0,
+      page: (obj.page as number) || page,
+      page_size: (obj.size as number) || PRODUCT_PAGE_SIZE,
+      total_pages: Math.ceil(((obj.total as number) || 0) / ((obj.size as number) || PRODUCT_PAGE_SIZE)) || 1,
+    };
+  }
+  // { products: [...], total, page, size }
+  if (obj.products && Array.isArray(obj.products)) {
+    return {
+      products: obj.products as Product[],
+      total: (obj.total as number) || 0,
+      page: (obj.page as number) || page,
+      page_size: (obj.size as number) || PRODUCT_PAGE_SIZE,
+      total_pages: Math.ceil(((obj.total as number) || 0) / ((obj.size as number) || PRODUCT_PAGE_SIZE)) || 1,
+    };
+  }
+  // { products: [...], total, page, page_size, total_pages } (search & direct responses)
+  if (obj.products || obj.data) {
+    const items = (obj.products || obj.data) as Product[];
+    const total = (obj.total as number) || items.length;
+    const ps = (obj.page_size as number) || (obj.size as number) || PRODUCT_PAGE_SIZE;
+    return {
+      products: items,
+      total,
+      page: (obj.page as number) || page,
+      page_size: ps,
+      total_pages: (obj.total_pages as number) || Math.ceil(total / ps) || 1,
+    };
+  }
+  return { products: [], total: 0, page, page_size: PRODUCT_PAGE_SIZE, total_pages: 0 };
+}
+
+export function useInfiniteProducts(
+  path: string,
+  extraParams: Record<string, string> = {}
+) {
+  return useInfiniteQuery({
+    queryKey: ["products", "infinite", path, extraParams],
+    queryFn: ({ pageParam }) => fetchProductPage(path, pageParam, extraParams),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.page < lastPage.total_pages) return lastPage.page + 1;
+      return undefined;
+    },
+    staleTime: 60000,
   });
 }

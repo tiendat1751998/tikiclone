@@ -1,12 +1,12 @@
 package http
 
 import (
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/embeddings"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/experiments"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/featurestore"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/inference"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/modelregistry"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/training"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/embeddings"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/experiments"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/featurestore"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/inference"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/modelregistry"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/training"
 )
 
 type Handler struct {

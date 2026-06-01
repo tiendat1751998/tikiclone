@@ -7,16 +7,19 @@ import { Product } from "@/types";
 import promotionsData from "@/data/tiki-promotions.json";
 
 const GATEWAY_URL = process.env.GATEWAY_URL || "http://gateway:8080";
+const API_BASE = `${GATEWAY_URL}/api/v1`;
 
 async function getDealProducts(): Promise<Product[]> {
   try {
-    const res = await fetch(`${GATEWAY_URL}/api/v1/products/deals?limit=20`, { cache: "no-store" });
+    const res = await fetch(`${API_BASE}/products/deals?limit=20`, { cache: "no-store" });
     const data = await res.json();
     return mapProductArray(Array.isArray(data) ? data : data.data || []);
   } catch {
     return [];
   }
 }
+
+export const dynamic = "force-dynamic";
 
 export default async function PromotionsPage() {
   const promo = promotionsData[0] as any;

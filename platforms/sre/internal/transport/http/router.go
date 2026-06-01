@@ -2,9 +2,9 @@ package http
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/health"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/middleware"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/health"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/middleware"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 )
 
 type Router struct {
@@ -17,7 +17,7 @@ func NewRouter(h *Handler, hc *health.Checker) *Router {
 }
 
 func (r *Router) Setup(e *gin.Engine) {
-	e.Use(middleware.Recovery(), middleware.ErrorHandler(), middleware.RequestID(), middleware.CORS(), observability.ObserveHTTPMetrics("shopee-sre"))
+	e.Use(middleware.Recovery(), middleware.ErrorHandler(), middleware.RequestID(), middleware.CORS(), observability.ObserveHTTPMetrics("tiki-sre"))
 
 	e.GET("/health", r.health.LivenessHandler())
 	e.GET("/ready", r.health.ReadinessHandler())

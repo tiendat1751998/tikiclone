@@ -2,8 +2,8 @@ package unit
 
 import (
 	"testing"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/domain"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/moderation"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/domain"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/moderation"
 )
 
 func TestFilterSpam(t *testing.T) {

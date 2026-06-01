@@ -10,13 +10,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/discovery"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/loadbalancer"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/mtls"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/resilience"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/telemetry"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/traffic"
-	httpTransport "github.com/shopee-clone/shopee/platforms/service-mesh/internal/transport/http"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/discovery"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/loadbalancer"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/mtls"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/resilience"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/telemetry"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/traffic"
+	httpTransport "github.com/tikiclone/tiki/platforms/service-mesh/internal/transport/http"
 	automaxprocs "go.uber.org/automaxprocs/maxprocs"
 )
 
@@ -34,7 +34,7 @@ func main() {
 
 	discSvc := discovery.NewService(discRepo)
 
-	ca, err := mtls.NewCertificateAuthority("ShopeeClone", "Service Mesh CA", 3650)
+	ca, err := mtls.NewCertificateAuthority("TikiClone", "Service Mesh CA", 3650)
 	if err != nil {
 		panic(err)
 	}

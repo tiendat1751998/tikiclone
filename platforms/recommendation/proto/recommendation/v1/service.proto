@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package shopee.recommendation.v1;
 
-option go_package = "github.com/shopee-clone/shopee/platforms/recommendation/proto/recommendation/v1;recpb";
+option go_package = "github.com/tikiclone/tiki/platforms/recommendation/proto/recommendation/v1;recpb";
 
 import "google/protobuf/timestamp.proto";
 

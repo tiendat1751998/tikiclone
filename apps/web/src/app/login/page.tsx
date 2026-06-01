@@ -61,7 +61,17 @@ export default function LoginPage() {
                   placeholder="Mật khẩu"
                 />
               </div>
-              <button
+              <div className="flex items-center justify-between mt-3 mb-4">
+              <label className="flex items-center gap-2 text-xs text-tiki-text-secondary cursor-pointer">
+                <input type="checkbox" className="rounded border-gray-300" />
+                Ghi nhớ đăng nhập
+              </label>
+              <Link href="/forgot-password" className="text-xs text-tiki-blue hover:underline">
+                Quên mật khẩu?
+              </Link>
+            </div>
+
+            <button
                 type="submit"
                 disabled={loginMutation.isPending}
                 className="w-full py-2.5 bg-tiki-blue text-white rounded-lg font-semibold text-sm hover:bg-tiki-blue-dark transition disabled:opacity-50"

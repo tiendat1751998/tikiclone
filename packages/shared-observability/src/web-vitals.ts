@@ -4,8 +4,8 @@ import { onCLS, onFID, onLCP, onFCP, onTTFB, onINP, type Metric } from "web-vita
 type VitalCallback = (metric: Metric) => void;
 
 const reportMetric: VitalCallback = (metric) => {
-  if (typeof window !== "undefined" && window.__shopee_observability) {
-    window.__shopee_observability.report(metric);
+  if (typeof window !== "undefined" && window.__tiki_observability) {
+    window.__tiki_observability.report(metric);
   }
   if (process.env.NODE_ENV === "development") {
     console.log(`[WebVital] ${metric.name}: ${metric.value}`, metric);
@@ -24,6 +24,6 @@ export function initWebVitals() {
 
 declare global {
   interface Window {
-    __shopee_observability?: { report: VitalCallback };
+    __tiki_observability?: { report: VitalCallback };
   }
 }

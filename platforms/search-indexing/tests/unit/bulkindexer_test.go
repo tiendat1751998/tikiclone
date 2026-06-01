@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/bulkindexer"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/bulkindexer"
 )
 
 func TestCreateBulkJob(t *testing.T) {

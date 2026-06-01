@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/decisionlog"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/decisionlog"
 )
 
 func TestLogDecision(t *testing.T) {

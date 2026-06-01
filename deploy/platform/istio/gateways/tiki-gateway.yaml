@@ -1,0 +1,163 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: tiki-gateway
+  namespace: tiki
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "api.tiki-clone.com"
+      tls:
+        httpsRedirect: true
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - "api.tiki-clone.com"
+      tls:
+        mode: SIMPLE
+        credentialName: tiki-tls-cert
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: tiki-routing
+  namespace: tiki
+spec:
+  hosts:
+    - "api.tiki-clone.com"
+  gateways:
+    - tiki-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /api/v1/auth
+      route:
+        - destination:
+            host: auth.tiki.svc.cluster.local
+            port:
+              number: 8080
+      timeout: 10s
+      retries:
+        attempts: 3
+        perTryTimeout: 3s
+    - match:
+        - uri:
+            prefix: /api/v1/products
+      route:
+        - destination:
+            host: product.tiki.svc.cluster.local
+            port:
+              number: 8080
+      timeout: 30s
+    - match:
+        - uri:
+            prefix: /api/v1/inventory
+      route:
+        - destination:
+            host: inventory.tiki.svc.cluster.local
+            port:
+              number: 8080
+      timeout: 5s
+    - match:
+        - uri:
+            prefix: /api/v1/cart
+      route:
+        - destination:
+            host: cart.tiki.svc.cluster.local
+            port:
+              number: 8080
+      timeout: 10s
+    - match:
+        - uri:
+            prefix: /api/v1/checkout
+      route:
+        - destination:
+            host: checkout.tiki.svc.cluster.local
+            port:
+              number: 8080
+      timeout: 30s
+    - match:
+        - uri:
+            prefix: /api/v1/orders
+      route:
+        - destination:
+            host: order.tiki.svc.cluster.local
+            port:
+              number: 8080
+      timeout: 10s
+    - match:
+        - uri:
+            prefix: /api/v1/payments
+      route:
+        - destination:
+            host: payment.tiki.svc.cluster.local
+            port:
+              number: 8080
+      timeout: 30s
+    - match:
+        - uri:
+            prefix: /api/v1/promotions
+      route:
+        - destination:
+            host: promotion.tiki.svc.cluster.local
+            port:
+              number: 8080
+      timeout: 10s
+    - match:
+        - uri:
+            prefix: /api/v1/shipments
+      route:
+        - destination:
+            host: shipment.tiki.svc.cluster.local
+            port:
+              number: 8080
+      timeout: 10s
+    - match:
+        - uri:
+            prefix: /api/v1/catalog
+      route:
+        - destination:
+            host: product-catalog.tiki.svc.cluster.local
+            port:
+              number: 8080
+      timeout: 30s
+    - match:
+        - uri:
+            prefix: /api/v1/search
+      route:
+        - destination:
+            host: search.tiki.svc.cluster.local
+            port:
+              number: 8080
+      timeout: 5s
+    - match:
+        - uri:
+            prefix: /api/v1/recommendations
+      route:
+        - destination:
+            host: recommendation.tiki.svc.cluster.local
+            port:
+              number: 8080
+      timeout: 10s
+    - match:
+        - uri:
+            prefix: /api/v1/notifications
+      route:
+        - destination:
+            host: notification.tiki.svc.cluster.local
+            port:
+              number: 8080
+      timeout: 10s
+    - route:
+        - destination:
+            host: api-gateway.tiki.svc.cluster.local
+            port:
+              number: 8080

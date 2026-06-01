@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/auth/internal/config"
-	"github.com/shopee-clone/shopee/services/auth/internal/domain"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/auth/internal/config"
+	"github.com/tikiclone/tiki/services/auth/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.uber.org/zap"
@@ -115,7 +115,7 @@ func (r *AuditRepository) batchInsert(ctx context.Context, logs []*domain.AuditL
 }
 
 func (r *AuditRepository) FindByUserID(ctx context.Context, userID string, limit, offset int) ([]*domain.AuditLog, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "mysql.audit.find_by_user")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "mysql.audit.find_by_user")
 	defer span.End()
 
 	var logs []*domain.AuditLog

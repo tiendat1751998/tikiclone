@@ -91,7 +91,7 @@ async function main() {
     const storeCatId = uuidv4();
     const catMap = {};
     
-    let script = `use shopee_catalog;
+    let script = `use tiki_catalog;
 db.products.deleteMany({});
 db.categories.deleteMany({});
 db.categories.insertOne({ category_id: '${storeCatId}', name: 'Tiki', slug: 'tiki', parent_id: '', level: 1, sort_order: 1, children: [] });\n`;
@@ -150,8 +150,8 @@ db.categories.insertOne({ category_id: '${storeCatId}', name: 'Tiki', slug: 'tik
     console.log(`Seed script saved to /tmp/seed-tiki.js (${selected.length} products)`);
     
     console.log('Seeding MongoDB...');
-    const out = execSync('docker compose exec -T mongodb mongosh shopee_catalog < /tmp/seed-tiki.js', {
-      cwd: '/home/datdt/shopeeclone', encoding: 'utf8', timeout: 60000, shell: '/bin/bash',
+    const out = execSync('docker compose exec -T mongodb mongosh tiki_catalog < /tmp/seed-tiki.js', {
+      cwd: '/home/datdt/tikiclone', encoding: 'utf8', timeout: 60000, shell: '/bin/bash',
     });
     console.log('MongoDB seeded successfully!');
     

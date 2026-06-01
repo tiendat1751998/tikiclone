@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/personalization"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/personalization"
 )
 
 func TestBuildUserProfile(t *testing.T) {

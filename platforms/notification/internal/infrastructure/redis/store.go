@@ -1,5 +1,5 @@
 package redis
-import ("context"; "fmt"; "time"; "github.com/redis/go-redis/v9"; "github.com/shopee-clone/shopee/platforms/notification/internal/config")
+import ("context"; "fmt"; "time"; "github.com/redis/go-redis/v9"; "github.com/tikiclone/tiki/platforms/notification/internal/config")
 type Store struct { rdb *redis.Client; cfg config.RedisConfig }
 func NewStore(rdb *redis.Client, cfg config.RedisConfig) *Store { return &Store{rdb: rdb, cfg: cfg} }
 func (s *Store) Ping(ctx context.Context) error { return s.rdb.Ping(ctx).Err() }

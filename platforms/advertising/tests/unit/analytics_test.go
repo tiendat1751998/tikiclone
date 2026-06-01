@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/analytics"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/analytics"
 )
 
 func TestRecordImpression(t *testing.T) {

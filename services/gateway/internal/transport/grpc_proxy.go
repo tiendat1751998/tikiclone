@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/gateway/internal/discovery"
-	"github.com/shopee-clone/shopee/services/gateway/internal/middleware"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/gateway/internal/discovery"
+	"github.com/tikiclone/tiki/services/gateway/internal/middleware"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -87,7 +87,7 @@ type GRPCUpstreamTarget struct {
 }
 
 func (p *GRPCProxy) Invoke(ctx context.Context, target *GRPCUpstreamTarget, method string, req, resp interface{}, md map[string]string) error {
-	ctx, span := otel.Tracer("shopee-gateway").Start(ctx,
+	ctx, span := otel.Tracer("tiki-gateway").Start(ctx,
 		fmt.Sprintf("grpc_upstream.%s", target.ServiceName),
 		trace.WithSpanKind(trace.SpanKindClient),
 	)

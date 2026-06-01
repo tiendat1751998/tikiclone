@@ -2,8 +2,8 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
-    cluster: shopee-clone
-    namespace: shopee
+    cluster: tiki-clone
+    namespace: tiki
 
 scrape_configs:
   # Prometheus self-monitoring
@@ -12,7 +12,7 @@ scrape_configs:
       - targets: ["localhost:9090"]
 
   # Core Go services - all 12 services with /metrics endpoint
-  - job_name: "shopee-services"
+  - job_name: "tiki-services"
     scrape_interval: 10s
     static_configs:
       - targets:

@@ -10,11 +10,11 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/services/order/internal/application"
-	"github.com/shopee-clone/shopee/services/order/internal/config"
-	"github.com/shopee-clone/shopee/services/order/internal/domain"
-	"github.com/shopee-clone/shopee/services/order/internal/infrastructure/mysql"
-	redisinfra "github.com/shopee-clone/shopee/services/order/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/services/order/internal/application"
+	"github.com/tikiclone/tiki/services/order/internal/config"
+	"github.com/tikiclone/tiki/services/order/internal/domain"
+	"github.com/tikiclone/tiki/services/order/internal/infrastructure/mysql"
+	redisinfra "github.com/tikiclone/tiki/services/order/internal/infrastructure/redis"
 )
 
 var (
@@ -25,7 +25,7 @@ var (
 
 func TestMain(m *testing.M) {
 	cfg := &config.Config{
-		AppName:  "shopee-order-test",
+		AppName:  "tiki-order-test",
 		AppEnv:   "test",
 		LogLevel: "error",
 		MySQL: config.MySQLConfig{
@@ -33,7 +33,7 @@ func TestMain(m *testing.M) {
 			Port:     3306,
 			User:     getEnv("MYSQL_USER", "root"),
 			Password: getEnv("MYSQL_PASSWORD", "root"),
-			Database: "shopee_orders_test",
+			Database: "tiki_orders_test",
 			Timeout:  5 * time.Second,
 		},
 		Redis: config.RedisConfig{

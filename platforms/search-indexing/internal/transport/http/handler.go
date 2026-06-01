@@ -1,11 +1,11 @@
 package http
 
 import (
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/bulkindexer"
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/coordinator"
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/monitoring"
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/pipeline"
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/synonyms"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/bulkindexer"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/coordinator"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/monitoring"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/pipeline"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/synonyms"
 )
 
 type Handler struct {

@@ -4,32 +4,35 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 	"go.uber.org/zap"
 
-	"github.com/shopee-clone/shopee/services/gateway/internal/auth"
-	"github.com/shopee-clone/shopee/services/gateway/internal/config"
-	"github.com/shopee-clone/shopee/services/gateway/internal/discovery"
-	gwHealth "github.com/shopee-clone/shopee/services/gateway/internal/health"
-	"github.com/shopee-clone/shopee/services/gateway/internal/middleware"
-	"github.com/shopee-clone/shopee/services/gateway/internal/ratelimit"
-	"github.com/shopee-clone/shopee/services/gateway/internal/transport"
-	sharedMiddleware "github.com/shopee-clone/shopee/packages/go-shared/pkg/middleware"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/health"
+	"github.com/tikiclone/tiki/services/gateway/internal/auth"
+	"github.com/tikiclone/tiki/services/gateway/internal/cache"
+	"github.com/tikiclone/tiki/services/gateway/internal/config"
+	"github.com/tikiclone/tiki/services/gateway/internal/discovery"
+	gwHealth "github.com/tikiclone/tiki/services/gateway/internal/health"
+	"github.com/tikiclone/tiki/services/gateway/internal/middleware"
+	"github.com/tikiclone/tiki/services/gateway/internal/ratelimit"
+	"github.com/tikiclone/tiki/services/gateway/internal/transport"
+	sharedMiddleware "github.com/tikiclone/tiki/packages/go-shared/pkg/middleware"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/health"
 )
 
 type Router struct {
-	cfg         *config.Config
-	proxy       *transport.Proxy
-	grpcProxy   *transport.GRPCProxy
-	rateLimiter *ratelimit.RateLimiter
-	authMW      *auth.AuthMiddleware
-	discovery   *discovery.ServiceDiscovery
-	health      *health.Checker
-	rdb         *redis.Client
+	cfg           *config.Config
+	proxy         *transport.Proxy
+	grpcProxy     *transport.GRPCProxy
+	rateLimiter   *ratelimit.RateLimiter
+	authMW        *auth.AuthMiddleware
+	discovery     *discovery.ServiceDiscovery
+	health        *health.Checker
+	rdb           *redis.Client
+	cacheMW       *cache.CacheMiddleware
 }
 
 func NewRouter(
@@ -68,9 +71,14 @@ func (r *Router) Setup(engine *gin.Engine) {
 		middleware.DeviceMetadata(),
 		middleware.AntiAbuse(),
 		middleware.RequestValidation(),
-		r.rateLimiter.GlobalMiddleware(),
-		r.rateLimiter.IPRateLimit(),
 	)
+
+	// Response cache for read-heavy endpoints (products, categories, search)
+	cacheMW := cache.NewCacheMiddleware(r.rdb, 60*time.Second)
+	engine.Use(cacheMW.CacheByPath(60*time.Second,
+		"/api/v1/products",
+		"/api/v1/categories",
+	))
 
 	r.setupSystemEndpoints(engine)
 	r.setupUpstreamRoutes(engine)

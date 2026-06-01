@@ -69,7 +69,7 @@ func envInt(key string, fallback int) int {
 
 func Load() *Config {
 	return &Config{
-		AppName:  env("APP_NAME", "shopee-fraud"),
+		AppName:  env("APP_NAME", "tiki-fraud"),
 		AppEnv:   env("APP_ENV", "development"),
 		LogLevel: env("LOG_LEVEL", "info"),
 		HTTPPort: envInt("HTTP_PORT", 8080),
@@ -81,14 +81,14 @@ func Load() *Config {
 			PoolSize: envInt("REDIS_POOL_SIZE", 100),
 		},
 		Postgres: PostgresConfig{
-			DSN: env("DATABASE_DSN", "postgres://shopee:shopee_dev@localhost:5432/shopee_fraud?sslmode=disable"),
+			DSN: env("DATABASE_DSN", "postgres://tiki:tiki_dev@localhost:5432/tiki_fraud?sslmode=disable"),
 		},
 		Kafka: KafkaConfig{
 			Brokers: strings.Split(env("KAFKA_BROKERS", "localhost:9092"), ","),
 		},
 		OpenTelemetry: OTELConfig{
 			Endpoint:    env("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318"),
-			ServiceName: env("OTEL_SERVICE_NAME", "shopee-fraud"),
+			ServiceName: env("OTEL_SERVICE_NAME", "tiki-fraud"),
 			TraceRatio:  0.1,
 		},
 		Fraud: FraudConfig{

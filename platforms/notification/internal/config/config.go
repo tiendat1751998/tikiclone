@@ -141,7 +141,7 @@ func Load() *Config {
 			Port:     getEnvInt("SMTP_PORT", 587),
 			Username: getEnv("SMTP_USERNAME", ""),
 			Password: getEnv("SMTP_PASSWORD", ""),
-			From:     getEnv("SMTP_FROM", "noreply@shopee-clone.com"),
+			From:     getEnv("SMTP_FROM", "noreply@tiki-clone.com"),
 		},
 		Twilio: TwilioConfig{
 			AccountSID: getEnv("TWILIO_ACCOUNT_SID", ""),
@@ -158,7 +158,7 @@ func Load() *Config {
 		},
 		SendGrid: SendGridConfig{
 			APIKey: getEnv("SENDGRID_API_KEY", ""),
-			From:   getEnv("SENDGRID_FROM", "noreply@shopee-clone.com"),
+			From:   getEnv("SENDGRID_FROM", "noreply@tiki-clone.com"),
 		},
 	}
 }

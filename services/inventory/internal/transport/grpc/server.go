@@ -3,9 +3,9 @@ package grpc
 import (
 	"context"
 
-	"github.com/shopee-clone/shopee/services/inventory/internal/application"
-	"github.com/shopee-clone/shopee/services/inventory/internal/domain"
-	pb "github.com/shopee-clone/shopee/services/inventory/proto/inventory/v1"
+	"github.com/tikiclone/tiki/services/inventory/internal/application"
+	"github.com/tikiclone/tiki/services/inventory/internal/domain"
+	pb "github.com/tikiclone/tiki/services/inventory/proto/inventory/v1"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

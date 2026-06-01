@@ -1,4 +1,4 @@
-# SHOPEE CLONE — MASTER PROJECT BRIEF
+# TIKI CLONE — MASTER PROJECT BRIEF
 
 > Synthesized from ALL 149 .md files. Last updated: 2026-05-27.
 
@@ -6,7 +6,7 @@
 
 ## 1. PROJECT VISION
 
-Production-grade Shopee clone — Vietnam-scale e-commerce:
+Production-grade Tiki clone — Vietnam-scale e-commerce:
 - 10M users, 1M DAU, 100K concurrent, 20K RPS burst
 - p95 < 200ms internal APIs, p99 < 500ms
 - 99.9% uptime. Kubernetes-native, horizontally scalable.
@@ -16,7 +16,7 @@ Production-grade Shopee clone — Vietnam-scale e-commerce:
 ## 2. MONOREPO STRUCTURE
 
 ```
-shopee-clone/
+tiki-clone/
 ├── .ai/                    # Architecture docs, rules, planning
 ├── .github/                # GitHub agents, prompts, OpenSpec
 ├── apps/web/               # Next.js 15 storefront (Tiki clone), output:"standalone"
@@ -56,7 +56,7 @@ shopee-clone/
 - Prices: int64 (BIGINT), weight: int, currency: VND
 - DB enum: UPPERCASE
 - Domain errors: *DomainError pointers
-- MySQL: host=mysql-primary, port=3306, user=shopee, pass=shopee_dev
+- MySQL: host=mysql-primary, port=3306, user=tiki, pass=tiki_dev
 - K8s YAML: single-document only (no --- separators)
 - SQL escaping: '' not \'
 - Next.js: --legacy-peer-deps, rm -rf .next before rebuild

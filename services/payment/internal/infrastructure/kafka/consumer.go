@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/segmentio/kafka-go"
-	"github.com/shopee-clone/shopee/services/payment/internal/config"
+	"github.com/tikiclone/tiki/services/payment/internal/config"
 	"go.uber.org/zap"
 )
 

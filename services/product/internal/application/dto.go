@@ -3,7 +3,7 @@ package application
 import (
 	"time"
 
-	"github.com/shopee-clone/shopee/services/product/internal/domain"
+	"github.com/tikiclone/tiki/services/product/internal/domain"
 )
 
 // -----------------------------------------------------------------------------

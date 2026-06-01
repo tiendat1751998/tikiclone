@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/events"
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/funnel"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/events"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/funnel"
 )
 
 func setupFunnelTest(t *testing.T) (*funnel.Service, *events.Service) {

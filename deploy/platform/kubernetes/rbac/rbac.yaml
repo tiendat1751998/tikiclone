@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: shopee-service
-  namespace: shopee
+  name: tiki-service
+  namespace: tiki
   annotations:
     kubernetes.io/enforce-mountable-secrets: "true"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: shopee:pod-reader
+  name: tiki:pod-reader
 rules:
   - apiGroups: [""]
     resources: ["pods", "pods/log", "services", "endpoints"]
@@ -18,7 +18,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: shopee:service-identity
+  name: tiki:service-identity
 rules:
   - apiGroups: [""]
     resources: ["serviceaccounts"]
@@ -33,21 +33,21 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: shopee:pod-reader-binding
+  name: tiki:pod-reader-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: shopee:pod-reader
+  name: tiki:pod-reader
 subjects:
   - kind: ServiceAccount
-    name: shopee-service
-    namespace: shopee
+    name: tiki-service
+    namespace: tiki
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: shopee:service-operator
-  namespace: shopee
+  name: tiki:service-operator
+  namespace: tiki
 rules:
   - apiGroups: ["apps"]
     resources: ["deployments", "statefulsets"]
@@ -65,13 +65,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: shopee:service-operator-binding
-  namespace: shopee
+  name: tiki:service-operator-binding
+  namespace: tiki
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: shopee:service-operator
+  name: tiki:service-operator
 subjects:
   - kind: ServiceAccount
-    name: shopee-service
-    namespace: shopee
+    name: tiki-service
+    namespace: tiki

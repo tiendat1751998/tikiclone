@@ -1,0 +1,31 @@
+
+════════════════════════════════════════════════════════════
+CHAOS TEST REPORT
+════════════════════════════════════════════════════════════
+Time: 2026-05-28T07:07:31.264904
+Project: tikiclone
+
+Results: 1/1 checks passed (100%)
+
+── KILL ──
+  1/1 passed
+  ✓ [final_check] All targeted services running
+
+── AVAILABILITY DURING CHAOS ──
+  gateway                   100.00%  (down 0/3 checks)
+  identity-auth             100.00%  (down 0/3 checks)
+  cart                      100.00%  (down 0/3 checks)
+  payment                   100.00%  (down 0/3 checks)
+  order                     100.00%  (down 0/3 checks)
+  checkout                  100.00%  (down 0/3 checks)
+  inventory                 100.00%  (down 0/3 checks)
+  auth                      100.00%  (down 0/3 checks)
+  catalog-product           100.00%  (down 0/3 checks)
+  product                   100.00%  (down 0/3 checks)
+  product-catalog           100.00%  (down 0/3 checks)
+  promotion                 100.00%  (down 0/3 checks)
+  shipment                  100.00%  (down 0/3 checks)
+  web                       100.00%  (down 0/3 checks)
+  ollama                    100.00%  (down 0/3 checks)
+
+════════════════════════════════════════════════════════════

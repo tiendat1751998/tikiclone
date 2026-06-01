@@ -5,14 +5,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/blacklist"
-	fraudcase "github.com/shopee-clone/shopee/platforms/fraud/internal/case"
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/core"
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/detection"
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/rules"
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/scoring"
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/streaming"
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/verification"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/blacklist"
+	fraudcase "github.com/tikiclone/tiki/platforms/fraud/internal/case"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/core"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/detection"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/rules"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/scoring"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/streaming"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/verification"
 )
 
 func setupDetectionTest(t *testing.T) (*detection.Service, *rules.Service, *rules.InMemoryRepository) {

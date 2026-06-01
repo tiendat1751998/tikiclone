@@ -1,4 +1,4 @@
-import type { Product, ProductImage, ProductListResponse, SearchResult, Category } from "@/types";
+import type { Product, ProductImage, Category } from "@/types";
 
 interface BackendProductImage {
   id: string;
@@ -43,7 +43,7 @@ interface BackendProduct {
 }
 
 const SELLER_NAMES: Record<string, string> = {
-  "usr-001": "Shopee Official",
+  "usr-001": "Tiki Official",
   "usr-002": "TechStore Vietnam",
   "usr-003": "Fashion Hub",
   "usr-004": "Home & Life",
@@ -54,11 +54,14 @@ function getSellerName(shopId: string): string {
   return SELLER_NAMES[shopId] || `Shop ${shopId.slice(-4)}`;
 }
 
-function localImagePath(p: BackendProduct): string {
+function buildImageUrl(p: BackendProduct, media: BackendProductImage): string {
+  if (media?.url) return media.url;
+  return "/images/placeholder.svg";
+}
+
+function buildPrimaryImageUrl(p: BackendProduct): string {
   const img = p.media?.find((m) => m.is_primary) || p.media?.[0];
-  if (!img?.url) return "/images/placeholder.svg";
-  const ext = img.url.split(".").pop()?.split("?")[0] || "jpg";
-  return `/images/products/${p.id}.${ext}`;
+  return buildImageUrl(p, img as BackendProductImage);
 }
 
 export function mapBackendProduct(p: BackendProduct): Product {
@@ -77,13 +80,13 @@ export function mapBackendProduct(p: BackendProduct): Product {
     name: p.name,
     description: p.description || "",
     brand: p.brand || "",
-    image_url: localImagePath(p),
-    thumbnail_url: localImagePath(p),
+    image_url: buildPrimaryImageUrl(p),
+    thumbnail_url: buildPrimaryImageUrl(p),
     images: p.media?.map(
       (m): ProductImage => ({
         id: m.id,
-        url: localImagePath(p),
-        thumbnail_url: localImagePath(p),
+        url: buildImageUrl(p, m),
+        thumbnail_url: m.thumbnail_url || buildImageUrl(p, m),
         sort_order: m.sort_order,
         is_primary: m.is_primary,
       })

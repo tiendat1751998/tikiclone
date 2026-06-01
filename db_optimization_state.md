@@ -40,7 +40,7 @@
 - services/shipment/migrations/003_performance_indexes.sql (7 indexes)
 - services/promotion/migrations/002_performance_indexes.sql (4 indexes)
 - platforms/notification/migrations/004_performance_indexes.sql (2 indexes)
-- database/migrations/007_ultra_performance.sql (14+ indexes on shopee_platform)
+- database/migrations/007_ultra_performance.sql (14+ indexes on tiki_platform)
 
 ### Services with NO infrastructure Go files (stubs - no action needed):
 - catalog-product, oms-fulfillment, payment-ledger, search-indexing, notification-campaign

@@ -1,5 +1,5 @@
 app:
-  name: shopee-auth
+  name: tiki-auth
   env: development
   log_level: debug
 
@@ -11,8 +11,8 @@ mysql:
   host: localhost
   port: 3306
   user: shopee
-  password: shopee_dev
-  database: shopee_auth
+  password: tiki_dev
+  database: tiki_auth
   max_open_conns: 25
   max_idle_conns: 10
   max_lifetime: 5m
@@ -28,8 +28,8 @@ redis:
 jwt:
   access_ttl: 15m
   refresh_ttl: 168h
-  issuer: shopee-auth
-  audience: shopee-clone
+  issuer: tiki-auth
+  audience: tiki-clone
   rotation_enabled: true
   blacklist_enabled: true
 

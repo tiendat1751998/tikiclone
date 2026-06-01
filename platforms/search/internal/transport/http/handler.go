@@ -1,11 +1,11 @@
 package http
 
 import (
-	"github.com/shopee-clone/shopee/platforms/search/internal/autocomplete"
-	"github.com/shopee-clone/shopee/platforms/search/internal/indexing"
-	"github.com/shopee-clone/shopee/platforms/search/internal/query"
-	"github.com/shopee-clone/shopee/platforms/search/internal/ranking"
-	"github.com/shopee-clone/shopee/platforms/search/internal/search"
+	"github.com/tikiclone/tiki/platforms/search/internal/autocomplete"
+	"github.com/tikiclone/tiki/platforms/search/internal/indexing"
+	"github.com/tikiclone/tiki/platforms/search/internal/query"
+	"github.com/tikiclone/tiki/platforms/search/internal/ranking"
+	"github.com/tikiclone/tiki/platforms/search/internal/search"
 )
 
 type Handler struct {

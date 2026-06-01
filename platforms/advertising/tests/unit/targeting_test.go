@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/campaign"
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/targeting"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/campaign"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/targeting"
 )
 
 func TestMatchAudienceDemographic(t *testing.T) {

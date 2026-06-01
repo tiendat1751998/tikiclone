@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/services/inventory/internal/application"
-	"github.com/shopee-clone/shopee/services/inventory/internal/domain"
+	"github.com/tikiclone/tiki/services/inventory/internal/application"
+	"github.com/tikiclone/tiki/services/inventory/internal/domain"
 	"go.uber.org/zap"
 )
 

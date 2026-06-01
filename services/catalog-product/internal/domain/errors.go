@@ -1,6 +1,6 @@
 package domain
 
-import "github.com/shopee-clone/shopee/packages/go-shared/pkg/errors"
+import "github.com/tikiclone/tiki/packages/go-shared/pkg/errors"
 
 var (
 	ErrProductNotFound    = errors.NewNotFound("Product not found")

@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/tracking"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/tracking"
 )
 
 type memTrackingRepo struct {

@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/api-gateway/internal/ratelimit"
+	"github.com/tikiclone/tiki/platforms/api-gateway/internal/ratelimit"
 )
 
 type createRateLimitRuleRequest struct {

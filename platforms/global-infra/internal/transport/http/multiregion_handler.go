@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/global-infra/internal/multiregion"
+	"github.com/tikiclone/tiki/platforms/global-infra/internal/multiregion"
 )
 
 type createRegionRequest struct {

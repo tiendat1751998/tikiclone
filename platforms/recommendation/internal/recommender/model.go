@@ -1,6 +1,6 @@
 package recommender
 
-import "github.com/shopee-clone/shopee/platforms/recommendation/internal/types"
+import "github.com/tikiclone/tiki/platforms/recommendation/internal/types"
 
 type RecommendationType = types.RecommendationType
 type ProductRecommendation = types.ProductRecommendation

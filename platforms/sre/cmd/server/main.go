@@ -11,17 +11,17 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/health"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/health"
 	"go.uber.org/zap"
 	automaxprocs "go.uber.org/automaxprocs/maxprocs"
 
-	"github.com/shopee-clone/shopee/platforms/sre/internal/alerting"
-	"github.com/shopee-clone/shopee/platforms/sre/internal/deployment"
-	"github.com/shopee-clone/shopee/platforms/sre/internal/healthcheck"
-	"github.com/shopee-clone/shopee/platforms/sre/internal/incident"
-	"github.com/shopee-clone/shopee/platforms/sre/internal/runbook"
-	"github.com/shopee-clone/shopee/platforms/sre/internal/slo"
-	httptransport "github.com/shopee-clone/shopee/platforms/sre/internal/transport/http"
+	"github.com/tikiclone/tiki/platforms/sre/internal/alerting"
+	"github.com/tikiclone/tiki/platforms/sre/internal/deployment"
+	"github.com/tikiclone/tiki/platforms/sre/internal/healthcheck"
+	"github.com/tikiclone/tiki/platforms/sre/internal/incident"
+	"github.com/tikiclone/tiki/platforms/sre/internal/runbook"
+	"github.com/tikiclone/tiki/platforms/sre/internal/slo"
+	httptransport "github.com/tikiclone/tiki/platforms/sre/internal/transport/http"
 )
 
 var version = "1.0.0"
@@ -59,7 +59,7 @@ func main() {
 	runbookRepo := runbook.NewInMemoryRepository()
 	runbookSvc := runbook.NewService(runbookRepo)
 
-	hc := health.NewChecker("shopee-sre", version)
+	hc := health.NewChecker("tiki-sre", version)
 
 	gin.SetMode(gin.ReleaseMode)
 	engine := gin.New()

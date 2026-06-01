@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "shopee-clone-terraform-state"
+    bucket = "tiki-clone-terraform-state"
     key    = "staging/terraform.tfstate"
     region = "ap-southeast-1"
     encrypt = true
@@ -29,7 +29,7 @@ module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
   version = "5.5.0"
 
-  name = "shopee-staging"
+  name = "tiki-staging"
   cidr = "10.1.0.0/16"
 
   azs             = ["ap-southeast-1a", "ap-southeast-1b"]
@@ -42,7 +42,7 @@ module "vpc" {
 
   tags = {
     Environment = "staging"
-    Project     = "shopee-clone"
+    Project     = "tiki-clone"
   }
 }
 
@@ -50,7 +50,7 @@ module "eks" {
   source = "terraform-aws-modules/eks/aws"
   version = "19.16.0"
 
-  cluster_name    = "shopee-staging"
+  cluster_name    = "tiki-staging"
   cluster_version = "1.28"
 
   vpc_id     = module.vpc.vpc_id
@@ -67,6 +67,6 @@ module "eks" {
 
   tags = {
     Environment = "staging"
-    Project     = "shopee-clone"
+    Project     = "tiki-clone"
   }
 }

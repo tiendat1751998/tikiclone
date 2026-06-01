@@ -6,7 +6,7 @@ Internal microservices communicate using high-performance, strictly-typed gRPC i
 ```protobuf
 syntax = "proto3";
 
-package shopee.inventory;
+package tiki.inventory;
 option go_package = "services/inventory/pb";
 
 service InventoryService {
@@ -37,8 +37,8 @@ message ReleaseStockRequest {
 ```protobuf
 syntax = "proto3";
 
-package shopee.order;
-option java_package = "com.shopee.order.grpc";
+package tiki.order;
+option java_package = "com.tiki.order.grpc";
 
 service OrderService {
   rpc GetOrderStatus (GetOrderStatusRequest) returns (GetOrderStatusResponse);

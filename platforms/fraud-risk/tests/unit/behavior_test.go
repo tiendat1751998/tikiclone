@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/behavior"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/core"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/behavior"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/core"
 )
 
 func TestBuildProfile(t *testing.T) {

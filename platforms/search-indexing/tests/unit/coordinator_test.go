@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/search-indexing/internal/coordinator"
+	"github.com/tikiclone/tiki/platforms/search-indexing/internal/coordinator"
 )
 
 func TestRegisterNode(t *testing.T) {

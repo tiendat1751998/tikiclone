@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/platforms/production-dashboard/internal/application"
-	"github.com/shopee-clone/shopee/platforms/production-dashboard/internal/domain"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/platforms/production-dashboard/internal/application"
+	"github.com/tikiclone/tiki/platforms/production-dashboard/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.uber.org/zap"
@@ -22,7 +22,7 @@ func NewHandler(service *application.DashboardService) *Handler {
 }
 
 func (h *Handler) GetSummary(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.get_summary")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.get_summary")
 	defer span.End()
 
 	summary, err := h.service.GetSummary(ctx)
@@ -34,7 +34,7 @@ func (h *Handler) GetSummary(c *gin.Context) {
 }
 
 func (h *Handler) RegisterService(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.register_service")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.register_service")
 	defer span.End()
 
 	var req application.RegisterServiceRequest
@@ -53,7 +53,7 @@ func (h *Handler) RegisterService(c *gin.Context) {
 }
 
 func (h *Handler) UpdateServiceHealth(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.update_service_health")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.update_service_health")
 	defer span.End()
 
 	serviceID := c.Param("service_id")
@@ -72,7 +72,7 @@ func (h *Handler) UpdateServiceHealth(c *gin.Context) {
 }
 
 func (h *Handler) GetServiceHealth(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.get_service_health")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.get_service_health")
 	defer span.End()
 
 	serviceID := c.Param("service_id")
@@ -85,7 +85,7 @@ func (h *Handler) GetServiceHealth(c *gin.Context) {
 }
 
 func (h *Handler) ListServices(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.list_services")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.list_services")
 	defer span.End()
 
 	services, err := h.service.ListServices(ctx)
@@ -97,7 +97,7 @@ func (h *Handler) ListServices(c *gin.Context) {
 }
 
 func (h *Handler) CreateDeployment(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.create_deployment")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.create_deployment")
 	defer span.End()
 
 	var req application.CreateDeploymentRequest
@@ -116,7 +116,7 @@ func (h *Handler) CreateDeployment(c *gin.Context) {
 }
 
 func (h *Handler) UpdateDeployment(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.update_deployment")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.update_deployment")
 	defer span.End()
 
 	deploymentID := c.Param("deployment_id")
@@ -136,7 +136,7 @@ func (h *Handler) UpdateDeployment(c *gin.Context) {
 }
 
 func (h *Handler) GetDeployment(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.get_deployment")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.get_deployment")
 	defer span.End()
 
 	deploymentID := c.Param("deployment_id")
@@ -149,7 +149,7 @@ func (h *Handler) GetDeployment(c *gin.Context) {
 }
 
 func (h *Handler) ListDeployments(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.list_deployments")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.list_deployments")
 	defer span.End()
 
 	serviceName := c.Query("service_name")
@@ -163,7 +163,7 @@ func (h *Handler) ListDeployments(c *gin.Context) {
 }
 
 func (h *Handler) ListActiveDeployments(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.list_active_deployments")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.list_active_deployments")
 	defer span.End()
 
 	deployments, err := h.service.ListActiveDeployments(ctx)
@@ -175,7 +175,7 @@ func (h *Handler) ListActiveDeployments(c *gin.Context) {
 }
 
 func (h *Handler) CreateIncident(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.create_incident")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.create_incident")
 	defer span.End()
 
 	var req application.CreateIncidentRequest
@@ -195,7 +195,7 @@ func (h *Handler) CreateIncident(c *gin.Context) {
 }
 
 func (h *Handler) AcknowledgeIncident(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.acknowledge_incident")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.acknowledge_incident")
 	defer span.End()
 
 	incidentID := c.Param("incident_id")
@@ -215,7 +215,7 @@ func (h *Handler) AcknowledgeIncident(c *gin.Context) {
 }
 
 func (h *Handler) ResolveIncident(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.resolve_incident")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.resolve_incident")
 	defer span.End()
 
 	incidentID := c.Param("incident_id")
@@ -235,7 +235,7 @@ func (h *Handler) ResolveIncident(c *gin.Context) {
 }
 
 func (h *Handler) CloseIncident(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.close_incident")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.close_incident")
 	defer span.End()
 
 	incidentID := c.Param("incident_id")
@@ -249,7 +249,7 @@ func (h *Handler) CloseIncident(c *gin.Context) {
 }
 
 func (h *Handler) GetIncident(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.get_incident")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.get_incident")
 	defer span.End()
 
 	incidentID := c.Param("incident_id")
@@ -262,7 +262,7 @@ func (h *Handler) GetIncident(c *gin.Context) {
 }
 
 func (h *Handler) ListActiveIncidents(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.list_active_incidents")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.list_active_incidents")
 	defer span.End()
 
 	incidents, err := h.service.ListActiveIncidents(ctx)
@@ -274,7 +274,7 @@ func (h *Handler) ListActiveIncidents(c *gin.Context) {
 }
 
 func (h *Handler) ListRecentIncidents(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.list_recent_incidents")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.list_recent_incidents")
 	defer span.End()
 
 	limit := 50
@@ -287,7 +287,7 @@ func (h *Handler) ListRecentIncidents(c *gin.Context) {
 }
 
 func (h *Handler) CreateAlertRule(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.create_alert_rule")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.create_alert_rule")
 	defer span.End()
 
 	var req application.CreateAlertRuleRequest
@@ -306,7 +306,7 @@ func (h *Handler) CreateAlertRule(c *gin.Context) {
 }
 
 func (h *Handler) UpdateAlertRule(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.update_alert_rule")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.update_alert_rule")
 	defer span.End()
 
 	ruleID := c.Param("rule_id")
@@ -326,7 +326,7 @@ func (h *Handler) UpdateAlertRule(c *gin.Context) {
 }
 
 func (h *Handler) DeleteAlertRule(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.delete_alert_rule")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.delete_alert_rule")
 	defer span.End()
 
 	ruleID := c.Param("rule_id")
@@ -339,7 +339,7 @@ func (h *Handler) DeleteAlertRule(c *gin.Context) {
 }
 
 func (h *Handler) GetAlertRule(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.get_alert_rule")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.get_alert_rule")
 	defer span.End()
 
 	ruleID := c.Param("rule_id")
@@ -352,7 +352,7 @@ func (h *Handler) GetAlertRule(c *gin.Context) {
 }
 
 func (h *Handler) ListAlertRules(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.list_alert_rules")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.list_alert_rules")
 	defer span.End()
 
 	rules, err := h.service.ListAlertRules(ctx)
@@ -364,7 +364,7 @@ func (h *Handler) ListAlertRules(c *gin.Context) {
 }
 
 func (h *Handler) ListAuditLogs(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.list_audit_logs")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.list_audit_logs")
 	defer span.End()
 
 	limit := 100
@@ -377,7 +377,7 @@ func (h *Handler) ListAuditLogs(c *gin.Context) {
 }
 
 func (h *Handler) AddServiceDependency(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.add_dependency")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.add_dependency")
 	defer span.End()
 
 	var req application.AddDependencyRequest
@@ -396,7 +396,7 @@ func (h *Handler) AddServiceDependency(c *gin.Context) {
 }
 
 func (h *Handler) GetServiceDependencies(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.get_dependencies")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.get_dependencies")
 	defer span.End()
 
 	serviceName := c.Param("service_name")
@@ -409,7 +409,7 @@ func (h *Handler) GetServiceDependencies(c *gin.Context) {
 }
 
 func (h *Handler) GetAllDependencies(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.get_all_dependencies")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.get_all_dependencies")
 	defer span.End()
 
 	deps, err := h.service.GetAllDependencies(ctx)
@@ -421,7 +421,7 @@ func (h *Handler) GetAllDependencies(c *gin.Context) {
 }
 
 func (h *Handler) RecordCapacityMetric(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.record_capacity")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.record_capacity")
 	defer span.End()
 
 	var req application.RecordCapacityRequest
@@ -439,7 +439,7 @@ func (h *Handler) RecordCapacityMetric(c *gin.Context) {
 }
 
 func (h *Handler) GetCapacityMetrics(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.get_capacity")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.get_capacity")
 	defer span.End()
 
 	serviceName := c.Param("service_name")
@@ -452,7 +452,7 @@ func (h *Handler) GetCapacityMetrics(c *gin.Context) {
 }
 
 func (h *Handler) GetLatestCapacity(c *gin.Context) {
-	ctx, span := otel.Tracer("shopee-dashboard").Start(c.Request.Context(), "http.get_latest_capacity")
+	ctx, span := otel.Tracer("tiki-dashboard").Start(c.Request.Context(), "http.get_latest_capacity")
 	defer span.End()
 
 	metrics, err := h.service.GetLatestCapacity(ctx)

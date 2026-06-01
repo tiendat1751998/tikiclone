@@ -3,10 +3,10 @@ package grpc
 import (
 	"context"
 
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/errors"
-	"github.com/shopee-clone/shopee/services/catalog-product/internal/domain"
-	"github.com/shopee-clone/shopee/services/catalog-product/internal/usecase"
-	pb "github.com/shopee-clone/shopee/proto/catalog/v1"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/errors"
+	"github.com/tikiclone/tiki/services/catalog-product/internal/domain"
+	"github.com/tikiclone/tiki/services/catalog-product/internal/usecase"
+	pb "github.com/tikiclone/tiki/proto/catalog/v1"
 	"go.opentelemetry.io/otel"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

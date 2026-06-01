@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/services/inventory/internal/domain"
+	"github.com/tikiclone/tiki/services/inventory/internal/domain"
 )
 
 type InventoryRepository struct {

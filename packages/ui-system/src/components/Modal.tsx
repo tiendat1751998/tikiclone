@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, type ReactNode } from "react";
 import { clsx } from "clsx";
-import { zIndex, transition } from "@shopee/design-tokens";
+import { zIndex, transition } from "@tiki/design-tokens";
 
 interface ModalProps { isOpen: boolean; onClose: () => void; title?: string; children: ReactNode; size?: "sm" | "md" | "lg" | "xl"; }
 

@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/routing"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/routing"
 )
 
 func (h *Handler) AssignRoute(c *gin.Context) {

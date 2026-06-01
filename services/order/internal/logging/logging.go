@@ -3,7 +3,7 @@ package logging
 import (
 	"context"
 
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )

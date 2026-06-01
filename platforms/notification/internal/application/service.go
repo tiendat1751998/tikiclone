@@ -1,5 +1,5 @@
 package application
-import ("context"; "fmt"; "time"; "github.com/shopee-clone/shopee/platforms/notification/internal/domain"; "github.com/shopee-clone/shopee/platforms/notification/internal/infrastructure/redis"; "github.com/shopee-clone/shopee/platforms/notification/internal/metrics"; "go.opentelemetry.io/otel"; "go.opentelemetry.io/otel/attribute")
+import ("context"; "fmt"; "time"; "github.com/tikiclone/tiki/platforms/notification/internal/domain"; "github.com/tikiclone/tiki/platforms/notification/internal/infrastructure/redis"; "github.com/tikiclone/tiki/platforms/notification/internal/metrics"; "go.opentelemetry.io/otel"; "go.opentelemetry.io/otel/attribute")
 
 type NotificationService struct { notifyRepo domain.NotificationRepository; templateRepo domain.TemplateRepository; prefRepo domain.PreferenceRepository; deliveryRepo domain.DeliveryLogRepository; redis *redis.Store; publisher EventPublisher }
 type EventPublisher interface { Publish(ctx context.Context, eventType string, payload interface{}) error }
@@ -9,7 +9,7 @@ func NewNotificationService(nr domain.NotificationRepository, tr domain.Template
 }
 
 func (s *NotificationService) SendNotification(ctx context.Context, userID, nType, title, body, channel string, data map[string]interface{}) (*domain.Notification, error) {
-	ctx, span := otel.Tracer("shopee-notification").Start(ctx, "notify.send"); defer span.End()
+	ctx, span := otel.Tracer("tiki-notification").Start(ctx, "notify.send"); defer span.End()
 	span.SetAttributes(attribute.String("user_id", userID), attribute.String("channel", channel))
 
 	// Check rate limit

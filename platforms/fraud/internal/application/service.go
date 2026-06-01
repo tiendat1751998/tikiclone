@@ -1,12 +1,12 @@
 package application
-import ("context"; "fmt"; "time"; "github.com/shopee-clone/shopee/platforms/fraud/internal/domain"; "github.com/shopee-clone/shopee/platforms/fraud/internal/metrics"; "go.opentelemetry.io/otel")
+import ("context"; "fmt"; "time"; "github.com/tikiclone/tiki/platforms/fraud/internal/domain"; "github.com/tikiclone/tiki/platforms/fraud/internal/metrics"; "go.opentelemetry.io/otel")
 
 type FraudService struct { publisher EventPublisher }
 type EventPublisher interface { Publish(ctx context.Context, eventType string, payload interface{}) error }
 func NewFraudService(pub EventPublisher) *FraudService { return &FraudService{publisher: pub} }
 
 func (s *FraudService) ScoreTransaction(ctx context.Context, userID, orderID string, amount int64, deviceIP string) (*domain.FraudScore, error) {
-	ctx, span := otel.Tracer("shopee-fraud").Start(ctx, "fraud.score"); defer span.End()
+	ctx, span := otel.Tracer("tiki-fraud").Start(ctx, "fraud.score"); defer span.End()
 	score := &domain.FraudScore{
 		ID: fmt.Sprintf("fraud_%d", time.Now().UnixNano()), UserID: userID, OrderID: orderID,
 		Score: 0.1, RiskLevel: domain.RiskLow, Signals: []string{}, CreatedAt: time.Now(),

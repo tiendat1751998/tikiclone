@@ -1,4 +1,4 @@
-module github.com/shopee-clone/shopee/platforms/oms-fulfillment
+module github.com/tikiclone/tiki/platforms/oms-fulfillment
 
 go 1.26.3
 
@@ -36,4 +36,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/shopee-clone/shopee/packages/go-shared => ../../packages/go-shared
+replace github.com/tikiclone/tiki/packages/go-shared => ../../packages/go-shared

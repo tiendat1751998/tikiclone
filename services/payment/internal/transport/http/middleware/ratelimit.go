@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	redisinfra "github.com/shopee-clone/shopee/services/payment/internal/infrastructure/redis"
+	redisinfra "github.com/tikiclone/tiki/services/payment/internal/infrastructure/redis"
 )
 
 func RateLimit(store *redisinfra.Store, limit int, window time.Duration) gin.HandlerFunc {

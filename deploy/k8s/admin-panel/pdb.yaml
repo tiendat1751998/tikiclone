@@ -2,7 +2,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: admin-panel
-  namespace: shopee
+  namespace: tiki
   labels:
     app: admin-panel
 spec:

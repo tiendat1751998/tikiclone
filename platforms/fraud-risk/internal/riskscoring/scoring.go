@@ -4,7 +4,7 @@ import (
 	"context"
 	"math"
 
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/core"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/core"
 )
 
 type Calculator struct {

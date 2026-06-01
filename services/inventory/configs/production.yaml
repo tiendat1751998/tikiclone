@@ -1,5 +1,5 @@
 app:
-  name: shopee-inventory
+  name: tiki-inventory
   env: production
   log_level: warn
   http_port: 8086
@@ -16,8 +16,8 @@ redis:
   db: 6
 kafka:
   brokers: ${KAFKA_BROKERS}
-  topic_prefix: shopee.inventory
-  consumer_group: shopee-inventory-service
+  topic_prefix: tiki.inventory
+  consumer_group: tiki-inventory-service
 jwt:
   access_secret: ${JWT_ACCESS_SECRET}
   access_ttl: 15m
@@ -29,4 +29,4 @@ inventory:
   flash_sale_rate_limit: 1000
 otel:
   endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT}
-  service_name: shopee-inventory
+  service_name: tiki-inventory

@@ -6,8 +6,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/services/order/internal/application"
-	"github.com/shopee-clone/shopee/services/order/internal/domain"
+	"github.com/tikiclone/tiki/services/order/internal/application"
+	"github.com/tikiclone/tiki/services/order/internal/domain"
 	"go.uber.org/zap"
 )
 
@@ -126,11 +126,13 @@ func (h *Handler) ListOrders(c *gin.Context) {
 		return
 	}
 
+	totalPages := (total + pageSize - 1) / pageSize
 	c.JSON(http.StatusOK, gin.H{
-		"data":  orders,
-		"total": total,
-		"page":  page,
-		"size":  pageSize,
+		"items":      orders,
+		"total":      total,
+		"page":       page,
+		"page_size":  pageSize,
+		"total_pages": totalPages,
 	})
 }
 

@@ -88,7 +88,7 @@ type RateLimitConfig struct {
 
 func Load() *AppConfig {
 	return &AppConfig{
-		AppName:  getEnv("APP_NAME", "shopee-clone"),
+		AppName:  getEnv("APP_NAME", "tiki-clone"),
 		AppEnv:   getEnv("APP_ENV", "development"),
 		LogLevel: getEnv("LOG_LEVEL", "info"),
 		Port:     getEnvInt("PORT", 8080),
@@ -96,16 +96,16 @@ func Load() *AppConfig {
 		Postgres: PostgresConfig{
 			Host:     getEnv("POSTGRES_HOST", "localhost"),
 			Port:     getEnvInt("POSTGRES_PORT", 5432),
-			User:     getEnv("POSTGRES_USER", "shopee"),
-			Password: getEnv("POSTGRES_PASSWORD", "shopee_dev"),
-			Database: getEnv("POSTGRES_DB", "shopee"),
+			User:     getEnv("POSTGRES_USER", "tiki"),
+			Password: getEnv("POSTGRES_PASSWORD", "tiki_dev"),
+			Database: getEnv("POSTGRES_DB", "tiki"),
 			SSLMode:  getEnv("POSTGRES_SSLMODE", "disable"),
 			MaxConns: getEnvInt("POSTGRES_MAX_CONNS", 25),
 		},
 
 		MongoDB: MongoDBConfig{
 			URI:      getEnv("MONGODB_URI", "mongodb://localhost:27017"),
-			Database: getEnv("MONGODB_DATABASE", "shopee_catalog"),
+			Database: getEnv("MONGODB_DATABASE", "tiki_catalog"),
 		},
 
 		Redis: RedisConfig{
@@ -120,9 +120,9 @@ func Load() *AppConfig {
 
 		MinIO: MinIOConfig{
 			Endpoint:  getEnv("MINIO_ENDPOINT", "localhost:9000"),
-			AccessKey: getEnv("MINIO_ACCESS_KEY", "shopee_access"),
-			SecretKey: getEnv("MINIO_SECRET_KEY", "shopee_secret"),
-			Bucket:    getEnv("MINIO_BUCKET", "shopee-assets"),
+			AccessKey: getEnv("MINIO_ACCESS_KEY", "tiki_access"),
+			SecretKey: getEnv("MINIO_SECRET_KEY", "tiki_secret"),
+			Bucket:    getEnv("MINIO_BUCKET", "tiki-assets"),
 			UseSSL:    getEnvBool("MINIO_USE_SSL", false),
 		},
 

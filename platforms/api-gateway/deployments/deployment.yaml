@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: shopee-api-gateway
+  name: tiki-api-gateway
   labels:
-    app: shopee-api-gateway
+    app: tiki-api-gateway
     version: v1
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: shopee-api-gateway
+      app: tiki-api-gateway
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,21 +18,21 @@ spec:
   template:
     metadata:
       labels:
-        app: shopee-api-gateway
+        app: tiki-api-gateway
         version: v1
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8109"
     spec:
-      serviceAccountName: shopee-api-gateway
+      serviceAccountName: tiki-api-gateway
       terminationGracePeriodSeconds: 60
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         fsGroup: 1000
       containers:
-        - name: shopee-api-gateway
-          image: shopee-clone/shopee-api-gateway:latest
+        - name: tiki-api-gateway
+          image: tiki-clone/tiki-api-gateway:latest
           imagePullPolicy: Always
           ports:
             - name: http
@@ -41,9 +41,9 @@ spec:
               containerPort: 9109
           envFrom:
             - configMapRef:
-                name: shopee-api-gateway-config
+                name: tiki-api-gateway-config
             - secretRef:
-                name: shopee-api-gateway-secrets
+                name: tiki-api-gateway-secrets
           resources:
             requests:
               cpu: 250m

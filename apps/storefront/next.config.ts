@@ -9,14 +9,14 @@ const nextConfig: NextConfig = {
 
   // Performance: optimize package imports
   experimental: {
-    optimizePackageImports: ['lucide-react', 'date-fns', '@shopee/ui-system'],
+    optimizePackageImports: ['lucide-react', 'date-fns', '@tiki/ui-system'],
   },
 
   images: {
     remotePatterns: [
       { protocol: 'http', hostname: 'localhost', port: '9000' },
       { protocol: 'http', hostname: 'localhost', port: '8080' },
-      { protocol: 'https', hostname: '**.shopee-clone.com' },
+      { protocol: 'https', hostname: '**.tiki-clone.com' },
       { protocol: 'https', hostname: '**.s3.amazonaws.com' },
       { protocol: 'https', hostname: '**.cloudfront.net' },
     ],

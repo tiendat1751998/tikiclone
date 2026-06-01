@@ -6,7 +6,7 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/shopee-clone/shopee/services/payment/internal/domain"
+	"github.com/tikiclone/tiki/services/payment/internal/domain"
 )
 
 func TestNewPayment(t *testing.T) {

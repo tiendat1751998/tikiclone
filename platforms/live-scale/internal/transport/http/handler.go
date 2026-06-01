@@ -1,12 +1,12 @@
 package http
 
 import (
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/cdn"
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/region"
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/sfu"
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/stream_health"
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/transcoding"
-	"github.com/shopee-clone/shopee/platforms/live-scale/internal/websocket_cluster"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/cdn"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/region"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/sfu"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/stream_health"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/transcoding"
+	"github.com/tikiclone/tiki/platforms/live-scale/internal/websocket_cluster"
 )
 
 type Handler struct {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/shopee-clone/shopee/services/auth/internal/domain"
+	"github.com/tikiclone/tiki/services/auth/internal/domain"
 	"go.opentelemetry.io/otel/trace"
 )
 

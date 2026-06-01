@@ -79,9 +79,9 @@ func Load() *Config {
 		MySQL: MySQLConfig{
 			Host:         getEnv("MYSQL_HOST", "localhost"),
 			Port:         getEnvInt("MYSQL_PORT", 3306),
-			User:         getEnv("MYSQL_USER", "shopee"),
-			Password:     getEnv("MYSQL_PASSWORD", "shopee_dev"),
-			Database:     getEnv("MYSQL_DATABASE", "shopee_product"),
+			User:         getEnv("MYSQL_USER", "tiki"),
+			Password:     getEnv("MYSQL_PASSWORD", "tiki_dev"),
+			Database:     getEnv("MYSQL_DATABASE", "tiki_product"),
 			MaxOpenConns: getEnvInt("MYSQL_MAX_OPEN_CONNS", 25),
 			MaxIdleConns: getEnvInt("MYSQL_MAX_IDLE_CONNS", 10),
 			MaxLifetime:  getEnvDuration("MYSQL_MAX_LIFETIME", 5*time.Minute),

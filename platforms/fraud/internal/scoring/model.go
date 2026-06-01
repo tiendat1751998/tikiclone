@@ -1,6 +1,6 @@
 package scoring
 
-import "github.com/shopee-clone/shopee/platforms/fraud/internal/core"
+import "github.com/tikiclone/tiki/platforms/fraud/internal/core"
 
 type ScoreCard struct {
 	TotalScore float64          `json:"total_score"`

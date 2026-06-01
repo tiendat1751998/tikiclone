@@ -3,7 +3,7 @@ package unit
 import (
 	"testing"
 
-	"github.com/shopee-clone/shopee/services/order/internal/domain"
+	"github.com/tikiclone/tiki/services/order/internal/domain"
 )
 
 func TestNewOrder(t *testing.T) {

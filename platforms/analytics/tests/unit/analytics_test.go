@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/analytics"
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/events"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/analytics"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/events"
 )
 
 func setupAnalyticsTest(t *testing.T) (*analytics.Service, *events.Service) {

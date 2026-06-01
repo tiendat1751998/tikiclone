@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/sre/internal/runbook"
+	"github.com/tikiclone/tiki/platforms/sre/internal/runbook"
 )
 
 type CreateRunbookReq struct {

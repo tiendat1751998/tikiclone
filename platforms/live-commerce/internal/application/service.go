@@ -5,16 +5,16 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/cache"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/domain"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/engagement"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/fanout"
-	ch "github.com/shopee-clone/shopee/platforms/live-commerce/internal/infrastructure/clickhouse"
-	redi "github.com/shopee-clone/shopee/platforms/live-commerce/internal/infrastructure/redis"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/metrics"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/moderation"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/recommendations"
-	"github.com/shopee-clone/shopee/platforms/live-commerce/internal/replay"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/cache"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/domain"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/engagement"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/fanout"
+	ch "github.com/tikiclone/tiki/platforms/live-commerce/internal/infrastructure/clickhouse"
+	redi "github.com/tikiclone/tiki/platforms/live-commerce/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/metrics"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/moderation"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/recommendations"
+	"github.com/tikiclone/tiki/platforms/live-commerce/internal/replay"
 	"go.opentelemetry.io/otel"
 )
 
@@ -80,7 +80,7 @@ func NewLiveCommerceService(
 }
 
 func (s *LiveCommerceService) CreateLivestream(ctx context.Context, sellerID, title, description, coverURL, category string, tags []string, scheduledAt *time.Time) (*domain.Livestream, error) {
-	_, span := otel.Tracer("shopee-live-commerce").Start(ctx, "service.CreateLivestream")
+	_, span := otel.Tracer("tiki-live-commerce").Start(ctx, "service.CreateLivestream")
 	defer span.End()
 
 	ls := domain.NewLivestream(sellerID, title, description, coverURL, category, tags, scheduledAt)
@@ -98,7 +98,7 @@ func (s *LiveCommerceService) CreateLivestream(ctx context.Context, sellerID, ti
 }
 
 func (s *LiveCommerceService) GetLivestream(ctx context.Context, id string) (*domain.Livestream, error) {
-	_, span := otel.Tracer("shopee-live-commerce").Start(ctx, "service.GetLivestream")
+	_, span := otel.Tracer("tiki-live-commerce").Start(ctx, "service.GetLivestream")
 	defer span.End()
 
 	if s.cache != nil {
@@ -117,7 +117,7 @@ func (s *LiveCommerceService) GetLivestream(ctx context.Context, id string) (*do
 }
 
 func (s *LiveCommerceService) StartLivestream(ctx context.Context, livestreamID string) error {
-	_, span := otel.Tracer("shopee-live-commerce").Start(ctx, "service.StartLivestream")
+	_, span := otel.Tracer("tiki-live-commerce").Start(ctx, "service.StartLivestream")
 	defer span.End()
 
 	ls, err := s.livestreamRepo.GetByID(ctx, livestreamID)
@@ -147,7 +147,7 @@ func (s *LiveCommerceService) StartLivestream(ctx context.Context, livestreamID 
 }
 
 func (s *LiveCommerceService) EndLivestream(ctx context.Context, livestreamID string) error {
-	_, span := otel.Tracer("shopee-live-commerce").Start(ctx, "service.EndLivestream")
+	_, span := otel.Tracer("tiki-live-commerce").Start(ctx, "service.EndLivestream")
 	defer span.End()
 
 	ls, err := s.livestreamRepo.GetByID(ctx, livestreamID)
@@ -185,7 +185,7 @@ func (s *LiveCommerceService) ListSellerLivestreams(ctx context.Context, sellerI
 }
 
 func (s *LiveCommerceService) SendChatMessage(ctx context.Context, roomID, userID, username, content string) (*domain.ChatMessage, error) {
-	_, span := otel.Tracer("shopee-live-commerce").Start(ctx, "service.SendChatMessage")
+	_, span := otel.Tracer("tiki-live-commerce").Start(ctx, "service.SendChatMessage")
 	defer span.End()
 
 	if s.redis != nil {
@@ -241,7 +241,7 @@ func (s *LiveCommerceService) SendChatMessage(ctx context.Context, roomID, userI
 }
 
 func (s *LiveCommerceService) SendReaction(ctx context.Context, roomID, userID, reactionType string) error {
-	_, span := otel.Tracer("shopee-live-commerce").Start(ctx, "service.SendReaction")
+	_, span := otel.Tracer("tiki-live-commerce").Start(ctx, "service.SendReaction")
 	defer span.End()
 
 	validTypes := map[string]bool{"like": true, "love": true, "wow": true, "laugh": true, "sad": true, "angry": true}
@@ -270,7 +270,7 @@ func (s *LiveCommerceService) SendReaction(ctx context.Context, roomID, userID, 
 }
 
 func (s *LiveCommerceService) SendGift(ctx context.Context, roomID, userID, username, giftType string, amount int64, currency string) error {
-	_, span := otel.Tracer("shopee-live-commerce").Start(ctx, "service.SendGift")
+	_, span := otel.Tracer("tiki-live-commerce").Start(ctx, "service.SendGift")
 	defer span.End()
 
 	gift := &domain.Gift{

@@ -7,8 +7,8 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-	"github.com/shopee-clone/shopee/services/auth/internal/config"
-	"github.com/shopee-clone/shopee/services/auth/internal/domain"
+	"github.com/tikiclone/tiki/services/auth/internal/config"
+	"github.com/tikiclone/tiki/services/auth/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -43,7 +43,7 @@ func NewService(cfg config.JWTConfig, store redisStore) *Service {
 }
 
 func (s *Service) GenerateAccessToken(ctx context.Context, claims *Claims) (string, string, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "jwt.generate_access")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "jwt.generate_access")
 	defer span.End()
 
 	tokenID := uuid.New().String()
@@ -110,7 +110,7 @@ func (s *Service) GenerateRefreshTokenWithSession(ctx context.Context, userID st
 }
 
 func (s *Service) ValidateAccessToken(ctx context.Context, tokenString string) (*Claims, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "jwt.validate_access")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "jwt.validate_access")
 	defer span.End()
 
 	if s.redisStore != nil && s.cfg.BlacklistEnabled {
@@ -155,7 +155,7 @@ func (s *Service) ValidateAccessToken(ctx context.Context, tokenString string) (
 }
 
 func (s *Service) ValidateRefreshToken(ctx context.Context, tokenString string) (*Claims, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "jwt.validate_refresh")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "jwt.validate_refresh")
 	defer span.End()
 
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {

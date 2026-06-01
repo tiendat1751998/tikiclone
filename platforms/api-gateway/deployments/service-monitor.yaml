@@ -1,13 +1,13 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: shopee-api-gateway
+  name: tiki-api-gateway
   labels:
     release: prometheus
 spec:
   selector:
     matchLabels:
-      app: shopee-api-gateway
+      app: tiki-api-gateway
   endpoints:
     - port: http
       path: /metrics

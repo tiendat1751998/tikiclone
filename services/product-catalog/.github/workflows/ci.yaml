@@ -6,7 +6,7 @@ on:
     branches: [main]
 env:
   GO_VERSION: "1.22"
-  APP_NAME: shopee-catalog
+  APP_NAME: tiki-catalog
 jobs:
   lint:
     runs-on: ubuntu-latest

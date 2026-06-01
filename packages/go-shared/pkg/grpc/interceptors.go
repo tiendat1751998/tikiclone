@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	otelCodes "go.opentelemetry.io/otel/codes"
@@ -24,7 +24,7 @@ func otelUnaryClientInterceptor() grpc.UnaryClientInterceptor {
 		invoker grpc.UnaryInvoker,
 		opts ...grpc.CallOption,
 	) error {
-		ctx, span := otel.Tracer("shopee-clone").Start(ctx, method,
+		ctx, span := otel.Tracer("tiki-clone").Start(ctx, method,
 			trace.WithSpanKind(trace.SpanKindClient),
 		)
 		defer span.End()

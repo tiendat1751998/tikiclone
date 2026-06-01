@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: shopee-analytics-config
+  name: tiki-analytics-config
 data:
-  APP_NAME: "shopee-analytics"
+  APP_NAME: "tiki-analytics"
   APP_ENV: "production"
   LOG_LEVEL: "info"
   ANALYTICS_HTTP_PORT: "8098"

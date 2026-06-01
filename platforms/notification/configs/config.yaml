@@ -33,7 +33,7 @@ smtp:
   port: 587
   username: ""
   password: ""
-  from: noreply@shopee-clone.com
+  from: noreply@tiki-clone.com
 
 twilio:
   account_sid: ""
@@ -45,4 +45,4 @@ fcm:
 
 sendgrid:
   api_key: ""
-  from: noreply@shopee-clone.com
+  from: noreply@tiki-clone.com

@@ -9,13 +9,13 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/behavior"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/decisionlog"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/devicefp"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/riskscoring"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/ruleengine"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/transactionmon"
-	httpTransport "github.com/shopee-clone/shopee/platforms/fraud-risk/internal/transport/http"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/behavior"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/decisionlog"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/devicefp"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/riskscoring"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/ruleengine"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/transactionmon"
+	httpTransport "github.com/tikiclone/tiki/platforms/fraud-risk/internal/transport/http"
 	automaxprocs "go.uber.org/automaxprocs/maxprocs"
 )
 

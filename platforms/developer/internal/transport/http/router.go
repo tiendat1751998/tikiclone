@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/developer/internal/cicd"
+	"github.com/tikiclone/tiki/platforms/developer/internal/cicd"
 )
 
 type Router struct {

@@ -1,4 +1,4 @@
-# QA Bug Report — Shopee Clone Monorepo
+# QA Bug Report — Tiki Clone Monorepo
 **Date:** May 20, 2026  
 **Scope:** 12 Go microservices, 1 Java service, CI/CD, Docker, K8s
 
@@ -39,7 +39,7 @@
 | 14 | **auth** | Swallowed errors in `Logout`, `HandleTokenReuse`, `EnforceMaxSessions` | Added error logging |
 | 15 | **product-catalog** | `JWTConfig` never populated → empty secret accepts any token | Added `JWTConfig: JWTConfig{AccessSecret: os.Getenv("JWT_ACCESS_SECRET")}` |
 | 16 | **product-catalog** | `JWTAuth` middleware defined but never applied to routes | **NOT YET FIXED** |
-| 17 | **All services** | Hardcoded default secrets (`change-me-in-production`, `shopee_dev`, `whsec-change-me`) | Replaced with `requireEnv()` that fails fast |
+| 17 | **All services** | Hardcoded default secrets (`change-me-in-production`, `tiki_dev`, `whsec-change-me`) | Replaced with `requireEnv()` that fails fast |
 | 18 | **All services** | `server.exe` / `main.exe` binaries committed (18 files) | Deleted all, added `*.exe` to `.gitignore` |
 
 ### Test Compilation Fixes (product-catalog)

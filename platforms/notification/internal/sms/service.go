@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/notification/internal/events"
+	"github.com/tikiclone/tiki/platforms/notification/internal/events"
 )
 
 type Service interface {

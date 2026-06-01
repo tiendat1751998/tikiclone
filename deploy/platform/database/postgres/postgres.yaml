@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: postgres-config
-  namespace: shopee-infra
+  namespace: tiki-infra
 data:
   postgresql.conf: |
     max_connections = 200
@@ -39,7 +39,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres
-  namespace: shopee-infra
+  namespace: tiki-infra
   labels:
     app: postgres
 spec:
@@ -54,7 +54,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres
-  namespace: shopee-infra
+  namespace: tiki-infra
 spec:
   serviceName: postgres
   replicas: 3
@@ -83,7 +83,7 @@ spec:
           image: postgres:16-alpine
           env:
             - name: POSTGRES_DB
-              value: shopee
+              value: tiki
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
@@ -132,7 +132,7 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        storageClassName: shopee-fast
+        storageClassName: tiki-fast
         resources:
           requests:
             storage: 100Gi

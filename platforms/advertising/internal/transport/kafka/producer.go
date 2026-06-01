@@ -1,5 +1,5 @@
 package kafka
-import ("context"; "encoding/json"; "time"; "github.com/segmentio/kafka-go"; "github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"; "go.uber.org/zap")
+import ("context"; "encoding/json"; "time"; "github.com/segmentio/kafka-go"; "github.com/tikiclone/tiki/packages/go-shared/pkg/observability"; "go.uber.org/zap")
 const TopicAdEvents = "advertising.events"
 type Producer struct { writer *kafka.Writer; service string }
 func NewProducer(brokers []string, service string) *Producer {

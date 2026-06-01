@@ -5,7 +5,7 @@ import (
 	"database/sql"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/services/cart/internal/domain"
+	"github.com/tikiclone/tiki/services/cart/internal/domain"
 )
 
 type CartRepository struct {

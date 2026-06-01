@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/services/auth/internal/application"
-	"github.com/shopee-clone/shopee/services/auth/internal/domain"
+	"github.com/tikiclone/tiki/services/auth/internal/application"
+	"github.com/tikiclone/tiki/services/auth/internal/domain"
 )
 
 type AuthMiddleware struct {

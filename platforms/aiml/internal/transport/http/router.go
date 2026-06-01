@@ -2,9 +2,9 @@ package http
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/middleware"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/health"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/middleware"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/health"
 )
 
 type Router struct {
@@ -20,8 +20,8 @@ func (r *Router) Setup(engine *gin.Engine) {
 	engine.Use(middleware.Recovery())
 	engine.Use(middleware.CORS())
 	engine.Use(middleware.RequestID())
-	engine.Use(middleware.OTelMiddleware("shopee-aiml"))
-	engine.Use(observability.ObserveHTTPMetrics("shopee-aiml"))
+	engine.Use(middleware.OTelMiddleware("tiki-aiml"))
+	engine.Use(observability.ObserveHTTPMetrics("tiki-aiml"))
 
 	engine.GET("/health/live", r.health.LivenessHandler())
 	engine.GET("/health/ready", r.health.ReadinessHandler())

@@ -1,5 +1,5 @@
 {
-  "name": "@shopee/shared-query",
+  "name": "@tiki/shared-query",
   "version": "0.1.0",
   "private": true,
   "main": "./src/index.ts",

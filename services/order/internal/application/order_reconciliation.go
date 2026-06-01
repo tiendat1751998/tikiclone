@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/shopee-clone/shopee/services/order/internal/domain"
-	"github.com/shopee-clone/shopee/services/order/internal/metrics"
+	"github.com/tikiclone/tiki/services/order/internal/domain"
+	"github.com/tikiclone/tiki/services/order/internal/metrics"
 	"go.opentelemetry.io/otel"
 	"go.uber.org/zap"
 )
 
 func (s *OrderService) TriggerReconciliation(ctx context.Context, orderID string, rtype domain.ReconciliationType) (*domain.OrderReconciliation, error) {
-	ctx, span := otel.Tracer("shopee-order").Start(ctx, "OrderService.TriggerReconciliation")
+	ctx, span := otel.Tracer("tiki-order").Start(ctx, "OrderService.TriggerReconciliation")
 	defer span.End()
 
 	rec := domain.NewOrderReconciliation(orderID, rtype)
@@ -34,7 +34,7 @@ func (s *OrderService) TriggerReconciliation(ctx context.Context, orderID string
 }
 
 func (s *OrderService) RunReconciliation(ctx context.Context) error {
-	ctx, span := otel.Tracer("shopee-order").Start(ctx, "OrderService.RunReconciliation")
+	ctx, span := otel.Tracer("tiki-order").Start(ctx, "OrderService.RunReconciliation")
 	defer span.End()
 
 	recs, err := s.orderRepo.GetPendingReconciliations(ctx, 100)

@@ -1,11 +1,11 @@
 package http
 
 import (
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/blacklist"
-	fraudcase "github.com/shopee-clone/shopee/platforms/fraud/internal/case"
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/detection"
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/rules"
-	"github.com/shopee-clone/shopee/platforms/fraud/internal/verification"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/blacklist"
+	fraudcase "github.com/tikiclone/tiki/platforms/fraud/internal/case"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/detection"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/rules"
+	"github.com/tikiclone/tiki/platforms/fraud/internal/verification"
 )
 
 type Handler struct {

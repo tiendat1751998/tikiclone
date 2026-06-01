@@ -1,6 +1,6 @@
 # Kubernetes Cluster Deployment & Autoscaling Rules
 
-All production deployments in the Shopee Clone cluster must adhere to these policies.
+All production deployments in the Tiki Clone cluster must adhere to these policies.
 
 ## 1. Resource Limits & Probes
 - **Requests vs Limits**: CPU request/limit ratio must be `1:2`, Memory request/limit ratio must be `1:1` (to prevent Out-Of-Memory termination during dynamic Java heap expansions).

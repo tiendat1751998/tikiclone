@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/api-gateway/internal/circuitbreaker"
+	"github.com/tikiclone/tiki/platforms/api-gateway/internal/circuitbreaker"
 )
 
 func TestCircuitBreakerClosedInitialState(t *testing.T) {

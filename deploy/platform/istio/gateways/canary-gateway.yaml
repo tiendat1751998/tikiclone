@@ -1,13 +1,13 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: shopee-canary-routing
-  namespace: shopee
+  name: tiki-canary-routing
+  namespace: tiki
 spec:
   hosts:
-    - "api.shopee-clone.com"
+    - "api.tiki-clone.com"
   gateways:
-    - shopee-gateway
+    - tiki-gateway
   http:
     - match:
         - headers:
@@ -15,18 +15,18 @@ spec:
               exact: "true"
       route:
         - destination:
-            host: gateway-v2.shopee.svc.cluster.local
+            host: gateway-v2.tiki.svc.cluster.local
             port:
               number: 8080
           weight: 100
     - route:
         - destination:
-            host: gateway.shopee.svc.cluster.local
+            host: gateway.tiki.svc.cluster.local
             port:
               number: 8080
           weight: 90
         - destination:
-            host: gateway-v2.shopee.svc.cluster.local
+            host: gateway-v2.tiki.svc.cluster.local
             port:
               number: 8080
           weight: 10
@@ -35,19 +35,19 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: auth-canary
-  namespace: shopee
+  namespace: tiki
 spec:
   hosts:
-    - auth.shopee.svc.cluster.local
+    - auth.tiki.svc.cluster.local
   http:
     - route:
         - destination:
-            host: auth.shopee.svc.cluster.local
+            host: auth.tiki.svc.cluster.local
             port:
               number: 8080
           weight: 90
         - destination:
-            host: auth-v2.shopee.svc.cluster.local
+            host: auth-v2.tiki.svc.cluster.local
             port:
               number: 8080
           weight: 10
@@ -60,10 +60,10 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: order-canary
-  namespace: shopee
+  namespace: tiki
 spec:
   hosts:
-    - order.shopee.svc.cluster.local
+    - order.tiki.svc.cluster.local
   http:
     - match:
         - headers:
@@ -71,18 +71,18 @@ spec:
               exact: "true"
       route:
         - destination:
-            host: order-v2.shopee.svc.cluster.local
+            host: order-v2.tiki.svc.cluster.local
             port:
               number: 8080
           weight: 100
     - route:
         - destination:
-            host: order.shopee.svc.cluster.local
+            host: order.tiki.svc.cluster.local
             port:
               number: 8080
           weight: 95
         - destination:
-            host: order-v2.shopee.svc.cluster.local
+            host: order-v2.tiki.svc.cluster.local
             port:
               number: 8080
           weight: 5

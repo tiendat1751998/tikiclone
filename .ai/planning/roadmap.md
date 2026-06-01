@@ -1,10 +1,10 @@
 # Phased Product Roadmap
 
-A 6-month product development timeline for launching the Shopee Clone platform.
+A 6-month product development timeline for launching the Tiki Clone platform.
 
 ```mermaid
 gantt
-    title Shopee Clone Development Pipeline
+    title Tiki Clone Development Pipeline
     dateFormat  YYYY-MM-DD
     section Phase 1: MVP baseline
     Monorepo Setup & Core DB Schema: active, 2026-06-01, 14d

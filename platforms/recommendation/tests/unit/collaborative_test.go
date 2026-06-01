@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/collaborative"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/collaborative"
 )
 
 func TestCollaborativeItemBasedSimilarity(t *testing.T) {

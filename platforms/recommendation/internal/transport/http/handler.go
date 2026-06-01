@@ -1,10 +1,10 @@
 package http
 
 import (
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/collaborative"
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/events"
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/recommender"
-	"github.com/shopee-clone/shopee/platforms/recommendation/internal/trending"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/collaborative"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/events"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/recommender"
+	"github.com/tikiclone/tiki/platforms/recommendation/internal/trending"
 )
 
 type Handler struct {

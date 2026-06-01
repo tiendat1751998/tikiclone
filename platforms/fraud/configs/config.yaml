@@ -1,5 +1,5 @@
 app:
-  name: shopee-fraud
+  name: tiki-fraud
   env: development
   version: 1.0.0
 
@@ -8,7 +8,7 @@ server:
   grpc_port: 9090
 
 postgres:
-  dsn: "postgres://shopee:shopee_dev@localhost:5432/shopee_fraud?sslmode=disable"
+  dsn: "postgres://shopee:tiki_dev@localhost:5432/tiki_fraud?sslmode=disable"
 
 redis:
   addr: localhost:6379
@@ -28,4 +28,4 @@ verification:
 
 otel:
   endpoint: http://localhost:4318
-  service_name: shopee-fraud
+  service_name: tiki-fraud

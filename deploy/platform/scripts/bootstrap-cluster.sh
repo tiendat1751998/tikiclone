@@ -1,14 +1,14 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "=== Shopee Clone Platform Bootstrap ==="
+echo "=== Tiki Clone Platform Bootstrap ==="
 
 NAMESPACES=(
-  "shopee"
-  "shopee-infra"
-  "shopee-observability"
-  "shopee-gitops"
-  "shopee-ingress"
+  "tiki"
+  "tiki-infra"
+  "tiki-observability"
+  "tiki-gitops"
+  "tiki-ingress"
 )
 
 echo "Creating namespaces..."
@@ -21,9 +21,9 @@ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/
 kubectl -n cert-manager wait --for=condition=Available deployment --all --timeout=300s
 
 echo "Installing ArgoCD..."
-kubectl create namespace shopee-gitops --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -n shopee-gitops -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-kubectl -n shopee-gitops wait --for=condition=Available deployment --all --timeout=300s
+kubectl create namespace tiki-gitops --dry-run=client -o yaml | kubectl apply -f -
+kubectl apply -n tiki-gitops -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl -n tiki-gitops wait --for=condition=Available deployment --all --timeout=300s
 
 echo "Installing Prometheus Stack..."
 kubectl apply -f deploy/platform/monitoring/prometheus/prometheus.yaml
@@ -70,5 +70,5 @@ kubectl apply -f deploy/platform/gitops/argocd/projects/
 kubectl apply -f deploy/platform/gitops/argocd/applicationsets/
 
 echo "=== Bootstrap complete ==="
-echo "ArgoCD URL: https://argocd.shopee-clone.com"
-echo "Grafana URL: https://grafana.shopee-clone.com"
+echo "ArgoCD URL: https://argocd.tiki-clone.com"
+echo "Grafana URL: https://grafana.tiki-clone.com"

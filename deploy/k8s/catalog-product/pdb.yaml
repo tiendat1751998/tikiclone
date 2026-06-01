@@ -2,7 +2,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: catalog-product
-  namespace: shopee
+  namespace: tiki
   labels:
     app: catalog-product
 spec:

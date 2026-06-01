@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/sre/internal/slo"
+	"github.com/tikiclone/tiki/platforms/sre/internal/slo"
 )
 
 type CreateSLOReq struct {

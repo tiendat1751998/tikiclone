@@ -15,9 +15,9 @@ const mysql = require('mysql2/promise');
 const DB_CONFIG = {
   host: 'localhost',
   port: 3306,
-  user: 'shopee',
-  password: 'shopee_dev',
-  database: 'shopee_platform',
+  user: 'tiki',
+  password: 'tiki_dev',
+  database: 'tiki_platform',
   charset: 'utf8mb4',
 };
 

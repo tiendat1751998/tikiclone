@@ -5,11 +5,11 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/payment-ledger/internal/dispute"
-	"github.com/shopee-clone/shopee/platforms/payment-ledger/internal/ledger"
-	"github.com/shopee-clone/shopee/platforms/payment-ledger/internal/payment"
-	"github.com/shopee-clone/shopee/platforms/payment-ledger/internal/payout"
-	"github.com/shopee-clone/shopee/platforms/payment-ledger/internal/reconciliation"
+	"github.com/tikiclone/tiki/platforms/payment-ledger/internal/dispute"
+	"github.com/tikiclone/tiki/platforms/payment-ledger/internal/ledger"
+	"github.com/tikiclone/tiki/platforms/payment-ledger/internal/payment"
+	"github.com/tikiclone/tiki/platforms/payment-ledger/internal/payout"
+	"github.com/tikiclone/tiki/platforms/payment-ledger/internal/reconciliation"
 )
 
 type Handler struct {

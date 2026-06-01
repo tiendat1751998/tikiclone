@@ -1,0 +1,73 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: tiki-services
+  namespace: tiki-gitops
+spec:
+  description: Tiki Core Services
+  sourceRepos:
+    - https://github.com/tiki-clone/tiki-clone
+  destinations:
+    - namespace: tiki
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  orphanedResources:
+    warn: true
+  syncWindows:
+    - kind: allow
+      schedule: "* * * * *"
+      duration: 1h
+      applications:
+        - "*-prod"
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: tiki-platforms
+  namespace: tiki-gitops
+spec:
+  description: Tiki Platform Services
+  sourceRepos:
+    - https://github.com/tiki-clone/tiki-clone
+  destinations:
+    - namespace: tiki
+      server: https://kubernetes.default.svc
+    - namespace: tiki-infra
+      server: https://kubernetes.default.svc
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  syncWindows:
+    - kind: allow
+      schedule: "* * * * *"
+      duration: 1h
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: tiki-infrastructure
+  namespace: tiki-gitops
+spec:
+  description: Tiki Infrastructure Components
+  sourceRepos:
+    - https://github.com/tiki-clone/tiki-clone
+  destinations:
+    - namespace: tiki-infra
+      server: https://kubernetes.default.svc
+    - namespace: tiki-observability
+      server: https://kubernetes.default.svc
+    - namespace: tiki-ingress
+      server: https://kubernetes.default.svc
+    - namespace: tiki-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

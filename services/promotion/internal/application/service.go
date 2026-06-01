@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/shopee-clone/shopee/services/promotion/internal/domain"
-	"github.com/shopee-clone/shopee/services/promotion/internal/infrastructure/redis"
-	"github.com/shopee-clone/shopee/services/promotion/internal/metrics"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/promotion/internal/domain"
+	"github.com/tikiclone/tiki/services/promotion/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/services/promotion/internal/metrics"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 	"go.opentelemetry.io/otel"
 	"go.uber.org/zap"
 )
@@ -49,7 +49,7 @@ func NewPromotionService(
 
 // ValidateVoucher checks if a voucher is valid for the given context
 func (s *PromotionService) ValidateVoucher(ctx context.Context, code, userID string, subtotal int64, shopID, categoryID, sku, region, paymentMethod string) (*domain.Voucher, error) {
-	ctx, span := otel.Tracer("shopee-promotion").Start(ctx, "promotion.validate_voucher")
+	ctx, span := otel.Tracer("tiki-promotion").Start(ctx, "promotion.validate_voucher")
 	defer span.End()
 
 	voucher, err := s.voucherRepo.FindByCode(ctx, code)
@@ -78,7 +78,7 @@ func (s *PromotionService) ValidateVoucher(ctx context.Context, code, userID str
 
 // RedeemVoucher redeems a voucher for a user/order
 func (s *PromotionService) RedeemVoucher(ctx context.Context, code, userID, orderID, idempotencyKey string, subtotal int64, shopID, categoryID, sku, region, paymentMethod string) (*domain.PromotionResult, error) {
-	ctx, span := otel.Tracer("shopee-promotion").Start(ctx, "promotion.redeem_voucher")
+	ctx, span := otel.Tracer("tiki-promotion").Start(ctx, "promotion.redeem_voucher")
 	defer span.End()
 
 	tx, err := s.voucherRepo.BeginTx(ctx)
@@ -166,7 +166,7 @@ func (s *PromotionService) RedeemVoucher(ctx context.Context, code, userID, orde
 
 // EvaluatePromotions evaluates all applicable promotions for a cart
 func (s *PromotionService) EvaluatePromotions(ctx context.Context, userID string, subtotal int64, shopID, categoryID, sku, region, paymentMethod string) ([]*domain.PromotionResult, error) {
-	ctx, span := otel.Tracer("shopee-promotion").Start(ctx, "promotion.evaluate")
+	ctx, span := otel.Tracer("tiki-promotion").Start(ctx, "promotion.evaluate")
 	defer span.End()
 
 	var results []*domain.PromotionResult

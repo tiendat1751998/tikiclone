@@ -1,12 +1,12 @@
 package http
 
 import (
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/discovery"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/loadbalancer"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/mtls"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/resilience"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/telemetry"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/traffic"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/discovery"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/loadbalancer"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/mtls"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/resilience"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/telemetry"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/traffic"
 )
 
 type Handler struct {

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/services/shipment/internal/domain"
+	"github.com/tikiclone/tiki/services/shipment/internal/domain"
 )
 
 type ShipmentRepository struct {

@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/shopee-clone/shopee/services/order/internal/config"
-	"github.com/shopee-clone/shopee/services/order/internal/domain"
-	"github.com/shopee-clone/shopee/services/order/internal/infrastructure/kafka"
-	"github.com/shopee-clone/shopee/services/order/internal/infrastructure/mysql"
-	redisinfra "github.com/shopee-clone/shopee/services/order/internal/infrastructure/redis"
-	"github.com/shopee-clone/shopee/services/order/internal/metrics"
+	"github.com/tikiclone/tiki/services/order/internal/config"
+	"github.com/tikiclone/tiki/services/order/internal/domain"
+	"github.com/tikiclone/tiki/services/order/internal/infrastructure/kafka"
+	"github.com/tikiclone/tiki/services/order/internal/infrastructure/mysql"
+	redisinfra "github.com/tikiclone/tiki/services/order/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/services/order/internal/metrics"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -58,7 +58,7 @@ type CreateOrderRequest struct {
 }
 
 func (s *OrderService) CreateOrder(ctx context.Context, req *CreateOrderRequest) (*domain.Order, error) {
-	ctx, span := otel.Tracer("shopee-order").Start(ctx, "OrderService.CreateOrder")
+	ctx, span := otel.Tracer("tiki-order").Start(ctx, "OrderService.CreateOrder")
 	defer span.End()
 
 	span.SetAttributes(
@@ -172,6 +172,9 @@ func (s *OrderService) CreateOrder(ctx context.Context, req *CreateOrderRequest)
 		}
 	}
 
+	// Populate computed fields from snapshot
+	domain.EnrichOrder(order)
+
 	// Cache the order
 	s.redisStore.CacheOrder(ctx, order, 5*time.Minute)
 
@@ -195,7 +198,7 @@ func (s *OrderService) CreateOrder(ctx context.Context, req *CreateOrderRequest)
 }
 
 func (s *OrderService) GetOrder(ctx context.Context, orderID string) (*domain.Order, error) {
-	ctx, span := otel.Tracer("shopee-order").Start(ctx, "OrderService.GetOrder")
+	ctx, span := otel.Tracer("tiki-order").Start(ctx, "OrderService.GetOrder")
 	defer span.End()
 
 	// Try cache first
@@ -212,6 +215,8 @@ func (s *OrderService) GetOrder(ctx context.Context, orderID string) (*domain.Or
 		return nil, err
 	}
 
+	domain.EnrichOrder(order)
+
 	// Cache for next time
 	s.redisStore.CacheOrder(ctx, order, 5*time.Minute)
 
@@ -219,7 +224,7 @@ func (s *OrderService) GetOrder(ctx context.Context, orderID string) (*domain.Or
 }
 
 func (s *OrderService) ListOrders(ctx context.Context, userID string, page, pageSize int) ([]*domain.Order, int, error) {
-	ctx, span := otel.Tracer("shopee-order").Start(ctx, "OrderService.ListOrders")
+	ctx, span := otel.Tracer("tiki-order").Start(ctx, "OrderService.ListOrders")
 	defer span.End()
 
 	if page < 1 {
@@ -235,6 +240,10 @@ func (s *OrderService) ListOrders(ctx context.Context, userID string, page, page
 		return nil, 0, err
 	}
 
+	for _, o := range orders {
+		domain.EnrichOrder(o)
+	}
+
 	total, err := s.orderRepo.CountByUserID(ctx, userID)
 	if err != nil {
 		return nil, 0, err
@@ -244,7 +253,7 @@ func (s *OrderService) ListOrders(ctx context.Context, userID string, page, page
 }
 
 func (s *OrderService) TransitionStatus(ctx context.Context, orderID string, target domain.OrderStatus, actorID, actorType, reason string) (*domain.Order, error) {
-	ctx, span := otel.Tracer("shopee-order").Start(ctx, "OrderService.TransitionStatus")
+	ctx, span := otel.Tracer("tiki-order").Start(ctx, "OrderService.TransitionStatus")
 	defer span.End()
 
 	span.SetAttributes(

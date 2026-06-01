@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/services/cart/internal/application"
-	"github.com/shopee-clone/shopee/services/cart/internal/infrastructure/mysql"
+	"github.com/tikiclone/tiki/services/cart/internal/application"
+	"github.com/tikiclone/tiki/services/cart/internal/infrastructure/mysql"
 )
 
 type CartService = application.CartService

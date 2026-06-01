@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/oms-fulfillment/internal/ordermanagement"
+	"github.com/tikiclone/tiki/platforms/oms-fulfillment/internal/ordermanagement"
 )
 
 func (h *Handler) CreateOrder(c *gin.Context) {

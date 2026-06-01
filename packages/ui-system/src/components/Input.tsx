@@ -1,7 +1,7 @@
 "use client";
 import { forwardRef, type InputHTMLAttributes } from "react";
 import { clsx } from "clsx";
-import { colors } from "@shopee/design-tokens";
+import { colors } from "@tiki/design-tokens";
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;

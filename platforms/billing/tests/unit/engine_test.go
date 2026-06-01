@@ -4,8 +4,8 @@ import (
 	"context"
 	"sync"
 	"testing"
-	"github.com/shopee-clone/shopee/platforms/billing/internal/domain"
-	"github.com/shopee-clone/shopee/platforms/billing/internal/ledger"
+	"github.com/tikiclone/tiki/platforms/billing/internal/domain"
+	"github.com/tikiclone/tiki/platforms/billing/internal/ledger"
 )
 
 type mockPublisher struct{}

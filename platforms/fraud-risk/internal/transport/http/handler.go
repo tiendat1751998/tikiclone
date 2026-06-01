@@ -1,12 +1,12 @@
 package http
 
 import (
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/behavior"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/decisionlog"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/devicefp"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/riskscoring"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/ruleengine"
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/transactionmon"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/behavior"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/decisionlog"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/devicefp"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/riskscoring"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/ruleengine"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/transactionmon"
 )
 
 type Handler struct {

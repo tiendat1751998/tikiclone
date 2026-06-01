@@ -65,7 +65,7 @@ type OTELConfig struct {
 
 func Load() *Config {
 	return &Config{
-		AppName:  getEnv("APP_NAME", "shopee-promotion"),
+		AppName:  getEnv("APP_NAME", "tiki-promotion"),
 		AppEnv:   getEnv("APP_ENV", "development"),
 		LogLevel: getEnv("LOG_LEVEL", "info"),
 		HTTPPort: getEnvInt("PROMOTION_HTTP_PORT", 8080),
@@ -74,9 +74,9 @@ func Load() *Config {
 		MySQL: MySQLConfig{
 			Host:         getEnv("MYSQL_HOST", "localhost"),
 			Port:         getEnvInt("MYSQL_PORT", 3306),
-			User:         getEnv("MYSQL_USER", "shopee"),
-			Password:     getEnv("MYSQL_PASSWORD", "shopee_dev"),
-			Database:     getEnv("MYSQL_DATABASE", "shopee_promotion"),
+			User:         getEnv("MYSQL_USER", "tiki"),
+			Password:     getEnv("MYSQL_PASSWORD", "tiki_dev"),
+			Database:     getEnv("MYSQL_DATABASE", "tiki_promotion"),
 			MaxOpenConns: getEnvInt("MYSQL_MAX_OPEN_CONNS", 25),
 			MaxIdleConns: getEnvInt("MYSQL_MAX_IDLE_CONNS", 10),
 			MaxLifetime:  getEnvDuration("MYSQL_MAX_LIFETIME", 5*time.Minute),
@@ -106,7 +106,7 @@ func Load() *Config {
 
 		OpenTelemetry: OTELConfig{
 			Endpoint:    getEnv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318"),
-			ServiceName: getEnv("OTEL_SERVICE_NAME", "shopee-promotion"),
+			ServiceName: getEnv("OTEL_SERVICE_NAME", "tiki-promotion"),
 			TraceRatio:  getEnvFloat("OTEL_TRACES_SAMPLER_ARG", 0.1),
 		},
 	}

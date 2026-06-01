@@ -8,6 +8,8 @@ interface ProductCardProps {
 
 export function ProductCard({ product, priority = false }: ProductCardProps) {
   const discount = product.discount_percent ?? null;
+  const hasDiscount = discount && discount > 0;
+  const hasFreeShipping = product.price && product.price >= 100000; // Tiki.vn style: freeship from 100k
 
   return (
     <Link
@@ -20,16 +22,38 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           alt={product.name}
           loading={priority ? "eager" : "lazy"}
         />
-        {discount && discount > 0 && (
+        {hasDiscount && (
           <div className="product-card__discount">-{discount}%</div>
         )}
         {product.is_official && (
           <div className="product-card__official">CHÍNH HÃNG</div>
         )}
+        {hasFreeShipping && (
+          <div className="absolute top-0 right-0 bg-tiki-green text-white text-[9px] font-bold px-1 py-0.5 rounded-bl">
+            FREESHIP
+          </div>
+        )}
       </div>
 
       <div className="product-card__body">
         <h3 className="product-card__name">{product.name}</h3>
+
+        <div className="flex flex-col gap-0.5">
+          <div className="product-card__price">
+            <span className="product-card__price-current">
+              {product.price?.toLocaleString("vi-VN")} ₫
+            </span>
+            {hasDiscount && (
+              <span className="product-card__price-discount">-{discount}%</span>
+            )}
+          </div>
+
+          {product.original_price && product.original_price > product.price && (
+            <div className="product-card__price-original">
+              {product.original_price.toLocaleString("vi-VN")} ₫
+            </div>
+          )}
+        </div>
 
         {product.rating_average && product.rating_average > 0 && (
           <div className="product-card__rating">
@@ -41,21 +65,6 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
                 <span className="product-card__sold">{product.quantity_sold_text}</span>
               </>
             )}
-          </div>
-        )}
-
-        <div className="product-card__price">
-          <span className="product-card__price-current">
-            {product.price?.toLocaleString("vi-VN")} ₫
-          </span>
-          {discount && discount > 0 && (
-            <span className="product-card__price-discount">-{discount}%</span>
-          )}
-        </div>
-
-        {product.original_price && product.original_price > product.price && (
-          <div className="product-card__price-original">
-            {product.original_price.toLocaleString("vi-VN")} ₫
           </div>
         )}
 

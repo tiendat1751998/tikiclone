@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/global-infra/internal/configmanager"
+	"github.com/tikiclone/tiki/platforms/global-infra/internal/configmanager"
 )
 
 func TestConfigCreateDuplicateIncrementsVersion(t *testing.T) {

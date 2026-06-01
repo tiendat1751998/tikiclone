@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/advertising/internal/creative"
+	"github.com/tikiclone/tiki/platforms/advertising/internal/creative"
 )
 
 func TestCreativeCRUD(t *testing.T) {

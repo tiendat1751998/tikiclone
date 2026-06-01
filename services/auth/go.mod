@@ -1,4 +1,4 @@
-module github.com/shopee-clone/shopee/services/auth
+module github.com/tikiclone/tiki/services/auth
 
 go 1.26.3
 
@@ -10,7 +10,7 @@ require (
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/prometheus/client_golang v1.23.2
 	github.com/redis/go-redis/v9 v9.7.0
-	github.com/shopee-clone/shopee/packages/go-shared v0.0.0-00010101000000-000000000000
+	github.com/tikiclone/tiki/packages/go-shared v0.0.0-00010101000000-000000000000
 	go.opentelemetry.io/otel v1.32.0
 	go.opentelemetry.io/otel/trace v1.32.0
 	go.uber.org/automaxprocs v1.6.0
@@ -69,4 +69,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/shopee-clone/shopee/packages/go-shared => ../../packages/go-shared
+replace github.com/tikiclone/tiki/packages/go-shared => ../../packages/go-shared

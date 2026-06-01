@@ -1,6 +1,6 @@
-# Shopee API Gateway
+# Tiki API Gateway
 
-Production-grade API gateway for the Shopee Clone platform, built with Go and Gin.
+Production-grade API gateway for the Tiki Clone platform, built with Go and Gin.
 
 ## Architecture
 
@@ -92,7 +92,7 @@ Multi-layered sliding-window rate limiting via Redis (`github.com/go-redis/redis
 - **Closed** → Normal operation
 - **Open** → Fail fast when failure ratio > 60% (min 5 samples)
 - **Half-Open** → After 30s timeout, allow 5 probes
-- Metrics exposed as `shopee_gateway_circuit_breaker_state{service="..."}`
+- Metrics exposed as `tiki_gateway_circuit_breaker_state{service="..."}`
 
 ### Retry with Exponential Backoff
 - Max 3 attempts (configurable via `UPSTREAM_MAX_RETRIES`)
@@ -114,7 +114,7 @@ Multi-layered sliding-window rate limiting via Redis (`github.com/go-redis/redis
 ## Kubernetes Topology
 
 ```
-Namespace: shopee-platform
+Namespace: tiki-platform
 Deployment: 3 replicas (canary: 1)
 Service: ClusterIP (:80 → :8080, :9090)
 HPA: 3–20 pods @ 70% CPU / 80% memory

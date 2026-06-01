@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/search/internal/autocomplete"
+	"github.com/tikiclone/tiki/platforms/search/internal/autocomplete"
 )
 
 func TestAutocompletePrefixMatching(t *testing.T) {

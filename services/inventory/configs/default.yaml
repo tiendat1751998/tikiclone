@@ -1,5 +1,5 @@
 app:
-  name: shopee-inventory
+  name: tiki-inventory
   env: development
   log_level: info
   http_port: 8086
@@ -8,15 +8,15 @@ mysql:
   host: localhost
   port: 3306
   user: shopee
-  password: shopee_dev
-  database: shopee_inventory
+  password: tiki_dev
+  database: tiki_inventory
 redis:
   addr: localhost:6379
   db: 6
 kafka:
   brokers: [localhost:9092]
-  topic_prefix: shopee.inventory
-  consumer_group: shopee-inventory-service
+  topic_prefix: tiki.inventory
+  consumer_group: tiki-inventory-service
 jwt:
   access_secret: change-me-in-production
   access_ttl: 15m
@@ -28,4 +28,4 @@ inventory:
   flash_sale_rate_limit: 1000
 otel:
   endpoint: http://localhost:4318
-  service_name: shopee-inventory
+  service_name: tiki-inventory

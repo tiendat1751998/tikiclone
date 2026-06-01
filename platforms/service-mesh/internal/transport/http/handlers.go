@@ -5,10 +5,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/discovery"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/mtls"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/resilience"
-	"github.com/shopee-clone/shopee/platforms/service-mesh/internal/traffic"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/discovery"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/mtls"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/resilience"
+	"github.com/tikiclone/tiki/platforms/service-mesh/internal/traffic"
 )
 
 func (h *Handler) RegisterService(c *gin.Context) {

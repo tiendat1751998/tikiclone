@@ -1,6 +1,6 @@
 # PRODUCTION SECURITY + PERFORMANCE + RELIABILITY AUDIT REPORT
 **Date:** May 20, 2026
-**Scope:** Shopee Clone — 12 Go Microservices + Platform Modules
+**Scope:** Tiki Clone — 12 Go Microservices + Platform Modules
 
 ---
 
@@ -94,7 +94,7 @@ Cache updated on write. If Redis write fails after DB update, stale data served 
 ## HIGH (P1) — Fix This Sprint
 
 ### SEC-1: Hardcoded Default Secrets
-Services: checkout, inventory, order — MySQL password default: shopee_dev
+Services: checkout, inventory, order — MySQL password default: tiki_dev
 
 **Fix:** Use requireEnv() that fails fast. Already partially fixed.
 

@@ -43,7 +43,7 @@ STATIC_ASSETS = {
 }
 
 # Save directory
-SAVE_DIR = "/home/datdt/shopeeclone/apps/web/public/images"
+SAVE_DIR = "/home/datdt/tikiclone/apps/web/public/images"
 TIKI_DIR = f"{SAVE_DIR}/tiki"
 CATEGORY_DIR = f"{SAVE_DIR}/categories"
 BANNER_DIR = f"{SAVE_DIR}/banners"

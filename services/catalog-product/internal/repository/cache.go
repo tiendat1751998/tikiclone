@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/catalog-product/internal/domain"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/catalog-product/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.uber.org/zap"
 	"golang.org/x/sync/singleflight"
@@ -17,6 +17,7 @@ type ProductCache struct {
 	client      *redis.Client
 	sf          singleflight.Group
 	defaultTTL  time.Duration
+	listTTL     time.Duration
 }
 
 func NewProductCache(client *redis.Client) *ProductCache {
@@ -25,7 +26,8 @@ func NewProductCache(client *redis.Client) *ProductCache {
 	}
 	return &ProductCache{
 		client:     client,
-		defaultTTL: 1 * time.Hour,
+		defaultTTL: 1 * time.Minute,
+		listTTL:    1 * time.Minute,
 	}
 }
 
@@ -107,4 +109,107 @@ func (c *ProductCache) GetOrFetch(ctx context.Context, spuID string, fetchFn fun
 	}
 
 	return result.(*domain.Product), nil
+}
+
+func (c *ProductCache) GetList(ctx context.Context, cacheKey string) (*domain.ProductList, error) {
+	if c == nil || c.client == nil {
+		return nil, nil
+	}
+
+	ctx, span := otel.Tracer("catalog-product").Start(ctx, "cache.product.list.get")
+	defer span.End()
+
+	val, err := c.client.Get(ctx, cacheKey).Result()
+	if err == redis.Nil {
+		observability.CacheMissesTotal.WithLabelValues("catalog-product", "redis").Inc()
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	observability.CacheHitsTotal.WithLabelValues("catalog-product", "redis").Inc()
+
+	var productList domain.ProductList
+	if err := json.Unmarshal([]byte(val), &productList); err != nil {
+		return nil, err
+	}
+
+	return &productList, nil
+}
+
+func (c *ProductCache) SetList(ctx context.Context, cacheKey string, list *domain.ProductList) error {
+	if c == nil || c.client == nil {
+		return nil
+	}
+
+	data, err := json.Marshal(list)
+	if err != nil {
+		return err
+	}
+
+	return c.client.Set(ctx, cacheKey, data, c.listTTL).Err()
+}
+
+type CategoryCache struct {
+	client     *redis.Client
+	defaultTTL time.Duration
+}
+
+func NewCategoryCache(client *redis.Client) *CategoryCache {
+	if client == nil {
+		return nil
+	}
+	return &CategoryCache{
+		client:     client,
+		defaultTTL: 10 * time.Minute,
+	}
+}
+
+func (c *CategoryCache) GetAll(ctx context.Context) ([]domain.Category, error) {
+	if c == nil || c.client == nil {
+		return nil, nil
+	}
+
+	ctx, span := otel.Tracer("catalog-product").Start(ctx, "cache.category.get_all")
+	defer span.End()
+
+	val, err := c.client.Get(ctx, "categories:all").Result()
+	if err == redis.Nil {
+		observability.CacheMissesTotal.WithLabelValues("catalog-product", "redis").Inc()
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	observability.CacheHitsTotal.WithLabelValues("catalog-product", "redis").Inc()
+
+	var categories []domain.Category
+	if err := json.Unmarshal([]byte(val), &categories); err != nil {
+		return nil, err
+	}
+
+	return categories, nil
+}
+
+func (c *CategoryCache) SetAll(ctx context.Context, categories []domain.Category) error {
+	if c == nil || c.client == nil {
+		return nil
+	}
+
+	data, err := json.Marshal(categories)
+	if err != nil {
+		return err
+	}
+
+	return c.client.Set(ctx, "categories:all", data, c.defaultTTL).Err()
+}
+
+func (c *CategoryCache) DeleteAll(ctx context.Context) error {
+	if c == nil || c.client == nil {
+		return nil
+	}
+
+	return c.client.Del(ctx, "categories:all").Err()
 }

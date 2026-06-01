@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/shopee-clone/shopee/services/auth/internal/domain"
+	"github.com/tikiclone/tiki/services/auth/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -20,7 +20,7 @@ func NewSessionRepository(db *sqlx.DB) *SessionRepository {
 }
 
 func (r *SessionRepository) Create(ctx context.Context, session *domain.Session) error {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "mysql.session.create")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "mysql.session.create")
 	defer span.End()
 
 	query := `INSERT INTO sessions (id, user_id, refresh_token_id, device_id, device_name, device_type, platform, ip, user_agent, location, status, last_active_at, expires_at, created_at)
@@ -35,7 +35,7 @@ func (r *SessionRepository) Create(ctx context.Context, session *domain.Session)
 }
 
 func (r *SessionRepository) FindByID(ctx context.Context, id string) (*domain.Session, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "mysql.session.find_by_id")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "mysql.session.find_by_id")
 	defer span.End()
 
 	var session domain.Session
@@ -66,7 +66,7 @@ func (r *SessionRepository) FindByRefreshTokenID(ctx context.Context, tokenID st
 }
 
 func (r *SessionRepository) FindActiveByUserID(ctx context.Context, userID string) ([]*domain.Session, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "mysql.session.find_active_by_user")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "mysql.session.find_active_by_user")
 	defer span.End()
 
 	var sessions []*domain.Session

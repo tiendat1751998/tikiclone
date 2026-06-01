@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/checkout/internal/domain"
-	"github.com/shopee-clone/shopee/services/checkout/internal/infrastructure/redis"
-	"github.com/shopee-clone/shopee/services/checkout/internal/metrics"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/checkout/internal/domain"
+	"github.com/tikiclone/tiki/services/checkout/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/services/checkout/internal/metrics"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.uber.org/zap"
@@ -56,7 +56,7 @@ func NewCheckoutService(
 
 // InitiateCheckout starts the checkout orchestration process
 func (s *CheckoutService) InitiateCheckout(ctx context.Context, req InitiateRequest) (*domain.Checkout, error) {
-	ctx, span := otel.Tracer("shopee-checkout").Start(ctx, "checkout.initiate")
+	ctx, span := otel.Tracer("tiki-checkout").Start(ctx, "checkout.initiate")
 	defer span.End()
 
 	span.SetAttributes(

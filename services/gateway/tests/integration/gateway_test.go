@@ -8,13 +8,13 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/health"
-	"github.com/shopee-clone/shopee/services/gateway/internal/auth"
-	"github.com/shopee-clone/shopee/services/gateway/internal/config"
-	"github.com/shopee-clone/shopee/services/gateway/internal/discovery"
-	"github.com/shopee-clone/shopee/services/gateway/internal/ratelimit"
-	"github.com/shopee-clone/shopee/services/gateway/internal/routing"
-	"github.com/shopee-clone/shopee/services/gateway/internal/transport"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/health"
+	"github.com/tikiclone/tiki/services/gateway/internal/auth"
+	"github.com/tikiclone/tiki/services/gateway/internal/config"
+	"github.com/tikiclone/tiki/services/gateway/internal/discovery"
+	"github.com/tikiclone/tiki/services/gateway/internal/ratelimit"
+	"github.com/tikiclone/tiki/services/gateway/internal/routing"
+	"github.com/tikiclone/tiki/services/gateway/internal/transport"
 )
 
 func newTestRequest(method, path string) *http.Request {

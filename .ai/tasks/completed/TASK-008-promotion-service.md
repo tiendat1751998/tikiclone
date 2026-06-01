@@ -273,7 +273,7 @@ Generate:
 - anti-thundering-herd protection
 
 The flash-sale architecture MUST resemble:
-- Shopee
+- Tiki
 - Lazada
 - TikTok Shop
 

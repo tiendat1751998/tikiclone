@@ -1,3 +1,3 @@
-CREATE DATABASE shopee_auth;
-CREATE DATABASE shopee_order;
-CREATE DATABASE shopee_payment;
+CREATE DATABASE tiki_auth;
+CREATE DATABASE tiki_order;
+CREATE DATABASE tiki_payment;

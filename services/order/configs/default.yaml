@@ -1,5 +1,5 @@
 app:
-  name: shopee-order
+  name: tiki-order
   env: development
   log_level: info
   http_port: 8083
@@ -9,8 +9,8 @@ mysql:
   host: localhost
   port: 3306
   user: shopee
-  password: shopee_dev
-  database: shopee_orders
+  password: tiki_dev
+  database: tiki_orders
   max_open_conns: 25
   max_idle_conns: 10
   max_lifetime: 5m
@@ -30,15 +30,15 @@ redis:
 kafka:
   brokers:
     - localhost:9092
-  topic_prefix: shopee.orders
-  consumer_group: shopee-order-service
-  dlq_topic: shopee.orders.dlq
+  topic_prefix: tiki.orders
+  consumer_group: tiki-order-service
+  dlq_topic: tiki.orders.dlq
 
 jwt:
   access_secret: change-me-in-production
   access_ttl: 15m
-  issuer: shopee-auth
-  audience: shopee-clone
+  issuer: tiki-auth
+  audience: tiki-clone
 
 order:
   default_currency: SGD
@@ -50,7 +50,7 @@ order:
 
 otel:
   endpoint: http://localhost:4318
-  service_name: shopee-order
+  service_name: tiki-order
   trace_ratio: 0.1
 
 audit:

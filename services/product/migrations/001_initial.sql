@@ -1,8 +1,8 @@
 -- Product Service Database Migration
 -- Version: 001_initial.sql
 
-CREATE DATABASE IF NOT EXISTS shopee_product CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE shopee_product;
+CREATE DATABASE IF NOT EXISTS tiki_product CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE tiki_product;
 
 -- Products table
 CREATE TABLE IF NOT EXISTS products (

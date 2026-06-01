@@ -11,15 +11,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/config"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/embeddings"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/experiments"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/featurestore"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/health"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/inference"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/modelregistry"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/training"
-	httptransport "github.com/shopee-clone/shopee/platforms/aiml/internal/transport/http"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/config"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/embeddings"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/experiments"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/featurestore"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/health"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/inference"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/modelregistry"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/training"
+	httptransport "github.com/tikiclone/tiki/platforms/aiml/internal/transport/http"
 	automaxprocs "go.uber.org/automaxprocs/maxprocs"
 )
 

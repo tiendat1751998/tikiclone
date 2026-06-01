@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-APP_NAME="shopee-gateway"
+APP_NAME="tiki-gateway"
 VERSION="${1:-$(git describe --tags --always --dirty 2>/dev/null || echo "dev")}"
 OUTPUT_DIR="./bin"
 

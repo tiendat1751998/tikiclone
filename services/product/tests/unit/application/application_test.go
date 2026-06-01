@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/services/product/internal/domain"
-	app "github.com/shopee-clone/shopee/services/product/internal/application"
+	"github.com/tikiclone/tiki/services/product/internal/domain"
+	app "github.com/tikiclone/tiki/services/product/internal/application"
 )
 
 // Type aliases for application types

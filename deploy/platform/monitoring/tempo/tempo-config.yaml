@@ -32,7 +32,7 @@ querier:
 metrics_generator:
   registry:
     external_labels:
-      cluster: shopee-clone
+      cluster: tiki-clone
   storage:
     path: /data/tempo/generator
     remote_write:

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/services/auth/internal/config"
+	"github.com/tikiclone/tiki/services/auth/internal/config"
 )
 
 type SuspiciousDetector struct {

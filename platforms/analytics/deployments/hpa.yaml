@@ -1,12 +1,12 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: shopee-analytics
+  name: tiki-analytics
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: shopee-analytics
+    name: tiki-analytics
   minReplicas: 3
   maxReplicas: 20
   metrics:

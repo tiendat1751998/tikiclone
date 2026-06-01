@@ -1,4 +1,4 @@
-# PRODUCTION FIX REPORT — Shopee Clone
+# PRODUCTION FIX REPORT — Tiki Clone
 **Date:** May 21, 2026
 **Scope:** All Go microservices — Security, Reliability, Performance, Observability
 
@@ -125,7 +125,7 @@ case errors.Is(err, domain.ErrOrderNotFound):
 ### FIX-7: Hardcoded MySQL Password Defaults
 **Severity:** CRITICAL | Services: payment, inventory, order, checkout
 
-**Root Cause:** Default password `shopee_dev` was hardcoded, creating a security risk if env vars were not set.
+**Root Cause:** Default password `tiki_dev` was hardcoded, creating a security risk if env vars were not set.
 
 **Files Fixed:**
 - `services/payment/internal/config/config.go`

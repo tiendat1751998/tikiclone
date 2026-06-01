@@ -20,6 +20,13 @@ type Config struct {
 	Shipment ShipmentConfig
 	Idempotency IdempotencyConfig
 	OpenTelemetry OTELConfig
+	// Delivery config
+	NominatimBaseURL   string
+	NominatimUserAgent string
+	NominatimTimeout   time.Duration
+	OSRMBaseURL        string
+	OSRMTimeout        time.Duration
+	WSMaxConnections   int
 }
 
 type MySQLConfig struct {
@@ -83,13 +90,13 @@ type OTELConfig struct {
 
 func Load() *Config {
 	return &Config{
-		AppName: getEnv("APP_NAME", "shopee-shipment"), AppEnv: getEnv("APP_ENV", "development"),
+		AppName: getEnv("APP_NAME", "tiki-shipment"), AppEnv: getEnv("APP_ENV", "development"),
 		LogLevel: getEnv("LOG_LEVEL", "info"), HTTPPort: getEnvInt("SHIPMENT_HTTP_PORT", 8085),
 		GRPCPort: getEnvInt("SHIPMENT_GRPC_PORT", 9095),
 		MySQL: MySQLConfig{
 			Host: getEnv("MYSQL_HOST", "localhost"), Port: getEnvInt("MYSQL_PORT", 3306),
-			User: getEnv("MYSQL_USER", "shopee"), Password: getEnv("MYSQL_PASSWORD", "shopee_dev"),
-			Database: getEnv("MYSQL_DATABASE", "shopee_shipments"), MaxOpenConns: 25, MaxIdleConns: 10,
+			User: getEnv("MYSQL_USER", "tiki"), Password: getEnv("MYSQL_PASSWORD", "tiki_dev"),
+			Database: getEnv("MYSQL_DATABASE", "tiki_shipments"), MaxOpenConns: 25, MaxIdleConns: 10,
 			MaxLifetime: 5 * time.Minute, Timeout: 5 * time.Second,
 		},
 		Redis: RedisConfig{
@@ -98,12 +105,12 @@ func Load() *Config {
 			DialTimeout: 5 * time.Second, ReadTimeout: 3 * time.Second, WriteTimeout: 3 * time.Second, MaxRetries: 3,
 		},
 		Kafka: KafkaConfig{
-			Brokers: getEnvSlice("KAFKA_BROKERS", ","), TopicPrefix: getEnv("KAFKA_TOPIC_PREFIX", "shopee.shipments"),
-			ConsumerGroup: getEnv("KAFKA_CONSUMER_GROUP", "shopee-shipment-service"), DLQTopic: "shopee.shipments.dlq",
+			Brokers: getEnvSlice("KAFKA_BROKERS", ","), TopicPrefix: getEnv("KAFKA_TOPIC_PREFIX", "tiki.shipments"),
+			ConsumerGroup: getEnv("KAFKA_CONSUMER_GROUP", "tiki-shipment-service"), DLQTopic: "tiki.shipments.dlq",
 		},
 		JWT: JWTConfig{
 			AccessSecret: getEnv("JWT_ACCESS_SECRET", "change-me-in-production"),
-			AccessTTL: getEnvDuration("JWT_ACCESS_TTL", 15*time.Minute), Issuer: "shopee-auth", Audience: "shopee-clone",
+			AccessTTL: getEnvDuration("JWT_ACCESS_TTL", 15*time.Minute), Issuer: "tiki-auth", Audience: "tiki-clone",
 		},
 		Shipment: ShipmentConfig{
 			DefaultCarrier: getEnv("DEFAULT_CARRIER", "ninja_van"),
@@ -113,10 +120,16 @@ func Load() *Config {
 		},
 		Idempotency: IdempotencyConfig{TTL: getEnvDuration("IDEMPOTENCY_TTL", 24*time.Hour)},
 		OpenTelemetry: OTELConfig{
-			Endpoint: getEnv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318"),
-			ServiceName: getEnv("OTEL_SERVICE_NAME", "shopee-shipment"),
-			TraceRatio: getEnvFloat("OTEL_TRACES_SAMPLER_ARG", 0.1),
+			Endpoint:    getEnv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318"),
+			ServiceName: getEnv("OTEL_SERVICE_NAME", "tiki-shipment"),
+			TraceRatio:  getEnvFloat("OTEL_TRACES_SAMPLER_ARG", 0.1),
 		},
+		NominatimBaseURL:   getEnv("NOMINATIM_BASE_URL", "https://nominatim.openstreetmap.org"),
+		NominatimUserAgent: getEnv("NOMINATIM_USER_AGENT", "tiki-shipment/1.0"),
+		NominatimTimeout:   getEnvDuration("NOMINATIM_TIMEOUT", 10*time.Second),
+		OSRMBaseURL:        getEnv("OSRM_BASE_URL", "https://router.project-osrm.org"),
+		OSRMTimeout:        getEnvDuration("OSRM_TIMEOUT", 10*time.Second),
+		WSMaxConnections:   getEnvInt("WS_MAX_CONNECTIONS", 10000),
 	}
 }
 

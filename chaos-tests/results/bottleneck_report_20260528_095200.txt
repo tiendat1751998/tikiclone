@@ -1,0 +1,60 @@
+══════════════════════════════════════════════════════════════════════
+TIKI-CLONE LOAD TEST / BOTTLENECK ANALYSIS REPORT
+Generated: 2026-05-28T09:52:00.454738
+Entry point: https://localhost:8443 (Nginx TLS) → Gateway → Backend
+══════════════════════════════════════════════════════════════════════
+
+── RPS SCALING SUMMARY ───────────────────────────────────
+  Target   Actual   Avg RT   p90 RT   p95 RT   p99 RT   Max RT   Fail%  Status
+      10     41.3      24ms      83ms     135ms     255ms    2549ms    0.0%  ✓
+     100     64.2     156ms     830ms    1099ms    1896ms    3039ms    0.0%  ✓
+
+── CONTAINER RESOURCE USAGE AT EACH LEVEL ───────────────
+
+  At 10 TPS:
+  Service                                CPU%    Mem%   PIDs
+  tikiclone-web-tls-1                    0.0%    0.0%       
+  tikiclone-gateway-1                    0.0%    0.0%       
+  tikiclone-web-1                        0.0%    0.0%       
+  tikiclone-product-1                    0.0%    0.0%       
+  tikiclone-cart-1                       0.0%    0.0%       
+  tikiclone-order-1                      0.0%    0.0%       
+  tikiclone-payment-1                    0.0%    0.0%       
+  tikiclone-inventory-1                  0.0%    0.0%       
+  tikiclone-auth-1                       0.0%    0.0%       
+  tikiclone-identity-auth-1              0.0%    0.0%       
+  tikiclone-mysql-primary-1              0.0%    0.0%       
+  tikiclone-redis-master-1               0.0%    0.0%       
+  tikiclone-mongodb-1                    0.0%    0.0%       
+  tikiclone-kafka-1                      0.0%    0.0%       
+
+  At 100 TPS:
+  Service                                CPU%    Mem%   PIDs
+  tikiclone-web-tls-1                    0.0%    0.0%       
+  tikiclone-gateway-1                    0.0%    0.0%       
+  tikiclone-web-1                        0.0%    0.0%       
+  tikiclone-product-1                    0.0%    0.0%       
+  tikiclone-cart-1                       0.0%    0.0%       
+  tikiclone-order-1                      0.0%    0.0%       
+  tikiclone-payment-1                    0.0%    0.0%       
+  tikiclone-inventory-1                  0.0%    0.0%       
+  tikiclone-auth-1                       0.0%    0.0%       
+  tikiclone-identity-auth-1              0.0%    0.0%       
+  tikiclone-mysql-primary-1              0.0%    0.0%       
+  tikiclone-redis-master-1               0.0%    0.0%       
+  tikiclone-mongodb-1                    0.0%    0.0%       
+  tikiclone-kafka-1                      0.0%    0.0%       
+
+── BOTTLENECK DIAGNOSIS ────────────────────────────────
+  ✓ No clear bottleneck detected within tested TPS range
+
+── RECOMMENDATIONS ─────────────────────────────────────
+  1. Horizontal scale the primary bottleneck service
+  2. Add Redis caching for product listing (most hit endpoint)
+  3. Enable connection pooling to MySQL
+  4. Add nginx replicas if TLS termination is the limit
+  5. Profile slow queries: SET GLOBAL slow_query_log = 'ON'
+  6. Add CDN for static assets (product images, JS bundles)
+  7. Enable HTTP/2 on nginx for multiplexing
+
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════

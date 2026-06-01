@@ -1,0 +1,114 @@
+══════════════════════════════════════════════════════════════════════
+TIKI-CLONE LOAD TEST / BOTTLENECK ANALYSIS REPORT
+Generated: 2026-05-28T08:29:03.634864
+Entry point: https://localhost:8443 (Nginx TLS) → Gateway → Backend
+══════════════════════════════════════════════════════════════════════
+
+── RPS SCALING SUMMARY ───────────────────────────────────
+  Target   Actual   Avg RT   p90 RT   p95 RT   p99 RT   Max RT   Fail%  Status
+      10    106.4       9ms      41ms      55ms      84ms    2162ms    0.0%  ✓
+     100    165.0      61ms     311ms     445ms     638ms    2379ms    0.0%  ✓
+    1000    148.7     335ms    2358ms    2979ms    3842ms    5477ms    0.0%  ✓
+    5000    155.8     639ms    3442ms    5854ms    7628ms    9742ms    0.1%  ~ OK
+   10000    241.0     729ms     478ms    8624ms    9520ms   10877ms    3.9%  ~ OK
+
+── CONTAINER RESOURCE USAGE AT EACH LEVEL ───────────────
+
+  At 10 TPS:
+  Service                                CPU%    Mem%   PIDs
+  tikiclone-web-tls-1                    0.0%    0.0%       
+  tikiclone-gateway-1                    0.0%    0.0%       
+  tikiclone-web-1                        0.0%    0.0%       
+  tikiclone-product-1                    0.0%    0.0%       
+  tikiclone-cart-1                       0.0%    0.0%       
+  tikiclone-order-1                      0.0%    0.0%       
+  tikiclone-payment-1                    0.0%    0.0%       
+  tikiclone-inventory-1                  0.0%    0.0%       
+  tikiclone-auth-1                       0.0%    0.0%       
+  tikiclone-identity-auth-1              0.0%    0.0%       
+  tikiclone-mysql-primary-1              0.0%    0.0%       
+  tikiclone-redis-master-1               0.0%    0.0%       
+  tikiclone-mongodb-1                    0.0%    0.0%       
+  tikiclone-kafka-1                      0.0%    0.0%       
+
+  At 100 TPS:
+  Service                                CPU%    Mem%   PIDs
+  tikiclone-web-tls-1                    0.0%    0.0%       
+  tikiclone-gateway-1                    0.0%    0.0%       
+  tikiclone-web-1                        0.0%    0.0%       
+  tikiclone-product-1                    0.0%    0.0%       
+  tikiclone-cart-1                       0.0%    0.0%       
+  tikiclone-order-1                      0.0%    0.0%       
+  tikiclone-payment-1                    0.0%    0.0%       
+  tikiclone-inventory-1                  0.0%    0.0%       
+  tikiclone-auth-1                       0.0%    0.0%       
+  tikiclone-identity-auth-1              0.0%    0.0%       
+  tikiclone-mysql-primary-1              0.0%    0.0%       
+  tikiclone-redis-master-1               0.0%    0.0%       
+  tikiclone-mongodb-1                    0.0%    0.0%       
+  tikiclone-kafka-1                      0.0%    0.0%       
+
+  At 1000 TPS:
+  Service                                CPU%    Mem%   PIDs
+  tikiclone-web-tls-1                    0.0%    0.0%       
+  tikiclone-gateway-1                    0.0%    0.0%       
+  tikiclone-web-1                        0.0%    0.0%       
+  tikiclone-product-1                    0.0%    0.0%       
+  tikiclone-cart-1                       0.0%    0.0%       
+  tikiclone-order-1                      0.0%    0.0%       
+  tikiclone-payment-1                    0.0%    0.0%       
+  tikiclone-inventory-1                  0.0%    0.0%       
+  tikiclone-auth-1                       0.0%    0.0%       
+  tikiclone-identity-auth-1              0.0%    0.0%       
+  tikiclone-mysql-primary-1              0.0%    0.0%       
+  tikiclone-redis-master-1               0.0%    0.0%       
+  tikiclone-mongodb-1                    0.0%    0.0%       
+  tikiclone-kafka-1                      0.0%    0.0%       
+
+  At 5000 TPS:
+  Service                                CPU%    Mem%   PIDs
+  tikiclone-web-tls-1                    0.0%    0.0%       
+  tikiclone-gateway-1                    0.0%    0.0%       
+  tikiclone-web-1                        0.0%    0.0%       
+  tikiclone-product-1                    0.0%    0.0%       
+  tikiclone-cart-1                       0.0%    0.0%       
+  tikiclone-order-1                      0.0%    0.0%       
+  tikiclone-payment-1                    0.0%    0.0%       
+  tikiclone-inventory-1                  0.0%    0.0%       
+  tikiclone-auth-1                       0.0%    0.0%       
+  tikiclone-identity-auth-1              0.0%    0.0%       
+  tikiclone-mysql-primary-1              0.0%    0.0%       
+  tikiclone-redis-master-1               0.0%    0.0%       
+  tikiclone-mongodb-1                    0.0%    0.0%       
+  tikiclone-kafka-1                      0.0%    0.0%       
+
+  At 10000 TPS:
+  Service                                CPU%    Mem%   PIDs
+  tikiclone-web-tls-1                    0.0%    0.0%       
+  tikiclone-gateway-1                    0.0%    0.0%       
+  tikiclone-web-1                        0.0%    0.0%       
+  tikiclone-product-1                    0.0%    0.0%       
+  tikiclone-cart-1                       0.0%    0.0%       
+  tikiclone-order-1                      0.0%    0.0%       
+  tikiclone-payment-1                    0.0%    0.0%       
+  tikiclone-inventory-1                  0.0%    0.0%       
+  tikiclone-auth-1                       0.0%    0.0%       
+  tikiclone-identity-auth-1              0.0%    0.0%       
+  tikiclone-mysql-primary-1              0.0%    0.0%       
+  tikiclone-redis-master-1               0.0%    0.0%       
+  tikiclone-mongodb-1                    0.0%    0.0%       
+  tikiclone-kafka-1                      0.0%    0.0%       
+
+── BOTTLENECK DIAGNOSIS ────────────────────────────────
+  ✓ No clear bottleneck detected within tested TPS range
+
+── RECOMMENDATIONS ─────────────────────────────────────
+  1. Horizontal scale the primary bottleneck service
+  2. Add Redis caching for product listing (most hit endpoint)
+  3. Enable connection pooling to MySQL
+  4. Add nginx replicas if TLS termination is the limit
+  5. Profile slow queries: SET GLOBAL slow_query_log = 'ON'
+  6. Add CDN for static assets (product images, JS bundles)
+  7. Enable HTTP/2 on nginx for multiplexing
+
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════

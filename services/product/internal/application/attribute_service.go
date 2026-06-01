@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/errors"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/product/internal/domain"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/errors"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/product/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"

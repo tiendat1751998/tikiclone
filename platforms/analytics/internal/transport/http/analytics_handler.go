@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/analytics"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/analytics"
 )
 
 type queryRequest struct {

@@ -5,9 +5,9 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/errors"
-	"github.com/shopee-clone/shopee/services/product/internal/application"
-	"github.com/shopee-clone/shopee/services/product/internal/domain"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/errors"
+	"github.com/tikiclone/tiki/services/product/internal/application"
+	"github.com/tikiclone/tiki/services/product/internal/domain"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 )

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package shopee.catalog.v1;
 
-option go_package = "github.com/shopee-clone/shopee/proto/catalog/v1;catalogv1";
+option go_package = "github.com/tikiclone/tiki/proto/catalog/v1;catalogv1";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";

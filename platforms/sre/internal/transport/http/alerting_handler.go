@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/sre/internal/alerting"
+	"github.com/tikiclone/tiki/platforms/sre/internal/alerting"
 )
 
 type CreateRuleReq struct {

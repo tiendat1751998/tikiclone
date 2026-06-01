@@ -7,58 +7,58 @@ import (
 
 var (
 	AuctionsTotal = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "shopee_ad_auctions_total",
+		Name: "tiki_ad_auctions_total",
 		Help: "Total number of auctions run",
 	})
 
 	ImpressionsTotal = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "shopee_ad_impressions_total",
+		Name: "tiki_ad_impressions_total",
 		Help: "Total number of ad impressions",
 	})
 
 	ClicksTotal = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "shopee_ad_clicks_total",
+		Name: "tiki_ad_clicks_total",
 		Help: "Total number of ad clicks",
 	})
 
 	ConversionsTotal = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "shopee_ad_conversions_total",
+		Name: "tiki_ad_conversions_total",
 		Help: "Total number of ad conversions",
 	})
 
 	SpendTotal = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "shopee_ad_spend_total",
+		Name: "tiki_ad_spend_total",
 		Help: "Total ad spend",
 	})
 
 	WinRate = promauto.NewGauge(prometheus.GaugeOpts{
-		Name: "shopee_ad_win_rate",
+		Name: "tiki_ad_win_rate",
 		Help: "Auction win rate",
 	})
 
 	CTR = promauto.NewGauge(prometheus.GaugeOpts{
-		Name: "shopee_ad_ctr",
+		Name: "tiki_ad_ctr",
 		Help: "Click-through rate",
 	})
 
 	CampaignsActive = promauto.NewGauge(prometheus.GaugeOpts{
-		Name: "shopee_ad_campaigns_active",
+		Name: "tiki_ad_campaigns_active",
 		Help: "Number of active campaigns",
 	})
 
 	CampaignsCreated = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "shopee_ad_campaigns_created_total", Help: "Total campaigns created",
+		Name: "tiki_ad_campaigns_created_total", Help: "Total campaigns created",
 	})
 
 	AdRequestsTotal = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "shopee_ad_requests_total", Help: "Total ad requests",
+		Name: "tiki_ad_requests_total", Help: "Total ad requests",
 	})
 
 	ImpressionsRecorded = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "shopee_ad_impressions_recorded_total", Help: "Total impressions recorded",
+		Name: "tiki_ad_impressions_recorded_total", Help: "Total impressions recorded",
 	})
 
 	ClicksRecorded = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "shopee_ad_clicks_recorded_total", Help: "Total clicks recorded",
+		Name: "tiki_ad_clicks_recorded_total", Help: "Total clicks recorded",
 	})
 )

@@ -3,7 +3,7 @@ package domain
 import (
 	"testing"
 
-	"github.com/shopee-clone/shopee/services/product-catalog/internal/domain"
+	"github.com/tikiclone/tiki/services/product-catalog/internal/domain"
 )
 
 func TestNewProduct(t *testing.T) {

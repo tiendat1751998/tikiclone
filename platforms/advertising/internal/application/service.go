@@ -1,5 +1,5 @@
 package application
-import ("context"; "fmt"; "time"; "github.com/shopee-clone/shopee/platforms/advertising/internal/domain"; "github.com/shopee-clone/shopee/platforms/advertising/internal/metrics")
+import ("context"; "fmt"; "time"; "github.com/tikiclone/tiki/platforms/advertising/internal/domain"; "github.com/tikiclone/tiki/platforms/advertising/internal/metrics")
 
 type AdvertisingService struct { publisher EventPublisher }
 type EventPublisher interface { Publish(ctx context.Context, eventType string, payload interface{}) error }

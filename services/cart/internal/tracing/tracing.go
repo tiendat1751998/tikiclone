@@ -1,8 +1,8 @@
 package tracing
 
 import (
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/cart/internal/config"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/cart/internal/config"
 )
 
 func Init(cfg config.OTELConfig) (func(), error) {

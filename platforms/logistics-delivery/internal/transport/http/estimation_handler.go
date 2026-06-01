@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/logistics-delivery/internal/estimations"
+	"github.com/tikiclone/tiki/platforms/logistics-delivery/internal/estimations"
 )
 
 func (h *Handler) CalculateEstimation(c *gin.Context) {

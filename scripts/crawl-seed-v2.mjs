@@ -182,7 +182,7 @@ async function main() {
     const catMap = {};
 
     let script = `
-use shopee_catalog;
+use tiki_catalog;
 db.products.deleteMany({});
 db.categories.deleteMany({});
 
@@ -247,7 +247,7 @@ db.categories.insertOne({ category_id: '${storeCatId}', name: 'Hoang Ha Mobile',
     // Execute
     console.log('Executing MongoDB seed...');
     try {
-      const result = execSync('docker compose exec -T mongodb mongosh shopee_catalog < /tmp/seed-mongo-v2.js', {
+      const result = execSync('docker compose exec -T mongodb mongosh tiki_catalog < /tmp/seed-mongo-v2.js', {
         cwd: process.env.HOME || '/home/datdt',
         encoding: 'utf8',
         timeout: 60000,
@@ -256,7 +256,7 @@ db.categories.insertOne({ category_id: '${storeCatId}', name: 'Hoang Ha Mobile',
       console.log('Seed completed successfully!');
     } catch (err) {
       console.error('MongoDB seed error:', err.message.substring(0, 200));
-      console.log('Run manually: docker compose exec -T mongodb mongosh shopee_catalog < /tmp/seed-mongo-v2.js');
+      console.log('Run manually: docker compose exec -T mongodb mongosh tiki_catalog < /tmp/seed-mongo-v2.js');
     }
 
     console.log(`\nDone!`);

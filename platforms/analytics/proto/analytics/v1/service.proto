@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package analytics.v1;
 
-option go_package = "github.com/shopee-clone/shopee/platforms/analytics/proto/analytics/v1;analyticsv1";
+option go_package = "github.com/tikiclone/tiki/platforms/analytics/proto/analytics/v1;analyticsv1";
 
 service AnalyticsService {
   rpc RunQuery(QueryRequest) returns (QueryResponse);

@@ -1,12 +1,12 @@
 package http
 
 import (
-	"github.com/shopee-clone/shopee/platforms/global-infra/internal/configmanager"
-	"github.com/shopee-clone/shopee/platforms/global-infra/internal/featureflag"
-	"github.com/shopee-clone/shopee/platforms/global-infra/internal/multiregion"
-	"github.com/shopee-clone/shopee/platforms/global-infra/internal/ratelimit"
-	"github.com/shopee-clone/shopee/platforms/global-infra/internal/registry"
-	"github.com/shopee-clone/shopee/platforms/global-infra/internal/secrets"
+	"github.com/tikiclone/tiki/platforms/global-infra/internal/configmanager"
+	"github.com/tikiclone/tiki/platforms/global-infra/internal/featureflag"
+	"github.com/tikiclone/tiki/platforms/global-infra/internal/multiregion"
+	"github.com/tikiclone/tiki/platforms/global-infra/internal/ratelimit"
+	"github.com/tikiclone/tiki/platforms/global-infra/internal/registry"
+	"github.com/tikiclone/tiki/platforms/global-infra/internal/secrets"
 )
 
 type Handler struct {

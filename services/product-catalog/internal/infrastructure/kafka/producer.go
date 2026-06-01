@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/segmentio/kafka-go"
-	"github.com/shopee-clone/shopee/services/product-catalog/internal/config"
-	"github.com/shopee-clone/shopee/services/product-catalog/internal/domain"
-	"github.com/shopee-clone/shopee/services/product-catalog/internal/metrics"
+	"github.com/tikiclone/tiki/services/product-catalog/internal/config"
+	"github.com/tikiclone/tiki/services/product-catalog/internal/domain"
+	"github.com/tikiclone/tiki/services/product-catalog/internal/metrics"
 	"go.uber.org/zap"
 )
 

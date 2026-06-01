@@ -1,6 +1,6 @@
 package routing
 
-import "github.com/shopee-clone/shopee/services/gateway/internal/transport"
+import "github.com/tikiclone/tiki/services/gateway/internal/transport"
 
 type RouteGroup struct {
 	Prefix      string
@@ -19,49 +19,49 @@ var RouteTable = []RouteGroup{
 		Target:    "auth",
 		Strip:     "",
 		Auth:      false,
-		RateLimit: 50,
+		RateLimit: 5000,
 	},
 	{
 		Prefix:    "/api/v1/products",
 		Target:    "catalog",
 		Strip:     "",
 		Auth:      false,
-		RateLimit: 200,
+		RateLimit: 10000,
 	},
 	{
 		Prefix:    "/api/v1/categories",
 		Target:    "catalog",
 		Strip:     "",
 		Auth:      false,
-		RateLimit: 200,
+		RateLimit: 10000,
 	},
 	{
 		Prefix:    "/api/v1/cart",
 		Target:    "cart",
 		Strip:     "/api/v1/cart",
 		Auth:      true,
-		RateLimit: 100,
+		RateLimit: 5000,
 	},
 	{
 		Prefix:    "/api/v1/orders",
 		Target:    "order",
 		Strip:     "/api/v1/orders",
 		Auth:      true,
-		RateLimit: 50,
+		RateLimit: 5000,
 	},
 	{
 		Prefix:    "/api/v1/checkout",
 		Target:    "order",
 		Strip:     "/api/v1/checkout",
 		Auth:      true,
-		RateLimit: 10,
+		RateLimit: 1000,
 	},
 	{
 		Prefix:    "/api/v1/inventory",
 		Target:    "inventory",
 		Strip:     "/api/v1/inventory",
 		Auth:      true,
-		RateLimit: 100,
+		RateLimit: 5000,
 		Roles:     []string{"admin", "service"},
 	},
 	{
@@ -69,31 +69,31 @@ var RouteTable = []RouteGroup{
 		Target:    "payment",
 		Strip:     "/api/v1/payments",
 		Auth:      true,
-		RateLimit: 20,
-	},
-	{
-		Prefix:    "/api/v1/search",
-		Target:    "search",
-		Strip:     "/api/v1/search",
-		Auth:      false,
-		RateLimit: 200,
+		RateLimit: 1000,
 	},
 	{
 		Prefix:    "/api/v1/recommendations",
 		Target:    "recommendation",
 		Strip:     "/api/v1/recommendations",
 		Auth:      true,
-		RateLimit: 50,
+		RateLimit: 5000,
 	},
 	{
-		Prefix:      "/api/v1/grpc/inventory",
-		Target:      "inventory",
-		Strip:       "/api/v1/grpc/inventory",
-		Auth:        true,
-		RateLimit:   200,
-		Roles:       []string{"service"},
-		Protocol:    "grpc",
-		GRPCMethod:  "/shopee.inventory.InventoryService/ReserveStock",
+		Prefix:    "/api/v1/delivery",
+		Target:    "delivery",
+		Strip:     "/api/v1/delivery",
+		Auth:      false,
+		RateLimit: 5000,
+	},
+	{
+		Prefix:    "/api/v1/grpc/inventory",
+		Target:    "inventory",
+		Strip:     "/api/v1/grpc/inventory",
+		Auth:      true,
+		RateLimit: 200,
+		Roles:     []string{"service"},
+		Protocol:  "grpc",
+		GRPCMethod: "/tiki.inventory.InventoryService/ReserveStock",
 	},
 }
 

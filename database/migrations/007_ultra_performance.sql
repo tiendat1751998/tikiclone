@@ -1,10 +1,10 @@
 -- ============================================================
 -- Migration 007: Ultra-Performance Database Optimization
 -- Created: 2026-05-25
--- Targets: shopee_platform (MySQL 8.0) + service-level schemas
+-- Targets: tiki_platform (MySQL 8.0) + service-level schemas
 --
 -- APPLY THIS MIGRATION:
---   mysql -u shopee -p shopee_platform < database/migrations/007_ultra_performance.sql
+--   mysql -u tiki -p tiki_platform < database/migrations/007_ultra_performance.sql
 --
 -- SAFETY: All ALTER TABLE statements use ALGORITHM=INPLACE, LOCK=NONE
 --         where supported by MySQL 8.0 for online DDL.

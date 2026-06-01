@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/analytics/internal/events"
+	"github.com/tikiclone/tiki/platforms/analytics/internal/events"
 )
 
 func TestEventIngestion(t *testing.T) {

@@ -1,11 +1,11 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: shopee-api-gateway
+  name: tiki-api-gateway
 spec:
   podSelector:
     matchLabels:
-      app: shopee-api-gateway
+      app: tiki-api-gateway
   policyTypes:
     - Ingress
     - Egress
@@ -13,7 +13,7 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app: shopee-gateway
+              app: tiki-gateway
       ports:
         - protocol: TCP
           port: 8109

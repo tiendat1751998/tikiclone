@@ -2,7 +2,7 @@ package http
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/services/payment/internal/transport/http/middleware"
+	"github.com/tikiclone/tiki/services/payment/internal/transport/http/middleware"
 )
 
 type Router struct {

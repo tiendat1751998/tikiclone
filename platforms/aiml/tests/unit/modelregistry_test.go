@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/modelregistry"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/modelregistry"
 )
 
 func TestModelRegistration(t *testing.T) {

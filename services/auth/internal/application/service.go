@@ -9,15 +9,15 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/shopee-clone/shopee/packages/go-shared/pkg/observability"
-	"github.com/shopee-clone/shopee/services/auth/internal/config"
-	"github.com/shopee-clone/shopee/services/auth/internal/domain"
-	"github.com/shopee-clone/shopee/services/auth/internal/infrastructure/hash"
-	"github.com/shopee-clone/shopee/services/auth/internal/infrastructure/jwt"
-	"github.com/shopee-clone/shopee/services/auth/internal/infrastructure/mysql"
-	redisinfra "github.com/shopee-clone/shopee/services/auth/internal/infrastructure/redis"
-	"github.com/shopee-clone/shopee/services/auth/internal/metrics"
-	"github.com/shopee-clone/shopee/services/auth/internal/security"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
+	"github.com/tikiclone/tiki/services/auth/internal/config"
+	"github.com/tikiclone/tiki/services/auth/internal/domain"
+	"github.com/tikiclone/tiki/services/auth/internal/infrastructure/hash"
+	"github.com/tikiclone/tiki/services/auth/internal/infrastructure/jwt"
+	"github.com/tikiclone/tiki/services/auth/internal/infrastructure/mysql"
+	redisinfra "github.com/tikiclone/tiki/services/auth/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/services/auth/internal/metrics"
+	"github.com/tikiclone/tiki/services/auth/internal/security"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -62,7 +62,7 @@ func NewAuthService(
 }
 
 func (s *AuthService) Register(ctx context.Context, req *domain.RegisterRequest, ip, userAgent string) (*domain.TokenPair, *domain.Session, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "auth.register")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "auth.register")
 	defer span.End()
 
 	if err := s.rateLimiter.CheckRegister(ctx, ip); err != nil {
@@ -129,7 +129,7 @@ func (s *AuthService) Register(ctx context.Context, req *domain.RegisterRequest,
 }
 
 func (s *AuthService) Login(ctx context.Context, req *domain.LoginRequest, ip, userAgent string) (*domain.TokenPair, *domain.Session, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "auth.login")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "auth.login")
 	defer span.End()
 
 	if err := s.rateLimiter.CheckLogin(ctx, req.Email, ip); err != nil {
@@ -216,7 +216,7 @@ func (s *AuthService) Login(ctx context.Context, req *domain.LoginRequest, ip, u
 }
 
 func (s *AuthService) RefreshToken(ctx context.Context, refreshToken, ip, userAgent string) (*domain.TokenPair, *domain.Session, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "auth.refresh")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "auth.refresh")
 	defer span.End()
 
 	claims, err := s.jwtService.ValidateRefreshToken(ctx, refreshToken)
@@ -282,7 +282,7 @@ func (s *AuthService) RefreshToken(ctx context.Context, refreshToken, ip, userAg
 }
 
 func (s *AuthService) Logout(ctx context.Context, accessToken, refreshToken string, allDevices bool) error {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "auth.logout")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "auth.logout")
 	defer span.End()
 
 	claims, err := s.jwtService.ValidateAccessToken(ctx, accessToken)
@@ -452,7 +452,7 @@ func (s *AuthService) handleTokenReuse(ctx context.Context, userID, sessionID, i
 }
 
 func (s *AuthService) RequestPasswordReset(ctx context.Context, req *domain.PasswordResetRequest, ip string) error {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "auth.request_password_reset")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "auth.request_password_reset")
 	defer span.End()
 
 	if err := s.rateLimiter.CheckPasswordReset(ctx, req.Email); err != nil {
@@ -484,7 +484,7 @@ func (s *AuthService) RequestPasswordReset(ctx context.Context, req *domain.Pass
 }
 
 func (s *AuthService) ResetPassword(ctx context.Context, req *domain.ResetPasswordRequest, ip string) error {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "auth.reset_password")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "auth.reset_password")
 	defer span.End()
 
 	if req.NewPassword != req.ConfirmPassword {
@@ -542,7 +542,7 @@ func (s *AuthService) ResetPassword(ctx context.Context, req *domain.ResetPasswo
 }
 
 func (s *AuthService) VerifyEmail(ctx context.Context, req *domain.VerifyEmailRequest, ip string) error {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "auth.verify_email")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "auth.verify_email")
 	defer span.End()
 
 	tokenHash := sha256Hex(req.Token)

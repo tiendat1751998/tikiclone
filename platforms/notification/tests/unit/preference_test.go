@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/notification/internal/preferences"
+	"github.com/tikiclone/tiki/platforms/notification/internal/preferences"
 )
 
 func TestGetPreferencesDefaults(t *testing.T) {

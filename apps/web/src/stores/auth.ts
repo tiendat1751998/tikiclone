@@ -58,7 +58,7 @@ export const useAuthStore = create<AuthStore>()(
       },
     }),
     {
-      name: "shopee-auth",
+      name: "tiki-auth",
       partialize: (state) => ({
         user: state.user,
         isAuthenticated: state.isAuthenticated,

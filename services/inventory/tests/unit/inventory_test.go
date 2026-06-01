@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/services/inventory/internal/domain"
+	"github.com/tikiclone/tiki/services/inventory/internal/domain"
 )
 
 func TestNewStock(t *testing.T) {

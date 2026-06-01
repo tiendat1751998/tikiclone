@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/shopee-clone/shopee/platforms/fraud-risk/internal/devicefp"
+	"github.com/tikiclone/tiki/platforms/fraud-risk/internal/devicefp"
 )
 
 func TestIdentifyNewDevice(t *testing.T) {

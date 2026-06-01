@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/shopee-clone/shopee/services/auth/internal/application"
-	"github.com/shopee-clone/shopee/services/auth/internal/domain"
-	pb "github.com/shopee-clone/shopee/services/auth/proto/auth/v1"
+	"github.com/tikiclone/tiki/services/auth/internal/application"
+	"github.com/tikiclone/tiki/services/auth/internal/domain"
+	pb "github.com/tikiclone/tiki/services/auth/proto/auth/v1"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	grpccodes "google.golang.org/grpc/codes"
@@ -23,7 +23,7 @@ func NewAuthGRPCServer(authService *application.AuthService) *AuthGRPCServer {
 }
 
 func (s *AuthGRPCServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "grpc.register")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "grpc.register")
 	defer span.End()
 
 	registerReq := &domain.RegisterRequest{
@@ -56,7 +56,7 @@ func (s *AuthGRPCServer) Register(ctx context.Context, req *pb.RegisterRequest) 
 }
 
 func (s *AuthGRPCServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "grpc.login")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "grpc.login")
 	defer span.End()
 
 	loginReq := &domain.LoginRequest{
@@ -85,7 +85,7 @@ func (s *AuthGRPCServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.L
 }
 
 func (s *AuthGRPCServer) RefreshToken(ctx context.Context, req *pb.RefreshTokenRequest) (*pb.RefreshTokenResponse, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "grpc.refresh")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "grpc.refresh")
 	defer span.End()
 
 	ip := extractIP(ctx)
@@ -108,7 +108,7 @@ func (s *AuthGRPCServer) RefreshToken(ctx context.Context, req *pb.RefreshTokenR
 }
 
 func (s *AuthGRPCServer) Logout(ctx context.Context, req *pb.LogoutRequest) (*pb.LogoutResponse, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "grpc.logout")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "grpc.logout")
 	defer span.End()
 
 	err := s.authService.Logout(ctx, req.AccessToken, req.RefreshToken, req.AllDevices)
@@ -123,7 +123,7 @@ func (s *AuthGRPCServer) Logout(ctx context.Context, req *pb.LogoutRequest) (*pb
 }
 
 func (s *AuthGRPCServer) ValidateToken(ctx context.Context, req *pb.ValidateTokenRequest) (*pb.ValidateTokenResponse, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "grpc.validate")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "grpc.validate")
 	defer span.End()
 
 	claims, err := s.authService.ValidateAccessToken(ctx, req.AccessToken)
@@ -146,7 +146,7 @@ func (s *AuthGRPCServer) ValidateToken(ctx context.Context, req *pb.ValidateToke
 }
 
 func (s *AuthGRPCServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "grpc.get_user")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "grpc.get_user")
 	defer span.End()
 
 	user, err := s.authService.GetUser(ctx, req.UserId)
@@ -166,7 +166,7 @@ func (s *AuthGRPCServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*
 }
 
 func (s *AuthGRPCServer) GetSessions(ctx context.Context, req *pb.GetSessionsRequest) (*pb.GetSessionsResponse, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "grpc.sessions")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "grpc.sessions")
 	defer span.End()
 
 	sessions, err := s.authService.GetActiveSessions(ctx, req.UserId)
@@ -195,7 +195,7 @@ func (s *AuthGRPCServer) GetSessions(ctx context.Context, req *pb.GetSessionsReq
 }
 
 func (s *AuthGRPCServer) RevokeSession(ctx context.Context, req *pb.RevokeSessionRequest) (*pb.RevokeSessionResponse, error) {
-	ctx, span := otel.Tracer("shopee-auth").Start(ctx, "grpc.revoke_session")
+	ctx, span := otel.Tracer("tiki-auth").Start(ctx, "grpc.revoke_session")
 	defer span.End()
 
 	err := s.authService.RevokeSession(ctx, req.UserId, req.SessionId)

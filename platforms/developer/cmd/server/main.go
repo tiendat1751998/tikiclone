@@ -11,13 +11,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/shopee-clone/shopee/platforms/developer/internal/apikeys"
-	"github.com/shopee-clone/shopee/platforms/developer/internal/cicd"
-	"github.com/shopee-clone/shopee/platforms/developer/internal/docs"
-	"github.com/shopee-clone/shopee/platforms/developer/internal/onboarding"
-	"github.com/shopee-clone/shopee/platforms/developer/internal/sdk"
-	httptransport "github.com/shopee-clone/shopee/platforms/developer/internal/transport/http"
-	"github.com/shopee-clone/shopee/platforms/developer/internal/webhooks"
+	"github.com/tikiclone/tiki/platforms/developer/internal/apikeys"
+	"github.com/tikiclone/tiki/platforms/developer/internal/cicd"
+	"github.com/tikiclone/tiki/platforms/developer/internal/docs"
+	"github.com/tikiclone/tiki/platforms/developer/internal/onboarding"
+	"github.com/tikiclone/tiki/platforms/developer/internal/sdk"
+	httptransport "github.com/tikiclone/tiki/platforms/developer/internal/transport/http"
+	"github.com/tikiclone/tiki/platforms/developer/internal/webhooks"
 	automaxprocs "go.uber.org/automaxprocs/maxprocs"
 )
 

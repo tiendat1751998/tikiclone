@@ -1,17 +1,17 @@
 -- ============================================================
--- SEED DATA FOR ALL SHOPEECLONE DATABASES
+-- SEED DATA FOR ALL TIKICLONE DATABASES
 -- ============================================================
 
 -- ============================================================
 -- 1. SHOPEE_AUTH - Users, Roles, Permissions
 -- ============================================================
-USE shopee_auth;
+USE tiki_auth;
 
 -- Insert admin user (password: Admin@123)
 INSERT IGNORE INTO users (user_id, email, phone, password_hash, full_name, role, is_verified, is_active) VALUES
-('usr-001', 'admin@shopee.com', '+6590001001', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'Super Admin', 'SUPER_ADMIN', 1, 1),
-('usr-002', 'seller@shopee.com', '+6590001002', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'Demo Seller', 'SELLER', 1, 1),
-('usr-003', 'buyer@shopee.com', '+6590001003', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'Demo Buyer', 'BUYER', 1, 1),
+('usr-001', 'admin@tiki.com', '+6590001001', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'Super Admin', 'SUPER_ADMIN', 1, 1),
+('usr-002', 'seller@tiki.com', '+6590001002', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'Demo Seller', 'SELLER', 1, 1),
+('usr-003', 'buyer@tiki.com', '+6590001003', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'Demo Buyer', 'BUYER', 1, 1),
 ('usr-004', 'john.doe@email.com', '+6590001004', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'John Doe', 'BUYER', 1, 1),
 ('usr-005', 'jane.smith@email.com', '+6590001005', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'Jane Smith', 'SELLER', 1, 1);
 
@@ -50,19 +50,19 @@ WHERE r.name = 'BUYER'
 -- ============================================================
 -- 2. SHOPEE_PLATFORM - Users (mirror of auth for Go services)
 -- ============================================================
-USE shopee_platform;
+USE tiki_platform;
 
 INSERT IGNORE INTO users (id, email, phone, username, password_hash, display_name, avatar_url, status, email_verified, phone_verified) VALUES
-('usr-001', 'admin@shopee.com', '+6590001001', 'admin', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'Super Admin', '/images/avatars/default-avatar.png', 'active', 1, 1),
-('usr-002', 'seller@shopee.com', '+6590001002', 'seller1', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'Demo Seller', '/images/avatars/default-avatar.png', 'active', 1, 1),
-('usr-003', 'buyer@shopee.com', '+6590001003', 'buyer1', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'Demo Buyer', '/images/avatars/default-avatar.png', 'active', 1, 1),
+('usr-001', 'admin@tiki.com', '+6590001001', 'admin', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'Super Admin', '/images/avatars/default-avatar.png', 'active', 1, 1),
+('usr-002', 'seller@tiki.com', '+6590001002', 'seller1', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'Demo Seller', '/images/avatars/default-avatar.png', 'active', 1, 1),
+('usr-003', 'buyer@tiki.com', '+6590001003', 'buyer1', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'Demo Buyer', '/images/avatars/default-avatar.png', 'active', 1, 1),
 ('usr-004', 'john.doe@email.com', '+6590001004', 'johndoe', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'John Doe', '/images/avatars/default-avatar.png', 'active', 1, 1),
 ('usr-005', 'jane.smith@email.com', '+6590001005', 'janesmith', '$2a$12$LJ3m4ys3Lk8nFgQOIc/MNOxHBMGxPJsGK5bHJKzCQvGJmZ3mFJXi', 'Jane Smith', '/images/avatars/default-avatar.png', 'active', 1, 1);
 
 -- ============================================================
 -- 3. SHOPEE_PRODUCT - Categories, Products, SKUs
 -- ============================================================
-USE shopee_product;
+USE tiki_product;
 
 -- Categories (Electronics)
 INSERT INTO categories (category_id, name, slug, parent_id, level, sort_order, image_url, is_active) VALUES
@@ -143,7 +143,7 @@ INSERT INTO product_images (spu_id, url, alt_text, sort_order, is_primary) VALUE
 -- ============================================================
 -- 4. SHOPEE_INVENTORY - Stock
 -- ============================================================
-USE shopee_inventory;
+USE tiki_inventory;
 
 INSERT INTO stock (id, product_id, sku_id, warehouse_id, quantity, reserved_qty, available_qty, status, reorder_level) VALUES
 ('inv-001', 'spu-001', 'sku-001', 'wh-001', 50, 0, 50, 'in_stock', 10),
@@ -166,7 +166,7 @@ INSERT INTO stock (id, product_id, sku_id, warehouse_id, quantity, reserved_qty,
 -- ============================================================
 -- 5. SHOPEE_CART - Carts & Cart Items
 -- ============================================================
-USE shopee_cart;
+USE tiki_cart;
 
 INSERT INTO carts (id, user_id, session_id, status, currency, item_count, subtotal, expires_at) VALUES
 ('cart-001', 'usr-003', NULL, 'active', 'VND', 3, 173380, DATE_ADD(NOW(), INTERVAL 7 DAY)),
@@ -184,7 +184,7 @@ INSERT INTO cart_items (id, cart_id, sku, product_name, shop_id, shop_name, quan
 -- ============================================================
 -- 6. SHOPEE_ORDER - Orders & Order Items
 -- ============================================================
-USE shopee_order;
+USE tiki_order;
 
 INSERT INTO orders (id, order_number, user_id, seller_id, status, total_amount, currency, shipping_address, billing_address) VALUES
 ('ord-001', 'SP-20260521-00001', 'usr-003', 'usr-002', 'delivered', 173390, 'VND',
@@ -211,7 +211,7 @@ INSERT INTO order_items (id, order_id, product_id, sku_id, shop_id, quantity, un
 -- ============================================================
 -- 7. SHOPEE_PAYMENT - Payments
 -- ============================================================
-USE shopee_payment;
+USE tiki_payment;
 
 INSERT INTO payments (id, order_id, user_id, amount, currency, status, payment_method, psp_provider, psp_transaction_id, authorized_at, captured_at) VALUES
 ('pay-001', 'ord-001', 'usr-003', 173390, 'VND', 'captured', 'credit_card', 'stripe', 'pi_3Nxample123', NOW(), NOW()),
@@ -222,7 +222,7 @@ INSERT INTO payments (id, order_id, user_id, amount, currency, status, payment_m
 -- ============================================================
 -- 8. SHOPEE_CHECKOUT - Checkouts
 -- ============================================================
-USE shopee_checkout;
+USE tiki_checkout;
 
 INSERT INTO checkouts (id, user_id, cart_id, order_id, status, idempotency_key, current_step, subtotal, discount_total, shipping_total, grand_total, currency, expires_at, completed_at) VALUES
 ('chk-001', 'usr-003', 'cart-001', 'ord-001', 'completed', 'idem-001', 'completed', 173390, 0, 0, 173390, 'VND', DATE_ADD(NOW(), INTERVAL 1 DAY), NOW()),
@@ -232,7 +232,7 @@ INSERT INTO checkouts (id, user_id, cart_id, order_id, status, idempotency_key, 
 -- ============================================================
 -- 9. SHOPEE_PLATFORM - Vouchers/Promotions
 -- ============================================================
-USE shopee_platform;
+USE tiki_platform;
 
 INSERT INTO vouchers (id, code, title, description, type, discount_value, min_spend, max_discount, usage_limit, per_user_limit, scope, start_time, end_time, status, stackable, priority) VALUES
 ('vch-001', 'WELCOME10', 'Welcome 10% Off', '10% off for new users, min spend $50', 'percentage', 10, 5000, 2000, 10000, 1, 'platform', DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_ADD(NOW(), INTERVAL 30 DAY), 'active', 0, 10),
@@ -244,7 +244,7 @@ INSERT INTO vouchers (id, code, title, description, type, discount_value, min_sp
 -- ============================================================
 -- 10. SHOPEE_PLATFORM - Shipments
 -- ============================================================
-USE shopee_platform;
+USE tiki_platform;
 
 INSERT INTO shipments (id, order_id, carrier, tracking_number, status, shipping_address, estimated_delivery, shipping_fee, weight_grams) VALUES
 ('shp-001', 'ord-001', 'Ninja Van', 'NV-SG-9876543210', 'delivered',
@@ -260,7 +260,7 @@ INSERT INTO shipments (id, order_id, carrier, tracking_number, status, shipping_
 -- ============================================================
 -- 11. SHOPEE_PLATFORM - Warehouses
 -- ============================================================
-USE shopee_platform;
+USE tiki_platform;
 
 INSERT IGNORE INTO warehouses (id, name, code, address, city, country, is_active) VALUES
 ('wh-001', 'Singapore Central Warehouse', 'SG-CENTRAL', '10 Pasir Panjang Road, Singapore', 'Singapore', 'SG', 1),
@@ -269,7 +269,7 @@ INSERT IGNORE INTO warehouses (id, name, code, address, city, country, is_active
 -- ============================================================
 -- 12. SHOPEE_PLATFORM - Categories
 -- ============================================================
-USE shopee_platform;
+USE tiki_platform;
 
 INSERT INTO categories (id, name, slug, parent_id, level, sort_order, image_url, is_active) VALUES
 ('cat-001', 'Electronics', 'electronics', NULL, 1, 1, '/images/categories/default-category.png', 1),
@@ -287,7 +287,7 @@ INSERT INTO categories (id, name, slug, parent_id, level, sort_order, image_url,
 -- ============================================================
 -- 13. SHOPEE_PLATFORM - Products
 -- ============================================================
-USE shopee_platform;
+USE tiki_platform;
 
 INSERT INTO products (id, shop_id, category_id, name, description, brand, status, currency) VALUES
 ('spu-001', 'shop-001', 'cat-002', 'iPhone 15 Pro Max 256GB', 'Latest Apple iPhone with A17 Pro chip', 'Apple', 'active', 'VND'),
@@ -304,7 +304,7 @@ INSERT INTO products (id, shop_id, category_id, name, description, brand, status
 -- ============================================================
 -- 14. SHOPEE_PLATFORM - SKUs
 -- ============================================================
-USE shopee_platform;
+USE tiki_platform;
 
 INSERT INTO skus (id, product_id, sku_code, price, sale_price, stock, status) VALUES
 ('sku-001', 'spu-001', 'IP15PM-256-BLK', 179900, 169900, 50, 'active'),
@@ -323,12 +323,12 @@ INSERT INTO skus (id, product_id, sku_code, price, sale_price, stock, status) VA
 -- ============================================================
 -- 15. SHOPEE_PLATFORM - Audit Logs
 -- ============================================================
-USE shopee_platform;
+USE tiki_platform;
 
 INSERT INTO audit_logs (id, actor_id, actor_type, action, resource_type, resource_id, new_value) VALUES
-('al-001', 'usr-001', 'admin', 'USER_REGISTERED', 'user', 'usr-001', '{"email":"admin@shopee.com"}'),
-('al-002', 'usr-002', 'user', 'USER_REGISTERED', 'user', 'usr-002', '{"email":"seller@shopee.com"}'),
-('al-003', 'usr-003', 'user', 'USER_REGISTERED', 'user', 'usr-003', '{"email":"buyer@shopee.com"}'),
+('al-001', 'usr-001', 'admin', 'USER_REGISTERED', 'user', 'usr-001', '{"email":"admin@tiki.com"}'),
+('al-002', 'usr-002', 'user', 'USER_REGISTERED', 'user', 'usr-002', '{"email":"seller@tiki.com"}'),
+('al-003', 'usr-003', 'user', 'USER_REGISTERED', 'user', 'usr-003', '{"email":"buyer@tiki.com"}'),
 ('al-004', 'usr-002', 'user', 'PRODUCT_CREATED', 'product', 'spu-001', '{"title":"iPhone 15 Pro Max"}'),
 ('al-005', 'usr-003', 'user', 'ORDER_PLACED', 'order', 'ord-001', '{"total":173390}'),
 ('al-006', 'usr-002', 'user', 'ORDER_SHIPPED', 'order', 'ord-001', '{"tracking":"NV-SG-9876543210"}'),

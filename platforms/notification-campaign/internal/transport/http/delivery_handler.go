@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/notification-campaign/internal/deliveryopt"
+	"github.com/tikiclone/tiki/platforms/notification-campaign/internal/deliveryopt"
 )
 
 type optimizeTimeRequest struct {

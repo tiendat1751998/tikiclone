@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package shopee.inventory.v1;
 
-option go_package = "github.com/shopee-clone/shopee/services/inventory/proto/inventory/v1";
+option go_package = "github.com/tikiclone/tiki/services/inventory/proto/inventory/v1";
 
 service InventoryService {
   rpc ReserveStock(ReserveStockRequest) returns (ReservationResponse);

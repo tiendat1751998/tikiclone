@@ -5,11 +5,11 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/services/inventory/internal/application"
-	"github.com/shopee-clone/shopee/services/inventory/internal/config"
-	"github.com/shopee-clone/shopee/services/inventory/internal/domain"
-	"github.com/shopee-clone/shopee/services/inventory/internal/infrastructure/mysql"
-	redisinfra "github.com/shopee-clone/shopee/services/inventory/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/services/inventory/internal/application"
+	"github.com/tikiclone/tiki/services/inventory/internal/config"
+	"github.com/tikiclone/tiki/services/inventory/internal/domain"
+	"github.com/tikiclone/tiki/services/inventory/internal/infrastructure/mysql"
+	redisinfra "github.com/tikiclone/tiki/services/inventory/internal/infrastructure/redis"
 )
 
 type InventoryService = application.InventoryService

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres-exporter
-  namespace: shopee-observability
+  namespace: tiki-observability
 spec:
   replicas: 1
   selector:
@@ -18,7 +18,7 @@ spec:
           image: quay.io/prometheuscommunity/postgres-exporter:latest
           env:
             - name: DATA_SOURCE_NAME
-              value: "postgresql://$(DB_USER):$(DB_PASSWORD)@postgres.shopee-infra:5432/shopee?sslmode=disable"
+              value: "postgresql://$(DB_USER):$(DB_PASSWORD)@postgres.tiki-infra:5432/tiki?sslmode=disable"
           envFrom:
             - secretRef:
                 name: db-credentials
@@ -37,7 +37,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-exporter
-  namespace: shopee-observability
+  namespace: tiki-observability
   labels:
     app: postgres-exporter
 spec:

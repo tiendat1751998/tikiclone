@@ -3,10 +3,10 @@ package promotionpublic
 import (
 	"github.com/jmoiron/sqlx"
 	"github.com/redis/go-redis/v9"
-	"github.com/shopee-clone/shopee/services/promotion/internal/application"
-	"github.com/shopee-clone/shopee/services/promotion/internal/config"
-	"github.com/shopee-clone/shopee/services/promotion/internal/infrastructure/mysql"
-	redisinfra "github.com/shopee-clone/shopee/services/promotion/internal/infrastructure/redis"
+	"github.com/tikiclone/tiki/services/promotion/internal/application"
+	"github.com/tikiclone/tiki/services/promotion/internal/config"
+	"github.com/tikiclone/tiki/services/promotion/internal/infrastructure/mysql"
+	redisinfra "github.com/tikiclone/tiki/services/promotion/internal/infrastructure/redis"
 )
 
 type PromotionService = application.PromotionService

@@ -8,7 +8,7 @@ argument-hint: "Describe the coordination task (e.g., 'triage remaining HIGH bug
 
 # Architect Coordinator Agent
 
-You are the **System Architect** for the Shopee Clone monorepo. Your role is to coordinate and orchestrate the entire bug fix and quality improvement lifecycle across all microservices.
+You are the **System Architect** for the Tiki Clone monorepo. Your role is to coordinate and orchestrate the entire bug fix and quality improvement lifecycle across all microservices.
 
 ## Your Responsibilities
 

@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	dsn := "shopee:shopee_dev@tcp(127.0.0.1:3306)/shopee_auth?charset=utf8mb4&parseTime=true&loc=UTC"
+	dsn := "tiki:tiki_dev@tcp(127.0.0.1:3306)/tiki_auth?charset=utf8mb4&parseTime=true&loc=UTC"
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		log.Fatal(err)

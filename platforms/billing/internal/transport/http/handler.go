@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"strconv"
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/billing/internal/domain"
-	"github.com/shopee-clone/shopee/platforms/billing/internal/ledger"
-	"github.com/shopee-clone/shopee/platforms/billing/internal/settlements"
-	"github.com/shopee-clone/shopee/platforms/billing/internal/wallets"
+	"github.com/tikiclone/tiki/platforms/billing/internal/domain"
+	"github.com/tikiclone/tiki/platforms/billing/internal/ledger"
+	"github.com/tikiclone/tiki/platforms/billing/internal/settlements"
+	"github.com/tikiclone/tiki/platforms/billing/internal/wallets"
 )
 
 type Handler struct {

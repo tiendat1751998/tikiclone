@@ -200,6 +200,9 @@ export const authApi = {
 
   me: () => api.get<import("@/types").User>("/auth/profile"),
 
+  put: <T>(path: string, body: unknown) =>
+    request<T>(path, { method: "PUT", body: JSON.stringify(body) }),
+
   refresh: async (refreshToken: string) => {
     const data = await api.post<{
       access_token: string;
@@ -225,6 +228,8 @@ export const productsApi = {
     api.get<import("@/types").Product[]>(`/products/featured?limit=${limit}`),
   getDeals: (limit = 20) =>
     api.get<import("@/types").Product[]>(`/products/deals?limit=${limit}`),
+  getFlashSale: () =>
+    api.get<{ end_time: string; products: { id: string; name: string; image_url: string; price: number; original_price: number }[] }>("/products/flash-sale"),
   getByCategory: (categoryId: string, params: Record<string, string> = {}) =>
     api.get<import("@/types").ProductListResponse>(
       `/products?category_id=${categoryId}&${new URLSearchParams(params)}`
@@ -250,12 +255,17 @@ export const categoriesApi = {
 // Cart API
 export const cartApi = {
   get: () => api.get<import("@/types").Cart>("/cart"),
-  addItem: (productId: string, skuId: string, quantity: number) =>
-    api.post<import("@/types").Cart>("/cart/items", {
-      product_id: productId,
-      sku_id: skuId,
-      quantity,
-    }),
+  addItem: (data: {
+    product_id: string;
+    sku_id: string;
+    quantity: number;
+    name?: string;
+    price?: number;
+    image_url?: string;
+    shop_id?: string;
+    shop_name?: string;
+  }) =>
+    api.post<import("@/types").Cart>("/cart/items", data),
   updateItem: (itemId: string, quantity: number) =>
     api.patch<import("@/types").Cart>(`/cart/items/${itemId}`, { quantity }),
   removeItem: (itemId: string) =>
@@ -271,12 +281,28 @@ export const ordersApi = {
     ),
   getById: (id: string) => api.get<import("@/types").Order>(`/orders/${id}`),
   create: (data: {
-    items: { product_id: string; sku_id: string; quantity: number }[];
+    items: { product_id: string; sku_id: string; quantity: number; price?: number; name?: string; image_url?: string; shop_id?: string; shop_name?: string }[];
     shipping_address: import("@/types").Address;
+    seller_id: string;
+    idempotency_key: string;
+    currency: string;
+    billing_address: import("@/types").Address;
     payment_method: string;
     voucher_code?: string;
   }) => api.post<import("@/types").Order>("/orders", data),
-  cancel: (id: string) => api.post(`/orders/${id}/cancel`, {}),
+  cancel: (id: string, reason?: string) => api.post(`/orders/${id}/cancel`, { reason: reason || "User requested cancellation" }),
+};
+
+export const paymentApi = {
+  authorize: (data: {
+    order_id: string;
+    amount: number;
+    currency: string;
+    payment_method: string;
+    idempotency_key: string;
+  }) => api.post<import("@/types").Order>("/payments", data),
+  get: (id: string) => api.get(`/payments/${id}`),
+  capture: (id: string) => api.post(`/payments/${id}/capture`, {}),
 };
 
 // Customers API (Admin)
@@ -306,6 +332,153 @@ export const dashboardApi = {
       revenue_today: number;
       conversion_rate: number;
     }>("/dashboard/realtime"),
+};
+
+// Promotions API
+export const promotionsApi = {
+  list: () => api.get("/promotions"),
+  getById: (id: string) => api.get(`/promotions/${id}`),
+  validate: (code: string) =>
+    api.post<{ valid: boolean; discount: number; type: "percent" | "fixed" }>("/promotions/validate", { code }),
+};
+
+// Shipment API
+export const shipmentsApi = {
+  track: (orderId: string) =>
+    api.get<{
+      order_id: string;
+      status: string;
+      carrier: string;
+      tracking_number: string;
+      estimated_delivery: string;
+      events: { status: string; description: string; timestamp: string; location: string }[];
+    }>(`/shipments/${orderId}/track`),
+};
+
+// Recommendations API
+export const recommendationsApi = {
+  getRelated: (productId: string, limit = 8) =>
+    api.get<Product[]>(`/recommendations?product_id=${productId}&limit=${limit}`),
+};
+
+// ============================================================
+// Delivery & Geo API (delivery-tracker microservice)
+// ============================================================
+const DELIVERY_API_BASE =
+  process.env.NEXT_PUBLIC_DELIVERY_API_URL || "";
+
+async function deliveryRequest<T>(
+  path: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const token = getAuthToken();
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...(options.headers as Record<string, string>),
+  };
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const res = await fetch(`${DELIVERY_API_BASE}${path}`, {
+    ...options,
+    headers,
+    credentials: "include",
+  });
+
+  let data: unknown;
+  try {
+    data = await res.json();
+  } catch {
+    throw new ApiError(res.status, "PARSE_ERROR", `Server returned ${res.status}`);
+  }
+
+  if (!res.ok) {
+    throw new ApiError(
+      res.status,
+      (data as Record<string, string>).error || "UNKNOWN",
+      (data as Record<string, string>).error || `Request failed with status ${res.status}`
+    );
+  }
+
+  return data as T;
+}
+
+export const deliveryApi = {
+  searchAddress: (query: string) =>
+    deliveryRequest<Array<{
+      address: string;
+      name?: string;
+      lat: number;
+      lng: number;
+    }>>(`/api/v1/delivery/search?q=${encodeURIComponent(query)}`),
+
+  reverseGeocode: (lat: number, lng: number) =>
+    deliveryRequest<{
+      address: string;
+      name?: string;
+      street?: string;
+      city?: string;
+      district?: string;
+      ward?: string;
+      country?: string;
+      lat: number;
+      lng: number;
+    }>(`/api/v1/delivery/reverse?lat=${lat}&lng=${lng}`),
+
+  calculateRoute: (pickupLat: number, pickupLng: number, dropoffLat: number, dropoffLng: number) =>
+    deliveryRequest<{
+      distance_meters: number;
+      duration_seconds: number;
+      polyline: string;
+    }>("/api/v1/delivery/route", {
+      method: "POST",
+      body: JSON.stringify({ pickup_lat: pickupLat, pickup_lng: pickupLng, dropoff_lat: dropoffLat, dropoff_lng: dropoffLng }),
+    }),
+
+  createOrder: (data: {
+    customer_id: string;
+    pickup: { lat: number; lng: number; address?: string };
+    dropoff: { lat: number; lng: number; address?: string };
+  }) => deliveryRequest<{
+    id: string;
+    customer_id: string;
+    status: string;
+    distance_meters: number;
+    duration_seconds: number;
+    polyline: string;
+    pickup: { lat: number; lng: number; address?: string };
+    dropoff: { lat: number; lng: number; address?: string };
+    created_at: string;
+  }>("/api/v1/orders", { method: "POST", body: JSON.stringify(data) }),
+
+  getOrder: (orderId: string) =>
+    deliveryRequest<{
+      id: string;
+      customer_id: string;
+      driver_id?: string;
+      status: string;
+      distance_meters: number;
+      duration_seconds: number;
+      polyline: string;
+      pickup: { lat: number; lng: number; address?: string };
+      dropoff: { lat: number; lng: number; address?: string };
+      created_at: string;
+      updated_at: string;
+      assigned_at?: string;
+      delivered_at?: string;
+    }>(`/api/v1/orders/${orderId}`),
+
+  getTracking: (orderId: string) =>
+    deliveryRequest<Array<{
+      id: string;
+      order_id: string;
+      driver_id: string;
+      status: string;
+      lat: number;
+      lng: number;
+      created_at: string;
+    }>>(`/api/v1/orders/${orderId}/tracking`),
 };
 
 export { ApiError, setAuthToken };

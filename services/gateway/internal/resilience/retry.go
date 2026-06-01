@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -32,7 +33,7 @@ func DefaultRetryableCheck(err error) bool {
 	if err == nil {
 		return false
 	}
-	errStr := err.Error()
+	errStr := strings.ToLower(err.Error())
 	retryablePrefixes := []string{
 		"connection refused",
 		"connection reset",
@@ -44,14 +45,12 @@ func DefaultRetryableCheck(err error) bool {
 		"circuit breaker",
 		"upstream service error",
 		"i/o timeout",
-		"EOF",
+		"eof",
 		"dial tcp",
 	}
 	for _, prefix := range retryablePrefixes {
-		if len(errStr) >= len(prefix) {
-			if errStr[:len(prefix)] == prefix {
-				return true
-			}
+		if strings.Contains(errStr, prefix) {
+			return true
 		}
 	}
 	return false

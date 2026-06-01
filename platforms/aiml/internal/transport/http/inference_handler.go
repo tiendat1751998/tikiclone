@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopee-clone/shopee/platforms/aiml/internal/inference"
+	"github.com/tikiclone/tiki/platforms/aiml/internal/inference"
 )
 
 type predictRequest struct {

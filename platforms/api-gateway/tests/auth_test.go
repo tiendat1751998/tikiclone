@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee-clone/shopee/platforms/api-gateway/internal/auth"
+	"github.com/tikiclone/tiki/platforms/api-gateway/internal/auth"
 )
 
 func TestJWTSignAndVerify(t *testing.T) {

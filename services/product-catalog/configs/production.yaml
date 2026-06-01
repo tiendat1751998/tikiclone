@@ -1,5 +1,5 @@
 app:
-  name: shopee-catalog
+  name: tiki-catalog
   env: production
   log_level: warn
   http_port: 8087
@@ -16,8 +16,8 @@ redis:
   db: 7
 kafka:
   brokers: ${KAFKA_BROKERS}
-  topic_prefix: shopee.catalog
-  consumer_group: shopee-catalog-service
+  topic_prefix: tiki.catalog
+  consumer_group: tiki-catalog-service
 jwt:
   access_secret: ${JWT_ACCESS_SECRET}
   access_ttl: 15m
@@ -26,4 +26,4 @@ catalog:
   cache_ttl: 5m
 otel:
   endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT}
-  service_name: shopee-catalog
+  service_name: tiki-catalog
