@@ -2,8 +2,8 @@
 @tailwind components;
 
 :root {
-  --tiki-blue: #1A94FF;
-  --tiki-blue-dark: #0066D6;
+  --tiki-blue: #0A68FF;
+  --tiki-blue-dark: #0052CC;
   --tiki-red: #FF424E;
   --tiki-red-dark: #D6303C;
   --tiki-green: #00AB56;
@@ -11,7 +11,7 @@
   --tiki-orange: #FC820A;
   --tiki-bg: #F5F5FA;
   --tiki-text: #27272A;
-  --tiki-text-secondary: #808089;
+  --tiki-text-secondary: #787880;
   --tiki-border: #EBEBF0;
 }
 
@@ -90,6 +90,7 @@ img { max-width: 100%; height: auto; }
   font-size: 11px;
   padding: 2px 6px;
   border-radius: 4px;
+  z-index: 2;
 }
 
 .product-card__official {

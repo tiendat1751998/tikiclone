@@ -60,8 +60,8 @@ export default async function ProductsPage({
 
   try {
     const [prodRes, catRes] = await Promise.all([
-      fetch(`${apiBase}/products?${params}`, { cache: "no-store" }).then((r) => r.json()),
-      fetch(`${apiBase}/categories`, { cache: "no-store" }).then((r) => r.json()),
+      fetch(`${apiBase}/products?${params}`, { next: { revalidate: 30 } }).then((r) => r.json()),
+      fetch(`${apiBase}/categories`, { next: { revalidate: 300 } }).then((r) => r.json()),
     ]);
 
     if (Array.isArray(prodRes)) {

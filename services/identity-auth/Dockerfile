@@ -1,31 +1,24 @@
-# Stage 1: Build
-FROM maven:3.9-eclipse-temurin-17 AS builder
+FROM golang:1.24-alpine AS builder
 
 WORKDIR /app
 
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
+RUN apk add --no-cache git ca-certificates tzdata
 
-COPY src ./src
-RUN mvn clean package -DskipTests -B
+COPY go.mod go.sum ./
+RUN go mod download
 
-# Stage 2: Minimal JRE Run
-FROM eclipse-temurin:17-jre-alpine
+COPY . .
 
-RUN addgroup -S spring && adduser -S spring -G spring
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o /identity-auth ./cmd/server
 
-USER spring:spring
+FROM alpine:3.20
+
+RUN apk add --no-cache ca-certificates tzdata
 
 WORKDIR /app
 
-COPY --from=builder /app/target/*.jar app.jar
+COPY --from=builder /identity-auth /app/identity-auth
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", \
-    "-XX:+UseG1GC", \
-    "-XX:MaxGCPauseMillis=100", \
-    "-XX:+ParallelRefProcEnabled", \
-    "-XX:MaxRAMPercentage=75.0", \
-    "-jar", \
-    "/app/app.jar"]
+ENTRYPOINT ["/app/identity-auth"]

@@ -496,8 +496,9 @@ export default function CheckoutPage() {
                             </button>
                           </div>
                         </div>
-                      ) : (
+) : (
                         <div>
+                          <label className="block text-xs font-medium text-tiki-text-secondary mb-1">Mã giảm giá</label>
                           <div className="flex gap-2">
                             <input
                               type="text"

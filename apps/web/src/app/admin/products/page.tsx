@@ -64,7 +64,7 @@ export default function AdminProductsPage() {
                   <tr key={product.id} className="border-b border-tiki-border hover:bg-gray-50">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <img src={product.image_url || "/images/placeholder.svg"} alt="" className="w-10 h-10 rounded object-cover" />
+                        <img src={product.image_url || "/images/placeholder.svg"} alt={product.name} className="w-10 h-10 rounded object-cover" />
                         <span className="text-sm text-tiki-text max-w-xs truncate">{product.name}</span>
                       </div>
                     </td>

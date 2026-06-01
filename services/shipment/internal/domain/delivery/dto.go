@@ -50,7 +50,7 @@ type DriverLocationUpdate struct {
 type NearbyDriver struct {
 	DriverID string  `json:"driver_id"`
 	Lat      float64 `json:"lat"`
-	Lng      float64 `json:"lat"`
+	Lng      float64 `json:"lng"`
 	Distance float64 `json:"distance_meters"`
 	Status   string  `json:"status"`
 }

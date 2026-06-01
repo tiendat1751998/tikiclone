@@ -96,7 +96,10 @@ func (r *ProductRepository) List(ctx context.Context, filter domain.ProductFilte
 	}
 	if filter.Search != "" {
 		escaped := regexp.QuoteMeta(filter.Search)
-		query["title"] = bson.M{"$regex": escaped, "$options": "i"}
+		query["$or"] = []bson.M{
+			{"title": bson.M{"$regex": escaped, "$options": "i"}},
+			{"description": bson.M{"$regex": escaped, "$options": "i"}},
+		}
 	}
 	if filter.MinPrice > 0 || filter.MaxPrice > 0 {
 		priceQuery := bson.M{}
@@ -123,12 +126,6 @@ func (r *ProductRepository) List(ctx context.Context, filter domain.ProductFilte
 	}
 	if filter.Size <= 0 || filter.Size > 100 {
 		filter.Size = 20
-	}
-
-	// Count total (uses index when available — no in-memory sort)
-	total, err := r.collection.CountDocuments(ctx, query)
-	if err != nil {
-		return nil, err
 	}
 
 	// For default sorts (created_at) without computed fields, use Find for
@@ -165,6 +162,11 @@ func (r *ProductRepository) List(ctx context.Context, filter domain.ProductFilte
 		}
 		if products == nil {
 			products = []domain.Product{}
+		}
+		// Use estimated count for performance - accurate enough for pagination
+		total, err := r.collection.EstimatedDocumentCount(ctx)
+		if err != nil {
+			total = int64(len(products))
 		}
 		return &domain.ProductList{
 			Products: products,
@@ -215,6 +217,12 @@ func (r *ProductRepository) List(ctx context.Context, filter domain.ProductFilte
 	}
 	if products == nil {
 		products = []domain.Product{}
+	}
+
+	// Use estimated count for performance
+	total, err := r.collection.EstimatedDocumentCount(ctx)
+	if err != nil {
+		total = int64(len(products))
 	}
 
 	return &domain.ProductList{

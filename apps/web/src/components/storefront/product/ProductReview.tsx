@@ -3,13 +3,11 @@
 import { useState } from "react";
 import ReviewSection from "./ReviewSection";
 
-export default function ProductDetailWithReviews({ product, children }: { product: any; children: React.ReactNode }) {
+export default function ProductDetailWithReviews({ product }: { product: any }) {
   const [activeTab, setActiveTab] = useState<"detail" | "reviews">("detail");
 
   return (
     <div>
-      {children}
-
       {/* Tabs */}
       <div className="mt-6 bg-white rounded-lg border border-tiki-border">
         <div className="flex border-b border-tiki-border">

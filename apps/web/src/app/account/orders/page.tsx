@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useAuthStore } from "@/stores/auth";
 import { ordersApi } from "@/lib/api/client";
@@ -75,53 +75,51 @@ export default function OrdersPage() {
   const orders = ordersResponse?.items || [];
 
   return (
-    <main className="bg-tiki-bg py-4 min-h-[60vh]">
-      <div className="max-w-3xl mx-auto px-3">
-        <h1 className="text-sm font-semibold text-tiki-text mb-3">Đơn hàng của tôi</h1>
+    <div>
+      <h1 className="text-sm font-semibold text-tiki-text mb-3">Đơn hàng của tôi</h1>
 
-        <div className="bg-white rounded-lg border border-tiki-border mb-3 overflow-x-auto">
-          <div className="flex">
-            {STATUS_FILTERS.map((f) => (
-              <button
-                key={f.value}
-                onClick={() => setStatusFilter(f.value)}
-                className={`flex-shrink-0 px-3 py-2.5 text-[11px] font-medium border-b-2 transition ${
-                  statusFilter === f.value
-                    ? "border-tiki-blue text-tiki-blue"
-                    : "border-transparent text-tiki-text-secondary hover:text-tiki-text"
-                }`}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
+      <div className="bg-white rounded-lg border border-tiki-border mb-3 overflow-x-auto">
+        <div className="flex">
+          {STATUS_FILTERS.map((f) => (
+            <button
+              key={f.value}
+              onClick={() => setStatusFilter(f.value)}
+              className={`flex-shrink-0 px-3 py-2.5 text-[11px] font-medium border-b-2 transition ${
+                statusFilter === f.value
+                  ? "border-tiki-blue text-tiki-blue"
+                  : "border-transparent text-tiki-text-secondary hover:text-tiki-text"
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
         </div>
-
-        {isLoading ? (
-          <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="order-card animate-pulse">
-                <div className="order-card__header"><div className="h-3 bg-gray-200 rounded w-24" /></div>
-                <div className="order-card__body"><div className="h-8 bg-gray-200 rounded" /></div>
-              </div>
-            ))}
-          </div>
-        ) : orders.length === 0 ? (
-          <div className="bg-white rounded-lg border border-tiki-border py-14 text-center">
-            <p className="text-3xl mb-2">📦</p>
-            <p className="text-xs text-tiki-text-secondary">Chưa có đơn hàng nào</p>
-            <Link href="/products" className="inline-block mt-3 px-4 py-1.5 bg-tiki-blue text-white rounded-lg text-xs font-medium hover:bg-tiki-blue-dark transition">
-              Mua sắm ngay
-            </Link>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {orders.map((order: Order) => (
-              <OrderCard key={order.id} order={order} />
-            ))}
-          </div>
-        )}
       </div>
-    </main>
+
+      {isLoading ? (
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="order-card animate-pulse">
+              <div className="order-card__header"><div className="h-3 bg-gray-200 rounded w-24" /></div>
+              <div className="order-card__body"><div className="h-8 bg-gray-200 rounded" /></div>
+            </div>
+          ))}
+        </div>
+      ) : orders.length === 0 ? (
+        <div className="bg-white rounded-lg border border-tiki-border py-14 text-center">
+          <p className="text-3xl mb-2">📦</p>
+          <p className="text-xs text-tiki-text-secondary">Chưa có đơn hàng nào</p>
+          <Link href="/products" className="inline-block mt-3 px-4 py-1.5 bg-tiki-blue text-white rounded-lg text-xs font-medium hover:bg-tiki-blue-dark transition">
+            Mua sắm ngay
+          </Link>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {orders.map((order: Order) => (
+            <OrderCard key={order.id} order={order} />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

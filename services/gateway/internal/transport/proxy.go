@@ -86,15 +86,16 @@ func NewProxy(
 ) *Proxy {
 	transport := &http.Transport{
 		MaxIdleConns:          maxIdleConns,
-		MaxIdleConnsPerHost:    maxIdleConns,
-		IdleConnTimeout:         idleConnTimeout,
-		DisableCompression:      true,
-		MaxConnsPerHost:         maxIdleConns * 2,
-		DisableKeepAlives:       false,
-		ForceAttemptHTTP2:       true,
-		ExpectContinueTimeout:   1 * time.Second,
-		ResponseHeaderTimeout:   5 * time.Second,
+		MaxIdleConnsPerHost:   maxIdleConns,
+		IdleConnTimeout:       idleConnTimeout,
+		DisableCompression:    true,
+		MaxConnsPerHost:        maxIdleConns * 2,
+		DisableKeepAlives:     false,
+		ForceAttemptHTTP2:     false,
+		ExpectContinueTimeout: 0,
+		ResponseHeaderTimeout: 2 * time.Second,
 	}
+	transport.MaxResponseHeaderBytes = 1 << 20
 	return &Proxy{
 		discovery:       svcDiscovery,
 		circuitBreakers: make(map[string]*resilience.CircuitBreaker),

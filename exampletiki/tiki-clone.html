@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tiki - Mua hàng online giá tốt, hàng chuẩn, ship nhanh</title>
+  <style>
+    /* Tiki.vn Design System */
+    :root {
+      --tiki-blue: #1A94FF;
+      --tiki-blue-dark: #0066D6;
+      --tiki-red: #FF424E;
+      --tiki-green: #00AB56;
+      --tiki-yellow: #FDD835;
+      --tiki-bg: #F5F5FA;
+      --tiki-text: #27272A;
+      --tiki-text-secondary: #808089;
+      --tiki-border: #EBEBF0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      background: #EFEFEF;
+      color: var(--tiki-text);
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; height: auto; }
+
+    /* Container */
+    .max-w-tiki { max-width: 1272px; margin: 0 auto; }
+    .flex { display: flex; }
+    .flex-1 { flex: 1; }
+    .flex-[2] { flex: 2; }
+    .flex-[1] { flex: 1; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+    .text-xs { font-size: 0.75rem; }
+    .text-sm { font-size: 0.875rem; }
+    .text-lg { font-size: 1.125rem; }
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .text-tiki-blue { color: var(--tiki-blue); }
+    .text-tiki-red { color: var(--tiki-red); }
+    .text-tiki-green { color: var(--tiki-green); }
+    .bg-white { background: white; }
+    .rounded-lg { border-radius: 0.5rem; }
+    .rounded-xl { border-radius: 0.75rem; }
+    .border { border: 1px solid; }
+    .border-tiki-border { border-color: var(--tiki-border); }
+    .absolute { position: absolute; }
+    .relative { position: relative; }
+    .overflow-hidden { overflow: hidden; }
+    .w-full { width: 100%; }
+    .h-full { height: 100%; }
+
+    /* Header */
+    header { background: white; border-bottom: 1px solid var(--tiki-border); }
+    .header-top { background: #EFFFF4; color: var(--tiki-green); font-size: 12px; padding: 6px 0; text-align: center; }
+    .header-main { padding: 8px 24px; }
+    .logo { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .logo svg { width: 64px; height: 22px; }
+    .logo span { font-size: 10px; color: #003EA1; font-weight: 600; }
+    .search-form { display: flex; align-items: stretch; border: 1px solid #DDDDE3; border-radius: 8px; overflow: hidden; flex: 1; max-width: 560px; }
+    .search-input { flex: 1; padding: 8px 12px; border: none; outline: none; font-size: 14px; }
+    .search-btn { background: none; border: none; border-left: 1px solid #DDDDE3; padding: 0 24px; font-size: 14px; color: var(--tiki-blue); cursor: pointer; }
+    .search-btn:hover { background: #F0F8FF; }
+    .header-location { font-size: 12px; color: var(--tiki-text-secondary); display: none; }
+    .header-location svg { width: 16px; height: 16px; margin-right: 4px; }
+    @media (min-width: 1024px) { .header-location { display: flex; } }
+
+    /* Category bar */
+    .category-bar { background: white; border-bottom: 1px solid var(--tiki-border); padding: 0 24px; }
+    .category-bar .flex { height: 40px; align-items: center; gap: 20px; font-size: 13px; overflow-x: auto; }
+    .category-bar a { color: var(--tiki-text); white-space: nowrap; }
+    .category-bar a:hover { color: var(--tiki-blue); }
+
+    /* Hero Banner */
+    .hero-section { padding: 12px 24px; }
+    .hero-banner { position: relative; border-radius: 10px; overflow: hidden; background: #f0f0f0; display: block; }
+    .hero-banner img, .hero-fallback { width: 100%; height: 100%; object-fit: cover; }
+    .hero-fallback { min-height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg, #FF6B00, #FF424E); color: white; text-align: center; padding: 24px; }
+    .hero-fallback__icon { font-size: 48px; margin-bottom: 8px; }
+    .hero-fallback__text { font-size: 20px; font-weight: 700; }
+    .hero-fallback__cta { font-size: 14px; margin-top: 8px; opacity: 0.9; }
+    .promo-banner { position: relative; border-radius: 10px; overflow: hidden; min-height: 116px; background: #f0f0f0; }
+    .promo-banner img { width: 100%; height: 100%; object-fit: cover; }
+    .promo-banner__fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #FF6B00, #FF424E); color: white; font-size: 11px; font-weight: 700; text-align: center; padding: 8px; }
+    .promo-banner__fallback--blue { background: linear-gradient(135deg, #1A94FF, #5B8DEF); }
+
+    /* Categories Grid */
+    .categories-section { padding: 24px 24px 16px; }
+    .categories-grid { background: white; border-radius: 12px; border: 1px solid var(--tiki-border); padding: 12px; }
+    .grid-cols-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+    @media (min-width: 640px) { .sm\\:grid-cols-6 { grid-template-columns: repeat(6, 1fr); } }
+    @media (min-width: 768px) { .md\\:grid-cols-8 { grid-template-columns: repeat(8, 1fr); } }
+    @media (min-width: 1024px) { .lg\\:grid-cols-10 { grid-template-columns: repeat(10, 1fr); } }
+
+    .category-card { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 4px 6px; background: white; transition: background 0.15s; cursor: pointer; }
+    .category-card:hover { background: #F5F5FA; }
+    .category-card__icon-wrap { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #F5F5FA; transition: background 0.15s; }
+    .category-card:hover .category-card__icon-wrap { background: #E8F0FE; }
+    .category-card__icon { font-size: 20px; }
+    .category-card__img { width: 36px; height: 36px; object-fit: cover; border-radius: 50%; }
+    .category-card__name { font-size: 10px; color: var(--tiki-text); text-align: center; font-weight: 500; line-height: 13px; max-width: 64px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    /* Product Section */
+    .product-section { padding: 16px 24px; }
+    .product-section .bg-white { border-radius: 10px; border: 1px solid var(--tiki-border); overflow: hidden; }
+    .product-section .px-4 { padding-left: 16px; padding-right: 16px; }
+    .product-section .py-2 { padding-top: 8px; padding-bottom: 8px; }
+    .product-section .border-b { border-bottom: 1px solid var(--tiki-border); }
+    .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
+    @media (min-width: 768px) { .md\\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 1024px) { .lg\\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); } }
+    @media (min-width: 1280px) { .xl\\:grid-cols-5 { grid-template-columns: repeat(5, 1fr); } }
+
+    /* Product Card */
+    .product-card { display: block; background: white; border: 1px solid var(--tiki-border); border-radius: 8px; overflow: hidden; transition: box-shadow 0.2s; }
+    .product-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.14); }
+    .product-card__image { position: relative; aspect-ratio: 1; background: #fafafa; overflow: hidden; }
+    .product-card__image img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s; }
+    .product-card:hover .product-card__image img { transform: scale(1.06); }
+    .product-card__discount { position: absolute; top: 6px; left: 6px; background: #FFDBDE; color: var(--tiki-red); font-weight: 700; font-size: 11px; padding: 2px 6px; border-radius: 4px; }
+    .product-card__badge { position: absolute; top: 0; right: 0; background: var(--tiki-green); color: white; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 0 0 0 4px; }
+    .product-card__body { padding: 6px 8px; display: flex; flex-direction: column; gap: 3px; }
+    .product-card__name { font-size: 11px; line-height: 15px; color: var(--tiki-text); font-weight: 400; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 30px; }
+    .product-card__price { display: flex; align-items: center; gap: 4px; }
+    .product-card__price-current { font-size: 14px; font-weight: 600; color: var(--tiki-red); }
+    .product-card__price-original { font-size: 11px; color: var(--tiki-text-secondary); text-decoration: line-through; }
+    .product-card__rating { display: flex; align-items: center; gap: 3px; font-size: 10px; color: var(--tiki-text-secondary); }
+    .product-card__seller { display: flex; align-items: center; gap: 3px; font-size: 10px; color: var(--tiki-text-secondary); }
+    .product-card__seller-badge { width: 12px; height: 12px; background: var(--tiki-blue); color: white; font-size: 7px; font-weight: 700; display: flex; align-items: center; justify-content: center; border-radius: 2px; }
+
+    /* Service Highlights */
+    .service-section { padding: 16px 24px; }
+    .service-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    @media (min-width: 640px) { .sm\\:grid-cols-5 { grid-template-columns: repeat(5, 1fr); } }
+    .service-card { background: white; border-radius: 10px; border: 1px solid var(--tiki-border); padding: 16px 12px; text-align: center; transition: box-shadow 0.2s; }
+    .service-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+    /* Flash Sale */
+    .flash-sale-section { padding: 16px 24px; }
+    .flash-sale { background: linear-gradient(135deg, #FF6B00, #FF424E, #E60019); border-radius: 10px; padding: 12px 20px; color: white; }
+    .flash-sale__timer { display: flex; align-items: center; gap: 8px; }
+    .flash-sale__time { background: white; color: var(--tiki-red); border-radius: 4px; padding: 4px 8px; font-weight: 700; min-width: 32px; text-align: center; }
+
+    /* Footer */
+    footer { background: #27272A; color: white; padding: 32px 24px 16px; margin-top: 32px; }
+    .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 24px; }
+    @media (max-width: 768px) { .footer-grid { grid-template-columns: repeat(2, 1fr); } }
+    .footer-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+    .footer-link { display: block; font-size: 12px; color: #A3A3A3; margin-bottom: 8px; }
+    .footer-link:hover { color: white; }
+    .footer-bottom { border-top: 1px solid #404040; padding-top: 16px; font-size: 11px; color: #A3A3A3; text-align: center; }
+
+    /* Section Header */
+    .section-header { padding: 8px 16px; border-bottom: 1px solid var(--tiki-border); display: flex; align-items: center; justify-content: space-between; }
+    .section-title { font-size: 13px; font-weight: 600; color: var(--tiki-text); }
+    .section-more { font-size: 11px; color: var(--tiki-blue); }
+    .section-more:hover { opacity: 0.8; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-top">
+      <strong>Freeship đơn từ 45k</strong>, giảm nhiều hơn cùng TikiCARD
+    </div>
+    <div class="header-main">
+      <div class="flex items-center gap-6" style="padding: 0 24px;">
+        <a href="#" class="logo">
+          <svg viewBox="0 0 64 22" fill="none">
+            <rect width="64" height="22" rx="4" fill="#1A94FF"/>
+            <text x="10" y="16" fill="white" font-size="12" font-weight="700" font-family="Inter, sans-serif">Tiki</text>
+          </svg>
+          <span>TỐT &amp; NHANH</span>
+        </a>
+        <form class="search-form" onsubmit="return false;">
+          <input type="text" class="search-input" placeholder="Bạn tìm gì hôm nay? Sản phẩm, thương hiệu...">
+          <button class="search-btn">Tìm kiếm</button>
+        </form>
+        <div class="header-location flex items-center gap-1">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 1C5.24 1 3 3.24 3 6c0 3.5 5 9 5 9s5-5.5 5-9c0-2.76-2.24-5-5-5zm0 7.5C6.62 8.5 5.5 7.38 5.5 6S6.62 3.5 8 3.5 10.5 4.62 10.5 6 9.38 8.5 8 8.5z" fill="#808089"/></svg>
+          <span>Giao đến:</span>
+          <span style="text-decoration: underline; max-width: 140px; overflow: hidden; text-overflow: ellipsis;">Q. Hoàn Kiếm, Hà Nội</span>
+        </div>
+      </div>
+    </div>
+    <div class="category-bar">
+      <div class="flex" style="overflow-x: auto;">
+        <a href="#" class="flex items-center gap-1.5 font-medium">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="7.5" height="7.5" rx="1.5" stroke="#27272A" stroke-width="1.5"/><rect x="11.5" y="1" width="7.5" height="7.5" rx="1.5" stroke="#27272A" stroke-width="1.5"/><rect x="1" y="11.5" width="7.5" height="7.5" rx="1.5" stroke="#27272A" stroke-width="1.5"/><rect x="11.5" y="11.5" width="7.5" height="7.5" rx="1.5" stroke="#27272A" stroke-width="1.5"/></svg>
+          Danh mục
+        </a>
+        <div class="flex gap-5" style="font-size: 12px;">
+          <a href="#">Sách</a>
+          <a href="#">Nhà cửa</a>
+          <a href="#">Điện thoại</a>
+          <a href="#">Mẹ &amp; Bé</a>
+          <a href="#">Làm đẹp</a>
+          <a href="#">Thể thao</a>
+          <a href="#">Ô tô xe máy</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main style="padding: 12px 0;">
+    <!-- Hero Banner -->
+    <section class="hero-section">
+      <div class="max-w-tiki" style="padding: 0 24px;">
+        <div class="flex gap-2">
+          <a href="#" class="hero-banner" style="flex: 2; min-height: 240px;">
+            <div class="hero-fallback">
+              <span class="hero-fallback__icon">🎉</span>
+              <span class="hero-fallback__text">Khuyến Mãi Đặc Biệt</span>
+              <span class="hero-fallback__cta">Xem ngay →</span>
+            </div>
+          </a>
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 0;">
+            <a href="#" class="promo-banner" style="min-height: 116px;">
+              <div class="promo-banner__fallback">Khuyến Mãi</div>
+            </a>
+            <a href="#" class="promo-banner" style="min-height: 116px;">
+              <div class="promo-banner__fallback promo-banner__fallback--blue">Ưu Đãi Đặc Biệt</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories Grid -->
+    <section class="categories-section">
+      <div class="max-w-tiki">
+        <div class="categories-grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10">
+          <a href="#" class="category-card">
+            <div class="category-card__icon-wrap"><span class="category-card__icon">📚</span></div>
+            <span class="category-card__name">Nhà Sách Tiki</span>
+          </a>
+          <a href="#" class="category-card">
+            <div class="category-card__icon-wrap"><span class="category-card__icon">🏠</span></div>
+            <span class="category-card__name">Nhà Cửa - Đời Sống</span>
+          </a>
+          <a href="#" class="category-card">
+            <div class="category-card__icon-wrap"><span class="category-card__icon">📱</span></div>
+            <span class="category-card__name">Điện Thoại - Máy Tính Bảng</span>
+          </a>
+          <a href="#" class="category-card">
+            <div class="category-card__icon-wrap"><span class="category-card__icon">👗</span></div>
+            <span class="category-card__name">Thời Trang Nữ</span>
+          </a>
+          <a href="#" class="category-card">
+            <div class="category-card__icon-wrap"><span class="category-card__icon">👔</span></div>
+            <span class="category-card__name">Thời Trang Nam</span>
+          </a>
+          <a href="#" class="category-card">
+            <div class="category-card__icon-wrap"><span class="category-card__icon">👟</span></div>
+            <span class="category-card__name">Giày - Dép Nữ</span>
+          </a>
+          <a href="#" class="category-card">
+            <div class="category-card__icon-wrap"><span class="category-card__icon">👞</span></div>
+            <span class="category-card__name">Giày - Dép Nam</span>
+          </a>
+          <a href="#" class="category-card">
+            <div class="category-card__icon-wrap"><span class="category-card__icon">🛒</span></div>
+            <span class="category-card__name">Bách Hóa Online</span>
+          </a>
+          <a href="#" class="category-card">
+            <div class="category-card__icon-wrap"><span class="category-card__icon">⚽</span></div>
+            <span class="category-card__name">Thể Thao - Dã Ngoại</span>
+          </a>
+          <a href="#" class="category-card">
+            <div class="category-card__icon-wrap"><span class="category-card__icon">💄</span></div>
+            <span class="category-card__name">Làm Đẹp - Sức Khỏe</span>
+          </a>
+          <a href="#" class="category-card">
+            <div class="category-card__icon-wrap"><span class="category-card__icon">❄️</span></div>
+            <span class="category-card__name">Điện Tử - Điện Lạnh</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flash Sale -->
+    <section class="flash-sale-section">
+      <div class="max-w-tiki">
+        <div class="flash-sale">
+          <div class="flex items-center justify-between">
+            <div class="flash-sale__timer">
+              <span class="font-semibold">⚡ FLASH SALE</span>
+              <span>Kết thúc trong:</span>
+              <div class="flash-sale__time">02</div>:<div class="flash-sale__time">15</div>:<div class="flash-sale__time">30</div>
+            </div>
+            <a href="#" class="section-more" style="color: white;">Xem tất cả →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products - Hot Deals -->
+    <section class="product-section">
+      <div class="max-w-tiki">
+        <div class="bg-white">
+          <div class="section-header">
+            <h2 class="section-title">🔥 Giá Sốc Hôm Nay</h2>
+            <a href="#" class="section-more">Xem tất cả →</a>
+          </div>
+          <div class="product-grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <a href="#" class="product-card">
+              <div class="product-card__image">
+                <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">📱</div>
+                <div class="product-card__discount">-9%</div>
+                <div class="product-card__badge">FREESHIP</div>
+              </div>
+              <div class="product-card__body">
+                <h3 class="product-card__name">iPhone 15 Pro Max 256GB</h3>
+                <div class="product-card__price">
+                  <span class="product-card__price-current">28.900.000 ₫</span>
+                </div>
+                <div class="product-card__rating">
+                  <span style="color: #FFC400;">★★★★★</span>
+                  <span>4.9</span>
+                  <span class="product-card__rating-sep" style="color: #EBEBF0;">|</span>
+                  <span class="product-card__sold">Đã bán 542</span>
+                </div>
+                <div class="product-card__seller">
+                  <div class="product-card__seller-badge">T</div>
+                  <span class="product-card__seller-name">Tiki Trading</span>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="product-card">
+              <div class="product-card__image">
+                <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">👗</div>
+                <div class="product-card__discount">-33%</div>
+              </div>
+              <div class="product-card__body">
+                <h3 class="product-card__name">Váy Liên Buộc Vạt Mảnh</h3>
+                <div class="product-card__price">
+                  <span class="product-card__price-current">399.000 ₫</span>
+                </div>
+                <div class="product-card__rating">
+                  <span style="color: #FFC400;">★★★★</span>
+                  <span>4.6</span>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="product-card">
+              <div class="product-card__image">
+                <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">👟</div>
+                <div class="product-card__badge">FREESHIP</div>
+              </div>
+              <div class="product-card__body">
+                <h3 class="product-card__name">Nike Air Force 1 Low</h3>
+                <div class="product-card__price">
+                  <span class="product-card__price-current">2.490.000 ₫</span>
+                  <span class="product-card__price-original">3.200.000 ₫</span>
+                </div>
+                <div class="product-card__rating">
+                  <span style="color: #FFC400;">★★★★★</span>
+                  <span>4.7</span>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="product-card">
+              <div class="product-card__image">
+                <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">💻</div>
+                <div class="product-card__discount">-9%</div>
+                <div class="product-card__badge">FREESHIP</div>
+              </div>
+              <div class="product-card__body">
+                <h3 class="product-card__name">MacBook Air M2 2024</h3>
+                <div class="product-card__price">
+                  <span class="product-card__price-current">28.900.000 ₫</span>
+                </div>
+                <div class="product-card__rating">
+                  <span style="color: #FFC400;">★★★★</span>
+                  <span>4.8</span>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="product-card">
+              <div class="product-card__image">
+                <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">📚</div>
+                <div class="product-card__discount">-25%</div>
+              </div>
+              <div class="product-card__body">
+                <h3 class="product-card__name">Sách Bán Chạy Nhất 2024</h3>
+                <div class="product-card__price">
+                  <span class="product-card__price-current">89.000 ₫</span>
+                </div>
+                <div class="product-card__rating">
+                  <span style="color: #FFC400;">★★★★★</span>
+                  <span>4.8</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products - Phones -->
+    <section class="product-section">
+      <div class="max-w-tiki">
+        <div class="bg-white">
+          <div class="section-header">
+            <h2 class="section-title">📱 Điện Thoại - Máy Tính Bảng</h2>
+            <a href="#" class="section-more">Xem tất cả →</a>
+          </div>
+          <div class="product-grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <a href="#" class="product-card">
+              <div class="product-card__image">
+                <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">📱</div>
+                <div class="product-card__discount">-9%</div>
+                <div class="product-card__badge">FREESHIP</div>
+              </div>
+              <div class="product-card__body">
+                <h3 class="product-card__name">iPhone 15 Pro Max 256GB</h3>
+                <div class="product-card__price">
+                  <span class="product-card__price-current">28.900.000 ₫</span>
+                </div>
+                <div class="product-card__rating">
+                  <span style="color: #FFC400;">★★★★★</span><span>4.9</span>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="product-card">
+              <div class="product-card__image">
+                <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">📱</div>
+                <div class="product-card__discount">-13%</div>
+              </div>
+              <div class="product-card__body">
+                <h3 class="product-card__name">Samsung Galaxy S24 Ultra</h3>
+                <div class="product-card__price">
+                  <span class="product-card__price-current">25.900.000 ₫</span>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="product-card">
+              <div class="product-card__image">
+                <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">📱</div>
+                <div class="product-card__discount">-16%</div>
+                <div class="product-card__badge">FREESHIP</div>
+              </div>
+              <div class="product-card__body">
+                <h3 class="product-card__name">Xiaomi Redmi Note 13</h3>
+                <div class="product-card__price">
+                  <span class="product-card__price-current">4.990.000 ₫</span>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="product-card">
+              <div class="product-card__image">
+                <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">📱</div>
+                <div class="product-card__discount">-23%</div>
+              </div>
+              <div class="product-card__body">
+                <h3 class="product-card__name">Oppo Reno 11 Pro</h3>
+                <div class="product-card__price">
+                  <span class="product-card__price-current">9.990.000 ₫</span>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="product-card">
+              <div class="product-card__image">
+                <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">📱</div>
+                <div class="product-card__badge">FREESHIP</div>
+              </div>
+              <div class="product-card__body">
+                <h3 class="product-card__name">iPad Air 5 Gen</h3>
+                <div class="product-card__price">
+                  <span class="product-card__price-current">12.990.000 ₫</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products - Fashion -->
+    <section class="product-section">
+      <div class="max-w-tiki">
+        <div class="bg-white">
+          <div class="section-header">
+            <h2 class="section-title">👗 Thời Trang Nữ</h2>
+            <a href="#" class="section-more">Xem tất cả →</a>
+          </div>
+          <div class="product-grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <a href="#" class="product-card">
+              <div class="product-card__image">
+                <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">👗</div>
+                <div class="product-card__discount">-33%</div>
+              </div>
+              <div class="product-card__body">
+                <h3 class="product-card__name">Váy Liên Buộc Vạt Mảnh</h3>
+                <div class="product-card__price">
+                  <span class="product-card__price-current">399.000 ₫</span>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="product-card">
+              <div class="product-card__image">
+                <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">👗</div>
+                <div class="product-card__discount">-33%</div>
+              </div>
+              <div class="product-card__body">
+                <h3 class="product-card__name">Áo Khoác Nữ windbreaker</h3>
+                <div class="product-card__price">
+                  <span class="product-card__price-current">599.000 ₫</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Service Highlights -->
+    <section class="service-section">
+      <div class="max-w-tiki">
+        <div class="service-grid sm:grid-cols-5">
+          <div class="service-card">
+            <div class="text-lg mb-1">🛡️</div>
+            <div class="font-semibold text-tiki-text mb-0.5">100% hàng thật</div>
+            <div class="text-xs text-tiki-text-secondary">Cam kết hàng chính hãng</div>
+          </div>
+          <div class="service-card">
+            <div class="text-lg mb-1">🚚</div>
+            <div class="font-semibold text-tiki-text mb-0.5">Freeship mọi đơn</div>
+            <div class="text-xs text-tiki-text-secondary">Miễn phí giao hàng toàn quốc</div>
+          </div>
+          <div class="service-card">
+            <div class="text-lg mb-1">💰</div>
+            <div class="font-semibold text-tiki-text mb-0.5">Hoàn 200% nếu giả</div>
+            <div class="text-xs text-tiki-text-secondary">Bảo vệ người tiêu dùng</div>
+          </div>
+          <div class="service-card">
+            <div class="text-lg mb-1">🔄</div>
+            <div class="font-semibold text-tiki-text mb-0.5">30 ngày đổi trả</div>
+            <div class="text-xs text-tiki-text-secondary">Đổi trả miễn phí</div>
+          </div>
+          <div class="service-card">
+            <div class="text-lg mb-1">⚡</div>
+            <div class="font-semibold text-tiki-text mb-0.5">Giao nhanh 2h</div>
+            <div class="text-xs text-tiki-text-secondary">Giao hàng nhanh chóng</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h3 class="footer-title">Hỗ trợ khách hàng</h3>
+        <a href="#" class="footer-link">Hotline: 1900-6035</a>
+        <a href="#" class="footer-link">Các câu hỏi thường gặp</a>
+        <a href="#" class="footer-link">Gửi yêu cầu hỗ trợ</a>
+        <a href="#" class="footer-link">Hướng dẫn đặt hàng</a>
+      </div>
+      <div>
+        <h3 class="footer-title">Về Tiki</h3>
+        <a href="#" class="footer-link">Giới thiệu Tiki</a>
+        <a href="#" class="footer-link">Tuyển dụng</a>
+        <a href="#" class="footer-link">Điều khoản dịch vụ</a>
+        <a href="#" class="footer-link">Chính sách bảo mật</a>
+      </div>
+      <div>
+        <h3 class="footer-title">Thanh toán</h3>
+        <a href="#" class="footer-link">Visa / Mastercard</a>
+        <a href="#" class="footer-link">Thanh toán khi nhận hàng</a>
+        <a href="#" class="footer-link">Trả góp 0%</a>
+      </div>
+      <div>
+        <h3 class="footer-title">Theo dõi chúng tôi</h3>
+        <a href="#" class="footer-link">Facebook</a>
+        <a href="#" class="footer-link">Instagram</a>
+        <a href="#" class="footer-link">Youtube</a>
+        <a href="#" class="footer-link">Zalo</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2024 Tiki.vn - Tất cả các quyền được bảo lưu
+    </div>
+  </footer>
+</body>
+</html>

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Header } from "@/components/layout/header/Header";
 import { Footer } from "@/components/layout/footer/Footer";
 import { useCartStore } from "@/stores/cart";
@@ -38,6 +39,12 @@ export default function CartPage() {
     if (items.length === 0) return;
     clearCart();
     addToast({ type: "success", title: "Đã xóa giỏ hàng", message: "Tất cả sản phẩm đã được xóa khỏi giỏ hàng" });
+  };
+
+  const router = useRouter();
+
+  const handleCheckout = () => {
+    router.push("/checkout");
   };
 
   if (items.length === 0) {
@@ -203,7 +210,7 @@ export default function CartPage() {
                 <p className="text-[10px] text-tiki-text-secondary mt-1">(Đã bao gồm VAT nếu có)</p>
                 <button
                   disabled={selectedItems.length === 0}
-                  onClick={() => { window.location.href = "/checkout"; }}
+                  onClick={handleCheckout}
                   className="w-full mt-3 py-2.5 bg-tiki-red text-white rounded-lg font-semibold text-xs hover:bg-tiki-red-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Mua hàng ({selectedItems.length})

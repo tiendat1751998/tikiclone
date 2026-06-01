@@ -64,3 +64,9 @@ coverage/
 # OS
 Thumbs.db
 Desktop.ini
+
+# Ignore all images everywhere
+*.png
+*.jpg
+*.jpeg
+*.gif

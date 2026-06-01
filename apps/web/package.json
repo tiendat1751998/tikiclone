@@ -22,7 +22,8 @@
     "tailwind-merge": "^2.6.0",
     "lucide-react": "^0.468.0",
     "framer-motion": "^11.15.0",
-    "mysql2": "^3.11.0"
+    "mysql2": "^3.11.0",
+    "ioredis": "^5.4.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

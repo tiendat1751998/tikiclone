@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	"github.com/tikiclone/tiki/packages/go-shared/pkg/errors"
 	"github.com/tikiclone/tiki/packages/go-shared/pkg/kafka"
@@ -27,6 +28,8 @@ type ProductCache interface {
 	Set(ctx context.Context, product *domain.Product) error
 	Delete(ctx context.Context, spuID string) error
 	GetOrFetch(ctx context.Context, spuID string, fetchFn func() (*domain.Product, error)) (*domain.Product, error)
+	GetList(ctx context.Context, cacheKey string) (*domain.ProductList, error)
+	SetList(ctx context.Context, cacheKey string, list *domain.ProductList) error
 }
 
 type ProductUseCase struct {
@@ -109,9 +112,24 @@ func (uc *ProductUseCase) List(ctx context.Context, filter domain.ProductFilter)
 		filter.Size = 20
 	}
 
+	cacheKey := fmt.Sprintf("products:list:page=%d:size=%d:cat=%s:sort=%s:order=%s:search=%s",
+		filter.Page, filter.Size, filter.CategoryID, filter.SortBy, filter.SortOrder, filter.Search)
+
+	list, err := uc.cache.GetList(ctx, cacheKey)
+	if err != nil {
+		observability.LogWithTrace(ctx).Error("cache list get failed", zap.Error(err))
+	}
+	if list != nil {
+		return list, nil
+	}
+
 	products, err := uc.repo.List(ctx, filter)
 	if err != nil {
 		return nil, errors.NewInternalError(err)
+	}
+
+	if err := uc.cache.SetList(ctx, cacheKey, products); err != nil {
+		observability.LogWithTrace(ctx).Error("cache list set failed", zap.Error(err))
 	}
 
 	return products, nil

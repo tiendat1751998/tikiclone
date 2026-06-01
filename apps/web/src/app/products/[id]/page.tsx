@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Header } from "@/components/layout/header/Header";
 import { Footer } from "@/components/layout/footer/Footer";
 import ProductDetailClient from "./ProductDetailClient";
-import RelatedProducts from "@/components/storefront/product/RelatedProducts";
 
 const GATEWAY_URL = process.env.GATEWAY_URL || "http://gateway:8080";
 const API_BASE = `${GATEWAY_URL}/api/v1`;
@@ -19,8 +18,8 @@ interface ProductDetail {
 }
 
 async function getProduct(id: string): Promise<ProductDetail | null> {
-  try {
-    const res = await fetch(`${API_BASE}/products/${id}`, { cache: "no-store" });
+   try {
+     const res = await fetch(`${API_BASE}/products/${id}`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const data = await res.json();
     const p = data?.data || data;
@@ -68,20 +67,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     <>
       <Header />
       <main className="py-2 sm:py-3" style={{ backgroundColor: "#F5F5FA" }}>
-        <div className="max-w-tiki mx-auto px-3">
-          <div className="flex items-center h-8 text-xs text-tiki-text-secondary mb-2">
-            <Link href="/" className="hover:text-tiki-blue">Trang chủ</Link>
-            <svg className="mx-1.5" width="5" height="8" viewBox="0 0 5 8" fill="none"><path d="M1 1L4 4L1 7" stroke="#808089" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            {p.category_name && (
-              <>
-                <Link href={`/categories/${p.category_id}`} className="hover:text-tiki-blue">{p.category_name}</Link>
-                <svg className="mx-1.5" width="5" height="8" viewBox="0 0 5 8" fill="none"><path d="M1 1L4 4L1 7" stroke="#808089" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-              </>
-            )}
-            <span className="text-tiki-text truncate">{p.name}</span>
-          </div>
-          <ProductDetailClient product={p} allImages={allImages} />
-        </div>
+        <ProductDetailClient product={p} allImages={allImages} />
       </main>
       <Footer />
     </>

@@ -74,8 +74,8 @@ func (r *Router) Setup(engine *gin.Engine) {
 	)
 
 	// Response cache for read-heavy endpoints (products, categories, search)
-	cacheMW := cache.NewCacheMiddleware(r.rdb, 30*time.Second)
-	engine.Use(cacheMW.CacheByPath(15*time.Second,
+	cacheMW := cache.NewCacheMiddleware(r.rdb, 60*time.Second)
+	engine.Use(cacheMW.CacheByPath(60*time.Second,
 		"/api/v1/products",
 		"/api/v1/categories",
 	))

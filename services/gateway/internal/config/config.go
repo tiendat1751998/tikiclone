@@ -79,19 +79,22 @@ type CircuitBreakerConfig struct {
 }
 
 type UpstreamConfig struct {
-	AuthService          string
-	CatalogService       string
-	CartService          string
-	OrderService         string
-	InventoryService     string
-	PaymentService       string
-	SearchService        string
+	AuthService           string
+	CatalogService        string
+	CatalogServiceReplica2 string
+	CatalogServiceReplica3 string
+	CartService           string
+	OrderService          string
+	InventoryService      string
+	PaymentService        string
+	SearchService         string
 	RecommendationService string
-	DefaultTimeout       time.Duration
-	MaxIdleConns         int
-	IdleConnTimeout      time.Duration
-	MaxRetries           int
-	CircuitBreaker       CircuitBreakerConfig
+	DeliveryService       string
+	DefaultTimeout        time.Duration
+	MaxIdleConns          int
+	IdleConnTimeout       time.Duration
+	MaxRetries            int
+	CircuitBreaker        CircuitBreakerConfig
 }
 
 type CORSConfig struct {
@@ -163,18 +166,21 @@ func Load() *Config {
 		},
 
 		Upstreams: UpstreamConfig{
-			AuthService:          getEnv("UPSTREAM_AUTH_SERVICE", "identity-auth:8080"),
-			CatalogService:       getEnv("UPSTREAM_CATALOG_SERVICE", "catalog-product:8080"),
-			CartService:          getEnv("UPSTREAM_CART_SERVICE", "shopping-cart:8080"),
-			OrderService:         getEnv("UPSTREAM_ORDER_SERVICE", "order-processing:8080"),
-			InventoryService:     getEnv("UPSTREAM_INVENTORY_SERVICE", "inventory-flashsale:8080"),
-			PaymentService:       getEnv("UPSTREAM_PAYMENT_SERVICE", "payment-ledger:8080"),
-			SearchService:        getEnv("UPSTREAM_SEARCH_SERVICE", "search-indexing:8080"),
+			AuthService:           getEnv("UPSTREAM_AUTH_SERVICE", "identity-auth:8080"),
+			CatalogService:        getEnv("UPSTREAM_CATALOG_SERVICE", "catalog-product:8080"),
+			CatalogServiceReplica2: getEnv("UPSTREAM_CATALOG_SERVICE_REPLICA2", "catalog-product-2:8088"),
+			CatalogServiceReplica3: getEnv("UPSTREAM_CATALOG_SERVICE_REPLICA3", "catalog-product-3:8088"),
+			CartService:           getEnv("UPSTREAM_CART_SERVICE", "shopping-cart:8080"),
+			OrderService:          getEnv("UPSTREAM_ORDER_SERVICE", "order-processing:8080"),
+			InventoryService:      getEnv("UPSTREAM_INVENTORY_SERVICE", "inventory-flashsale:8080"),
+			PaymentService:        getEnv("UPSTREAM_PAYMENT_SERVICE", "payment-ledger:8080"),
+			SearchService:         getEnv("UPSTREAM_SEARCH_SERVICE", "search-indexing:8080"),
 			RecommendationService: getEnv("UPSTREAM_RECOMMENDATION_SERVICE", "recommendation-ml:8080"),
-			DefaultTimeout:       getEnvDuration("UPSTREAM_DEFAULT_TIMEOUT", 30*time.Second),
-			MaxIdleConns:         getEnvInt("UPSTREAM_MAX_IDLE_CONNS", 1000),
-			IdleConnTimeout:      getEnvDuration("UPSTREAM_IDLE_CONN_TIMEOUT", 120*time.Second),
-			MaxRetries:           getEnvInt("UPSTREAM_MAX_RETRIES", 1),
+			DeliveryService:       getEnv("UPSTREAM_DELIVERY_SERVICE", "shipment:8092"),
+			DefaultTimeout:        getEnvDuration("UPSTREAM_DEFAULT_TIMEOUT", 5*time.Second),
+			MaxIdleConns:          getEnvInt("UPSTREAM_MAX_IDLE_CONNS", 5000),
+			IdleConnTimeout:       getEnvDuration("UPSTREAM_IDLE_CONN_TIMEOUT", 300*time.Second),
+			MaxRetries:            getEnvInt("UPSTREAM_MAX_RETRIES", 0),
 			CircuitBreaker: CircuitBreakerConfig{
 				Enabled:      getEnvBool("CIRCUIT_BREAKER_ENABLED", false),
 				MaxRequests:  getEnvInt("CIRCUIT_BREAKER_MAX_REQUESTS", 5),

@@ -5,8 +5,10 @@ import (
 
 	"github.com/tikiclone/tiki/packages/go-shared/pkg/errors"
 	"github.com/tikiclone/tiki/packages/go-shared/pkg/kafka"
+	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 	"github.com/tikiclone/tiki/services/catalog-product/internal/domain"
 	"go.opentelemetry.io/otel"
+	"go.uber.org/zap"
 )
 
 type CategoryRepository interface {
@@ -17,14 +19,22 @@ type CategoryRepository interface {
 	Update(ctx context.Context, category *domain.Category) error
 }
 
+type CategoryCache interface {
+	GetAll(ctx context.Context) ([]domain.Category, error)
+	SetAll(ctx context.Context, categories []domain.Category) error
+	DeleteAll(ctx context.Context) error
+}
+
 type CategoryUseCase struct {
 	repo     CategoryRepository
+	cache    CategoryCache
 	producer *kafka.Producer
 }
 
-func NewCategoryUseCase(repo CategoryRepository, producer *kafka.Producer) *CategoryUseCase {
+func NewCategoryUseCase(repo CategoryRepository, cache CategoryCache, producer *kafka.Producer) *CategoryUseCase {
 	return &CategoryUseCase{
 		repo:     repo,
+		cache:    cache,
 		producer: producer,
 	}
 }
@@ -90,9 +100,27 @@ func (uc *CategoryUseCase) List(ctx context.Context, parentID string, level int3
 	ctx, span := otel.Tracer("catalog-product").Start(ctx, "usecase.category.list")
 	defer span.End()
 
+	// Only cache root-level lists (parent="" and level<=0)
+	if parentID == "" && level <= 0 && uc.cache != nil {
+		categories, err := uc.cache.GetAll(ctx)
+		if err != nil {
+			observability.LogWithTrace(ctx).Error("cache get failed", zap.Error(err))
+		}
+		if categories != nil {
+			return categories, nil
+		}
+	}
+
 	categories, err := uc.repo.List(ctx, parentID, level)
 	if err != nil {
 		return nil, errors.NewInternalError(err)
+	}
+
+	// Cache root-level lists
+	if parentID == "" && level <= 0 && uc.cache != nil {
+		if err := uc.cache.SetAll(ctx, categories); err != nil {
+			observability.LogWithTrace(ctx).Error("cache set failed", zap.Error(err))
+		}
 	}
 
 	return categories, nil

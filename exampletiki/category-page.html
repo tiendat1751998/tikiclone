@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nhà Cửa - Đời Sống | Tiki.vn</title>
+  <style>
+    :root {
+      --tiki-blue: #1A94FF;
+      --tiki-red: #FF424E;
+      --tiki-green: #00AB56;
+      --tiki-text: #27272A;
+      --tiki-text-secondary: #808089;
+      --tiki-border: #EBEBF0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      background: #EFEFEF;
+      color: var(--tiki-text);
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; height: auto; }
+
+    .max-w-tiki { max-width: 1272px; margin: 0 auto; }
+    .flex { display: flex; }
+    .flex-1 { flex: 1; }
+    .gap-4 { gap: 1rem; }
+    .text-xs { font-size: 0.75rem; }
+    .text-sm { font-size: 0.875rem; }
+    .text-lg { font-size: 1.125rem; }
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .text-tiki-blue { color: var(--tiki-blue); }
+    .bg-white { background: white; }
+    .rounded-lg { border-radius: 0.5rem; }
+    .border { border: 1px solid; }
+    .border-tiki-border { border-color: var(--tiki-border); }
+    .text-tiki-text { color: var(--tiki-text); }
+    .text-tiki-text-secondary { color: var(--tiki-text-secondary); }
+
+    header { background: #27272A; color: white; padding: 12px 24px; font-size: 14px; }
+    .breadcrumb { display: flex; align-items: center; gap: 8px; padding: 16px 0; font-size: 12px; color: var(--tiki-text-secondary); }
+    .breadcrumb a:hover { color: var(--tiki-blue); }
+    .category-banner { position: relative; border-radius: 8px; overflow: hidden; margin-bottom: 16px; background: #ddd; min-height: 200px; }
+    .category-banner img { width: 100%; height: 100%; object-fit: cover; }
+    .category-banner__fallback { width: 100%; height: 100%; min-height: 200px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1A94FF, #5B8DEF); color: white; font-size: 24px; }
+
+    .filter-sidebar { background: white; border: 1px solid var(--tiki-border); border-radius: 8px; padding: 16px; position: sticky; top: 16px; height: fit-content; }
+    .filter-sidebar__title { font-size: 13px; font-weight: 600; color: var(--tiki-text); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--tiki-border); }
+    .filter-sidebar__group { margin-bottom: 16px; }
+    .filter-sidebar__option { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12px; cursor: pointer; }
+    .filter-sidebar__option:hover { color: var(--tiki-blue); }
+    .filter-sidebar__count { font-size: 11px; color: var(--tiki-text-secondary); margin-left: auto; }
+
+    .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    @media (min-width: 1280px) { .product-grid { grid-template-columns: repeat(5, 1fr); } }
+    .product-card { display: block; background: white; border: 1px solid var(--tiki-border); border-radius: 8px; overflow: hidden; transition: box-shadow 0.2s; }
+    .product-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.14); }
+    .product-card__image { position: relative; aspect-ratio: 1; background: #fafafa; }
+    .product-card__discount { position: absolute; top: 6px; left: 6px; background: #FFDBDE; color: var(--tiki-red); font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+    .product-card__badge { position: absolute; top: 0; right: 0; background: var(--tiki-green); color: white; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 0 0 0 4px; }
+    .product-card__body { padding: 6px 8px; }
+    .product-card__name { font-size: 11px; line-height: 15px; display: -webkit-box; -webkit-line-clamp: 2; overflow: hidden; min-height: 30px; }
+    .product-card__price { font-size: 14px; font-weight: 600; color: var(--tiki-red); }
+    .product-card__rating { font-size: 10px; color: var(--tiki-text-secondary); }
+
+    .sort-bar { background: white; border: 1px solid var(--tiki-border); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+    .sort-options { display: flex; gap: 16px; font-size: 12px; }
+    .sort-options a { color: var(--tiki-text-secondary); }
+    .sort-options a.active { color: var(--tiki-blue); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <h1>Nhà Cửa - Đời Sống</h1>
+  </header>
+
+  <main class="max-w-tiki" style="padding: 16px 24px;">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="#">Trang chủ</a> &gt; <a href="#">Nhà Cửa - Đời Sống</a>
+    </div>
+
+    <!-- Category Banner -->
+    <div class="category-banner">
+      <div class="category-banner__fallback">
+        <span>Nhà Cửa - Đời Sống</span>
+      </div>
+    </div>
+
+    <!-- Filter + Products -->
+    <div class="flex gap-4">
+      <!-- Filter Sidebar -->
+      <aside class="w-64" style="width: 240px;">
+        <div class="filter-sidebar">
+          <h2 class="filter-sidebar__title">Bộ lọc</h2>
+          
+          <div class="filter-sidebar__group">
+            <h3 class="text-xs font-semibold mb-2">Giá</h3>
+            <div class="filter-sidebar__option">
+              <input type="checkbox" id="price1"> <label for="price1">Dưới 100.000₫</label> <span class="filter-sidebar__count">(56)</span>
+            </div>
+            <div class="filter-sidebar__option">
+              <input type="checkbox" id="price2"> <label for="price2">100.000₫ - 300.000₫</label> <span class="filter-sidebar__count">(123)</span>
+            </div>
+            <div class="filter-sidebar__option">
+              <input type="checkbox" id="price3"> <label for="price3">300.000₫ - 500.000₫</label> <span class="filter-sidebar__count">(89)</span>
+            </div>
+            <div class="filter-sidebar__option">
+              <input type="checkbox" id="price4"> <label for="price4">Trên 500.000₫</label> <span class="filter-sidebar__count">(45)</span>
+            </div>
+          </div>
+
+          <div class="filter-sidebar__group">
+            <h3 class="text-xs font-semibold mb-2">Thương hiệu</h3>
+            <div class="filter-sidebar__option">
+              <input type="checkbox" id="brand1"> <label for="brand1">Lock&Lock</label> <span class="filter-sidebar__count">(34)</span>
+            </div>
+            <div class="filter-sidebar__option">
+              <input type="checkbox" id="brand2"> <label for="brand2">Sunhouse</label> <span class="filter-sidebar__count">(28)</span>
+            </div>
+            <div class="filter-sidebar__option">
+              <input type="checkbox" id="brand3"> <label for="brand3">Kangaroo</label> <span class="filter-sidebar__count">(19)</span>
+            </div>
+          </div>
+
+          <div class="filter-sidebar__group">
+            <h3 class="text-xs font-semibold mb-2">Đánh giá</h3>
+            <div class="filter-sidebar__option">★★★★★ <span class="filter-sidebar__count">(156)</span></div>
+            <div class="filter-sidebar__option">★★★★ <span class="filter-sidebar__count">(89)</span></div>
+            <div class="filter-sidebar__option">★★★ <span class="filter-sidebar__count">(45)</span></div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Product Grid -->
+      <div class="flex-1">
+        <div class="sort-bar">
+          <div class="sort-options">
+            <span>Sắp xếp:</span>
+            <a href="#" class="active">Phổ biến</a>
+            <a href="#">Mới nhất</a>
+            <a href="#">Bán chạy</a>
+            <a href="#">Giá thấp → cao</a>
+            <a href="#">Giá cao → thấp</a>
+          </div>
+        </div>
+
+        <div class="product-grid">
+          <a href="#" class="product-card">
+            <div class="product-card__image">
+              <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">🛏️</div>
+              <div class="product-card__discount">-25%</div>
+            </div>
+            <div class="product-card__body">
+              <h3 class="product-card__name">Chăn ga điện thoại thoáng mỏng</h3>
+              <div class="product-card__price">299.000 ₫</div>
+              <div class="product-card__rating">★★★★★ (128)</div>
+            </div>
+          </a>
+          <a href="#" class="product-card">
+            <div class="product-card__image">
+              <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">🍶</div>
+              <div class="product-card__badge">FREESHIP</div>
+            </div>
+            <div class="product-card__body">
+              <h3 class="product-card__name">Ấm siêu tốc inox 1.8L</h3>
+              <div class="product-card__price">499.000 ₫</div>
+              <div class="product-card__rating">★★★★ (96)</div>
+            </div>
+          </a>
+          <a href="#" class="product-card">
+            <div class="product-card__image">
+              <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">🍳</div>
+            </div>
+            <div class="product-card__body">
+              <h3 class="product-card__name">Chảo chiên không dính</h3>
+              <div class="product-card__price">199.000 ₫</div>
+              <div class="product-card__rating">★★★★ (67)</div>
+            </div>
+          </a>
+          <a href="#" class="product-card">
+            <div class="product-card__image">
+              <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">🛋️</div>
+              <div class="product-card__discount">-15%</div>
+            </div>
+            <div class="product-card__body">
+              <h3 class="product-card__name">Gối memory foam cao su</h3>
+              <div class="product-card__price">399.000 ₫</div>
+              <div class="product-card__rating">★★★★★ (212)</div>
+            </div>
+          </a>
+          <a href="#" class="product-card">
+            <div class="product-card__image">
+              <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">🚰</div>
+            </div>
+            <div class="product-card__body">
+              <h3 class="product-card__name">Bình nóng lạnh mini</h3>
+              <div class="product-card__price">899.000 ₫</div>
+              <div class="product-card__rating">★★★★ (89)</div>
+            </div>
+          </a>
+          <a href="#" class="product-card">
+            <div class="product-card__image">
+              <div style="width:100%;height:100%;background:#ddd;display:flex;align-items:center;justify-content:center;">🪑</div>
+              <div class="product-card__discount">-30%</div>
+            </div>
+            <div class="product-card__body">
+              <h3 class="product-card__name">Ghế xếp gấp không gian</h3>
+              <div class="product-card__price">599.000 ₫</div>
+              <div class="product-card__rating">★★★★ (45)</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

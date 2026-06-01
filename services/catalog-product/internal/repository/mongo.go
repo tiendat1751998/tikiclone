@@ -18,21 +18,21 @@ func NewMongoClient(uri, database string) (*mongo.Client, error) {
 	client, err := mongo.Connect(ctx,
 		options.Client().
 			ApplyURI(uri).
-			SetMinPoolSize(10).
-			SetMaxPoolSize(100).
+			SetMinPoolSize(100).
+			SetMaxPoolSize(1000).
 			SetMaxConnIdleTime(30*time.Second).
-			SetConnectTimeout(5*time.Second).
+			SetConnectTimeout(2*time.Second).
+			SetSocketTimeout(2*time.Second).
 			SetMonitor(otelmongo.NewMonitor()),
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := client.Ping(ctx, readpref.Primary()); err != nil {
+	if err := client.Ping(ctx, readpref.PrimaryPreferred()); err != nil {
 		return nil, err
 	}
 
-	// Ensure indexes exist (idempotent — MongoDB ignores duplicate index creates)
 	ensureIndexes(ctx, client.Database(database))
 
 	return client, nil
@@ -46,9 +46,11 @@ func ensureIndexes(ctx context.Context, db *mongo.Database) {
 	newest := mongo.IndexModel{Keys: bson.D{{Key: "status", Value: 1}, {Key: "created_at", Value: -1}}, Options: options.Index().SetName("idx_status_newest")}
 	catNewest := mongo.IndexModel{Keys: bson.D{{Key: "status", Value: 1}, {Key: "category_id", Value: 1}, {Key: "created_at", Value: -1}}, Options: options.Index().SetName("idx_status_cat_newest")}
 	catPrice := mongo.IndexModel{Keys: bson.D{{Key: "status", Value: 1}, {Key: "category_id", Value: 1}, {Key: "skus.0.price", Value: 1}}, Options: options.Index().SetName("idx_status_cat_price")}
+	catPriceDesc := mongo.IndexModel{Keys: bson.D{{Key: "status", Value: 1}, {Key: "category_id", Value: 1}, {Key: "skus.0.price", Value: -1}}, Options: options.Index().SetName("idx_status_cat_price_desc")}
 	textSearch := mongo.IndexModel{Keys: bson.D{{Key: "title", Value: "text"}, {Key: "description", Value: "text"}}, Options: options.Index().SetName("idx_text_search").SetWeights(bson.M{"title": 10, "description": 3})}
+	spuID := mongo.IndexModel{Keys: bson.D{{Key: "spu_id", Value: 1}}, Options: options.Index().SetName("idx_spu_id").SetUnique(true)}
 
-	db.Collection("products").Indexes().CreateMany(ctx, []mongo.IndexModel{priceAsc, priceDesc, popularity, newest, catNewest, catPrice, textSearch})
+	db.Collection("products").Indexes().CreateMany(ctx, []mongo.IndexModel{priceAsc, priceDesc, popularity, newest, catNewest, catPrice, catPriceDesc, textSearch, spuID})
 
 	// Category indexes
 	catSlug := mongo.IndexModel{Keys: bson.D{{Key: "slug", Value: 1}}, Options: options.Index().SetName("idx_cat_slug").SetUnique(true)}

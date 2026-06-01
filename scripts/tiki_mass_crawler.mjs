@@ -114,7 +114,7 @@ async function downloadImage(imageUrl, destPath, retries = 2) {
 }
 
 // Crawl a single category using response interception
-async function crawlCategory(browser, cat, maxPages = 25) {
+async function crawlCategory(browser, cat, maxPages = 200) {
   const ctx = await browser.newContext({
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36',
     viewport: { width: 1280, height: 900 },
@@ -223,13 +223,28 @@ async function main() {
 
   const browser = await chromium.launch({
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
   });
 
   const allProducts = [];
   const seenProductIds = new Set();
   const allCatRecords = [];
   const catDbIdMap = {};
+
+  // Retry wrapper for crawling
+  async function crawlCategorySafe(cat, browser, attempt = 1) {
+    try {
+      return await crawlCategory(browser, cat, 100);
+    } catch (e) {
+      if (attempt < 3) {
+        console.log(`  Retry ${attempt} for ${cat.name}...`);
+        await new Promise(r => setTimeout(r, 5000));
+        return crawlCategorySafe(cat, browser, attempt + 1);
+      }
+      console.log(`  Failed ${cat.name}: ${e.message.substring(0, 100)}`);
+      return [];
+    }
+  }
 
   try {
     // Build root category records
@@ -257,7 +272,7 @@ async function main() {
       const cat = CATEGORIES[i];
       console.log(`[${i + 1}/${CATEGORIES.length}] ${cat.name} (ID:${cat.id})`);
 
-      const products = await crawlCategory(browser, cat, 25);
+      const products = await crawlCategorySafe(cat, browser);
 
       let newCount = 0;
       for (const p of products) {
@@ -283,40 +298,22 @@ async function main() {
         fs.writeFileSync(CATEGORIES_FILE, JSON.stringify(allCatRecords));
       }
 
-      if (allProducts.length >= 22000) {
-        console.log('\nReached 22,000 products target!');
-        break;
-      }
+if (allProducts.length >= 52000) {
+         console.log('\nReached 52,000 products target!');
+         break;
+       }
 
       await sleep(1500 + Math.random() * 2000);
     }
 
     console.log(`\n=== Crawl Complete: ${allProducts.length} products ===`);
 
-    // Step 2: Download images (primary image per product)
-    console.log('\n=== Downloading Images ===');
+// Step 2: Prepare images (use CDN URLs directly)
+    console.log('\n=== Preparing Images (CDN) ===');
     for (let i = 0; i < allProducts.length; i++) {
       const p = allProducts[i];
-      if (!p.images || p.images.length === 0) continue;
-
-      const dest = localImgDest(p.images[0], p.tiki_product_id);
-      const ok = await downloadImage(p.images[0], dest);
-      if (ok) {
-        p.local_image_url = localImgUrl(p.images[0], p.tiki_product_id);
-        p.image_url = p.local_image_url;
-        stats.imagesDownloaded++;
-      } else {
-        p.local_image_url = '';
-        p.image_url = p.images[0];
-        stats.imagesFailed++;
-      }
-
-      if ((i + 1) % 1000 === 0) {
-        console.log(`  ${i + 1}/${allProducts.length} (${stats.imagesDownloaded} ok, ${stats.imagesFailed} fail)`);
-      }
-      if (i % 100 === 0) sleep(100);
+      p.local_image_url = p.images?.[0] || '';
     }
-    console.log(`Images: ${stats.imagesDownloaded} downloaded, ${stats.imagesFailed} failed`);
 
     // Step 3: Save to MySQL
     console.log('\n=== Saving to MySQL ===');

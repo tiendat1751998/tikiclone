@@ -121,29 +121,29 @@ func toProductResponse(p *domain.Product) ProductResponse {
 }
 
 func toCategoryResponse(c domain.Category) CategoryResponse {
-	children := make([]CategoryResponse, 0, len(c.Children))
-	for _, child := range c.Children {
-		children = append(children, toCategoryResponse(child))
-	}
-	slug := c.Slug
-	if slug == "" {
-		slug = slugify(c.Name)
-	}
-	return CategoryResponse{
-		ID:           c.CategoryID,
-		Name:         c.Name,
-		Slug:         slug,
-		ParentID:     c.ParentID,
-		Description:  "",
-		ImageURL:     "",
-		SortOrder:    c.SortOrder,
-		IsActive:     true,
-		Depth:        c.Level,
-		Path:         "",
-		Children:     children,
-		ProductCount: 0,
-	}
-}
+ 	children := make([]CategoryResponse, 0, len(c.Children))
+ 	for _, child := range c.Children {
+ 		children = append(children, toCategoryResponse(child))
+ 	}
+ 	slug := c.Slug
+ 	if slug == "" {
+ 		slug = slugify(c.Name)
+ 	}
+ 	return CategoryResponse{
+ 		ID:           c.CategoryID,
+ 		Name:         c.Name,
+ 		Slug:         slug,
+ 		ParentID:     c.ParentID,
+ 		Description:  "",
+ 		ImageURL:     c.ImageURL,
+ 		SortOrder:    c.SortOrder,
+ 		IsActive:     true,
+ 		Depth:        c.Level,
+ 		Path:         c.URLPath,
+ 		Children:     children,
+ 		ProductCount: c.ProductCount,
+ 	}
+ }
 
 func (h *Handler) GetProduct(c *gin.Context) {
 	ctx, span := otel.Tracer("catalog-product").Start(c.Request.Context(), "handler.product.get")
@@ -173,11 +173,18 @@ func (h *Handler) ListProducts(c *gin.Context) {
 	minPrice, _ := strconv.ParseFloat(c.Query("min_price"), 64)
 	maxPrice, _ := strconv.ParseFloat(c.Query("max_price"), 64)
 
-	categoryID := c.Query("category_id")
-	categorySlug := c.Query("category_slug")
-	if categoryID == "" && categorySlug != "" {
-		categoryID = categorySlug
-	}
+categoryID := c.Query("category_id")
+ 	categorySlug := c.Query("category_slug")
+ 	if categoryID == "" && categorySlug != "" {
+ 		cat, err := h.categoryUseCase.GetBySlug(ctx, categorySlug)
+ 		if err != nil {
+ 			_ = c.Error(err)
+ 			return
+ 		}
+ 		if cat != nil {
+ 			categoryID = cat.CategoryID
+ 		}
+ 	}
 
 	filter := domain.ProductFilter{
 		Page:       page,

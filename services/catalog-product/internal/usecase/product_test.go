@@ -84,6 +84,19 @@ func (m *mockCache) GetOrFetch(ctx context.Context, spuID string, fetchFn func()
 	return args.Get(0).(*domain.Product), args.Error(1)
 }
 
+func (m *mockCache) GetList(ctx context.Context, cacheKey string) (*domain.ProductList, error) {
+	args := m.Called(ctx, cacheKey)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*domain.ProductList), args.Error(1)
+}
+
+func (m *mockCache) SetList(ctx context.Context, cacheKey string, list *domain.ProductList) error {
+	args := m.Called(ctx, cacheKey, list)
+	return args.Error(0)
+}
+
 func TestProductUseCase_Create(t *testing.T) {
 	repo := new(mockProductRepo)
 	cache := new(mockCache)
