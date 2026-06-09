@@ -1,0 +1,183 @@
+{
+  "project": "tikiclone",
+  "generated": "2026-06-04",
+  "summary": {
+    "total_services": 27,
+    "services_with_tests": 7,
+    "services_without_tests": 20,
+    "overall_coverage_estimate": "25-30%"
+  },
+  "existing_test_coverage": {
+    "cart": {
+      "unit": ["domain_test.go - Cart, CartItem, CartSnapshot, CartMergeHistory creation and basic state"],
+      "integration": [],
+      "e2e": [],
+      "gaps": [
+        "No cart add/update/remove item tests",
+        "No cart merge flow tests",
+        "No cart checkout integration tests",
+        "No cart expiration cleanup tests",
+        "No cart concurrent access tests"
+      ]
+    },
+    "order": {
+      "unit": ["order_test.go - NewOrder, NewOrderItem, SplitOrderBySellers, OrderSnapshot, OrderCancellation, OrderReconciliation, IdempotencyRecord"],
+      "integration": ["order_test.go - CreateOrder, Idempotency, CancelOrder, OrderLifecycle transitions"],
+      "e2e": [],
+      "gaps": [
+        "NO state machine transition unit tests (StateMachine.CanTransition, GetValidTransitions)",
+        "NO invalid transition tests (e.g., pending->shipped, cancelled->paid)",
+        "NO order number generator tests",
+        "NO seller split creation tests",
+        "NO lifecycle event creation tests",
+        "NO concurrent modification tests",
+        "NO optimistic locking tests"
+      ]
+    },
+    "checkout": {
+      "unit": ["domain_test.go - NewCheckout, IsExpired, AdvanceStep, MarkCompleted, MarkFailed, CanRetry, MarkRollingBack/RolledBack, CheckoutStepLog, PricingSnapshot, ReconciliationJob"],
+      "integration": [],
+      "e2e": [],
+      "gaps": [
+        "NO checkout state machine tests (valid/invalid step transitions)",
+        "NO checkout orchestration flow tests (validate->freeze->reserve->payment->complete)",
+        "NO checkout rollback flow tests",
+        "NO checkout idempotency tests",
+        "NO checkout integration with cart/order/inventory/payment"
+      ]
+    },
+    "inventory": {
+      "unit": ["inventory_test.go - NewStock, Reserve, ReserveInsufficient, Release, Deduct, Replenish, StatusTransitions, NewReservation, Commit, Release"],
+      "integration": [],
+      "e2e": [],
+      "gaps": [
+        "NO reservation expiration tests",
+        "NO reservation commit-after-release tests",
+        "NO concurrent stock reservation tests",
+        "NO oversell prevention tests",
+        "NO warehouse-level stock tests"
+      ]
+    },
+    "product": {
+      "unit": ["domain_test.go - Product/Category/SKU domain logic", "application_test.go - CRUD with mocks"],
+      "integration": [],
+      "e2e": [],
+      "gaps": [
+        "NO product search tests",
+        "NO product filter/pagination integration tests",
+        "NO product moderation workflow tests",
+        "NO product media management tests"
+      ]
+    },
+    "payment": {
+      "unit": ["payment_test.go - NewPayment, CanTransitionTo, RemainingAmount, WebhookSignature"],
+      "integration": [],
+      "e2e": [],
+      "gaps": [
+        "NO payment state machine transition tests (TransitionTo method)",
+        "NO payment capture/refund flow tests",
+        "NO payment webhook processing tests",
+        "NO payment reconciliation tests"
+      ]
+    },
+    "gateway": {
+      "unit": [],
+      "integration": ["gateway_test.go - Health, Readiness, Metrics, NotFound, CORS, SecurityHeaders, CorrelationID, RequestID, Upstreams, RateLimit headers + benchmarks"],
+      "e2e": [],
+      "gaps": [
+        "NO auth middleware integration tests",
+        "NO rate limiting enforcement tests",
+        "NO proxy routing tests",
+        "NO gRPC proxy tests"
+      ]
+    },
+    "auth": {
+      "unit": [],
+      "integration": ["auth_e2e_test.go - Register, Login, Refresh, Logout, Token rotation, Reuse detection, Validation"],
+      "e2e": [],
+      "gaps": [
+        "NO unit tests for password hashing/validation",
+        "NO unit tests for JWT generation/validation",
+        "NO session management tests",
+        "NO RBAC permission tests"
+      ]
+    }
+  },
+  "services_without_any_tests": [
+    "admin-panel", "aiml", "api-gateway", "auth.bak", "catalog-product",
+    "developer", "fraud-risk", "global-infra", "identity-auth",
+    "notification-campaign", "oms-fulfillment", "payment-ledger",
+    "product-catalog", "promotion", "rec-vector", "search-indexing",
+    "service-mesh", "shipment", "sre"
+  ],
+  "critical_test_gaps": [
+    {
+      "priority": "P0",
+      "name": "Order State Machine Transitions",
+      "service": "order",
+      "description": "The StateMachine struct has CanTransition, GetValidTransitions, and Transition methods that are completely untested. These enforce the core order lifecycle. Invalid transitions (e.g., pending->shipped, cancelled->paid) must be rejected.",
+      "risk": "Invalid state transitions could allow orders to skip payment, skip shipping, etc."
+    },
+    {
+      "priority": "P0",
+      "name": "Cart-to-Checkout-to-Order Integration Flow",
+      "service": "checkout",
+      "description": "No integration test exists for the full flow: cart -> checkout -> reserve inventory -> process payment -> create order -> confirm. This is the most critical business flow.",
+      "risk": "End-to-end checkout failures would directly impact revenue."
+    },
+    {
+      "priority": "P0",
+      "name": "Inventory Reserve -> Release -> Confirm Flow",
+      "service": "inventory",
+      "description": "No integration test for the full inventory lifecycle: reserve stock on checkout, release on failure, confirm on payment.",
+      "risk": "Overselling or stock leaks."
+    },
+    {
+      "priority": "P1",
+      "name": "Payment State Machine Transitions",
+      "service": "payment",
+      "description": "Payment.TransitionTo() is untested. Must verify all valid and invalid transitions.",
+      "risk": "Double charges, invalid refunds."
+    },
+    {
+      "priority": "P1",
+      "name": "Checkout State Machine",
+      "service": "checkout",
+      "description": "Checkout has a complex state machine (pending->validating->pricing_frozen->reserving->reserved->processing->completed/failed->rolling_back->rolled_back) with no transition validation or tests.",
+      "risk": "Checkout stuck in invalid states, inventory never released."
+    },
+    {
+      "priority": "P1",
+      "name": "Cart Merge Flow",
+      "service": "cart",
+      "description": "Cart merge (guest-to-user) has domain types but no tests for the merge logic.",
+      "risk": "Lost cart items during login."
+    },
+    {
+      "priority": "P2",
+      "name": "Order Number Generator Uniqueness",
+      "service": "order",
+      "description": "OrderNumberGenerator.Generate() uses timestamp+sequence+random. No tests verify uniqueness under concurrency.",
+      "risk": "Duplicate order numbers."
+    },
+    {
+      "priority": "P2",
+      "name": "Snapshot Integrity",
+      "service": "order",
+      "description": "OrderSnapshot has checksum verification but no tests for tamper detection or corruption scenarios.",
+      "risk": "Undetected data corruption in order snapshots."
+    }
+  ],
+  "new_test_files_created": [
+    {
+      "path": "services/order/tests/unit/state_machine_test.go",
+      "type": "unit",
+      "coverage": "StateMachine.CanTransition, GetValidTransitions, Transition - all valid and invalid transitions"
+    },
+    {
+      "path": "services/checkout/tests/integration/checkout_flow_test.go",
+      "type": "integration",
+      "coverage": "Full cart->checkout->order flow with mock inventory reservation and payment processing"
+    }
+  ]
+}

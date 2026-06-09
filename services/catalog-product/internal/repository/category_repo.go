@@ -143,9 +143,10 @@ func (r *CategoryRepository) buildTree(categories []domain.Category) []domain.Ca
 	}
 
 	var roots []domain.Category
-	for _, c := range categories {
+	for i := range categories {
+		c := &categories[i]
 		if c.ParentID == "" {
-			roots = append(roots, c)
+			roots = append(roots, *c)
 		}
 	}
 

@@ -22,8 +22,9 @@ func NewProducer(cfg config.KafkaConfig) *Producer {
 		writer: &kafka.Writer{
 			Addr:          kafka.TCP(cfg.Brokers...),
 			Balancer:      &kafka.LeastBytes{},
-			BatchTimeout:  10 * time.Millisecond,
-			WriteTimeout:  10 * time.Second,
+			BatchTimeout:  1 * time.Millisecond,
+			WriteTimeout:  2 * time.Second,
+			Async:         true,
 		},
 		cfg: cfg,
 	}

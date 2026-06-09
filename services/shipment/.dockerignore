@@ -1,0 +1,64 @@
+# Version control
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# Dependencies - will be installed in container
+node_modules
+vendor
+
+# Build artifacts
+bin
+dist
+build
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Next.js
+.next
+out
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Docs
+*.md
+LICENSE
+docs
+
+# Tests
+*_test.go
+tests
+__pycache__
+*.pyc
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+
+# Configs that shouldn't be in image
+.env
+.env.*
+*.local
+
+# Misc
+*.log
+tmp
+temp
+swarm-migration-backup
+chaos-tests

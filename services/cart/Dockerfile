@@ -6,9 +6,8 @@ WORKDIR /app/services/cart
 
 COPY packages/go-shared /app/packages/go-shared
 COPY services/cart/go.mod services/cart/go.sum ./
-RUN go mod download
-
 COPY services/cart/ .
+RUN go mod tidy
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
     go build -ldflags="-w -s" \

@@ -162,13 +162,10 @@ func (h *Handler) AddItem(c *gin.Context) {
 
 	span.SetAttributes(attribute.String("item_id", item.ID))
 
-	// Return the updated cart so the frontend can reconcile
-	_, updatedItems, err := h.service.GetCartWithItems(ctx, cart.ID)
-	if err != nil {
-		handleError(c, err)
-		return
-	}
-	c.JSON(http.StatusOK, toCartResponse(cart, updatedItems))
+	// Return the updated cart — recalculate subtotal from the added item
+	cart.Subtotal += item.TotalPrice
+	cart.ItemCount++
+	c.JSON(http.StatusOK, toCartResponse(cart, []*domain.CartItem{item}))
 }
 
 func (h *Handler) UpdateItem(c *gin.Context) {
@@ -195,6 +192,7 @@ func (h *Handler) UpdateItem(c *gin.Context) {
 		return
 	}
 
+	// Get updated cart with items
 	updatedCart, updatedItems, err := h.service.GetCartWithItems(ctx, cart.ID)
 	if err != nil {
 		handleError(c, err)

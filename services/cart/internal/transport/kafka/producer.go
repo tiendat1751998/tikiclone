@@ -23,12 +23,12 @@ func NewProducer(brokers []string, service string) *Producer {
 		writer: &kafka.Writer{
 			Addr:          kafka.TCP(brokers...),
 			Balancer:      &kafka.Hash{},
-			BatchTimeout:  10 * time.Millisecond,
-			WriteTimeout:  10 * time.Second,
+			BatchTimeout:  1 * time.Millisecond,
+			WriteTimeout:  2 * time.Second,
 			BatchSize:     100,
-			Async:         false,
-			RequiredAcks:  kafka.RequireAll,
-			MaxAttempts:   3,
+			Async:         true,
+			RequiredAcks:  kafka.RequireOne,
+			MaxAttempts:   2,
 		},
 		service: service,
 	}

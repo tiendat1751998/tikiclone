@@ -88,8 +88,12 @@ func main() {
 	httpRouter.Setup(engine)
 
 	httpServer := &http.Server{
-		Addr: fmt.Sprintf(":%d", cfg.HTTPPort), Handler: engine,
-		ReadTimeout:       5 * time.Second, WriteTimeout:      10 * time.Second, IdleTimeout:       120 * time.Second,
+		Addr:              fmt.Sprintf(":%d", cfg.HTTPPort),
+		Handler:           engine,
+		ReadTimeout:       2 * time.Second,
+		WriteTimeout:      2 * time.Second,
+		IdleTimeout:       120 * time.Second,
+		ReadHeaderTimeout: 1 * time.Second,
 	}
 
 	quit := make(chan os.Signal, 1)

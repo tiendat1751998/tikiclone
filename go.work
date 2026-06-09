@@ -28,9 +28,9 @@ use (
 	./platforms/user-behavior
 	./proto
 	./services/admin-panel
-	./services/auth
 	./services/cart
 	./services/catalog-product
+	./services/oms-fulfillment
 	./services/checkout
 	./services/gateway
 	./services/identity-auth
@@ -38,8 +38,8 @@ use (
 	./services/order
 	./services/payment
 	./services/product
-	./services/product-catalog
 	./services/promotion
+	./services/rec-vector
 	./services/shipment
 	./tests/integration
 )

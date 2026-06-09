@@ -24,7 +24,7 @@ func NewProducer(cfg config.KafkaConfig) *Producer {
 		Balancer:      &kafka.LeastBytes{},
 		BatchTimeout:  10 * time.Millisecond,
 		WriteTimeout:  10 * time.Second,
-		Async:         false,
+		Async:         true,
 	}
 	return &Producer{writer: writer, cfg: cfg}
 }

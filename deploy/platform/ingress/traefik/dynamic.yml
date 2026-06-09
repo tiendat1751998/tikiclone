@@ -1,0 +1,65 @@
+http:
+  middlewares:
+    compress:
+      compress:
+        minResponseBodyBytes: 1024
+        encodings:
+          - gzip
+          - br
+
+    https-redirect:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+  services:
+    gateway:
+      loadBalancer:
+        servers:
+          - url: "http://gateway:8080"
+        passHostHeader: true
+
+    web:
+      loadBalancer:
+        servers:
+          - url: "http://web:3000"
+        passHostHeader: true
+
+  routers:
+    # API routes — HTTPS
+    gateway_api:
+      rule: "PathPrefix(`/api/`) || PathPrefix(`/health`) || Path(`/ready`) || Path(`/metrics`) || Path(`/upstreams`)"
+      service: "gateway"
+      entryPoints:
+        - websecure
+      middlewares:
+        - compress
+
+    # Frontend catch-all — HTTPS
+    web_catchall:
+      rule: "PathPrefix(`/`)"
+      service: "web"
+      entryPoints:
+        - websecure
+      priority: 1
+      middlewares:
+        - compress
+
+    # HTTP → HTTPS redirect for web
+    web_redirect:
+      rule: "PathPrefix(`/`)"
+      service: "web"
+      entryPoints:
+        - web
+      priority: 1
+      middlewares:
+        - https-redirect
+
+    # API redirect (HTTP → HTTPS)
+    gateway_api_redirect:
+      rule: "PathPrefix(`/api/`) || PathPrefix(`/health`) || Path(`/ready`) || Path(`/metrics`)"
+      service: "gateway"
+      entryPoints:
+        - web
+      middlewares:
+        - https-redirect

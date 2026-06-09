@@ -1,0 +1,175 @@
+[
+  {
+    "id": "top-deal",
+    "name": "Top Deal - Cam Kết Siêu Rẻ",
+    "slug": "hero-top-san-pham-ban-chay",
+    "description": "Top Deal - Cam Kết Siêu Rẻ. 100% Hàng Chính Hãng. Giao Nhanh & Đúng Hẹn",
+    "image_url": "https://salt.tikicdn.com/cache/w1240/ts/brickv2og/53/4b/35/b9c9bcae0af920e5bb7a2a452a2c022e.png.webp",
+    "sort_order": 1,
+    "is_active": true,
+    "groups": [
+      {
+        "id": "me-va-be",
+        "name": "Mẹ & Bé",
+        "slug": "me-va-be",
+        "sort_order": 1,
+        "items": [
+          { "name": "Tã, bỉm", "slug": "ta-bim", "image_url": "", "url": "/categories/do-choi-me-be" },
+          { "name": "Dinh dưỡng cho người lớn", "slug": "dinh-duong-nguoi-lon", "image_url": "", "url": "/categories/do-choi-me-be" },
+          { "name": "Đồ Dùng Cho Bé", "slug": "do-dung-cho-be", "image_url": "", "url": "/categories/do-choi-me-be" },
+          { "name": "Dinh Dưỡng Cho Mẹ", "slug": "dinh-duong-cho-me", "image_url": "", "url": "/categories/do-choi-me-be" }
+        ]
+      },
+      {
+        "id": "yeu-bep-nghien-nha",
+        "name": "Yêu Bếp Nghiện Nhà",
+        "slug": "yeu-bep-nghien-nha",
+        "sort_order": 3,
+        "items": [
+          { "name": "Gian Bếp Hiện Đại", "slug": "gian-bep-hien-dai", "image_url": "", "url": "/categories/dung-cu-nha-bep" },
+          { "name": "Nhà Cửa Tiện Nghi", "slug": "nha-cua-tien-nghi", "image_url": "", "url": "/categories/do-dung-va-thiet-bi-nha-tam" }
+        ]
+      },
+      {
+        "id": "sach-hay-nen-mua",
+        "name": "Top Sách Nên Mua",
+        "slug": "sach-hay-nen-mua",
+        "sort_order": 4,
+        "items": [
+          { "name": "Sách Văn Học", "slug": "sach-van-hoc", "image_url": "", "url": "/search?q=sách+văn+học" },
+          { "name": "Sách Kỹ Năng", "slug": "sach-ky-nang", "image_url": "", "url": "/search?q=sách+kỹ+năng" },
+          { "name": "Sách Kinh Tế", "slug": "sach-kinh-te", "image_url": "", "url": "/search?q=sách+kinh+tế" },
+          { "name": "Sách Thiếu Nhi", "slug": "sach-thieu-nhi", "image_url": "", "url": "/search?q=sách+thiếu+nhi" }
+        ]
+      },
+      {
+        "id": "lam-dep-suc-khoe",
+        "name": "Làm Đẹp - Sức Khỏe",
+        "slug": "lam-dep-suc-khoe",
+        "sort_order": 5,
+        "items": [
+          { "name": "Chăm Sóc Da Mặt", "slug": "cham-soc-da-mat", "image_url": "", "url": "/search?q=chăm+sóc+da+mặt" },
+          { "name": "Chăm Sóc Tóc & Cơ Thể", "slug": "cham-soc-toc-co-the", "image_url": "", "url": "/search?q=chăm+sóc+tóc" },
+          { "name": "Chăm Sóc Răng Miệng & Cá Nhân", "slug": "cham-soc-rang-mieng", "image_url": "", "url": "/search?q=chăm+sóc+răng+miệng" }
+        ]
+      },
+      {
+        "id": "cong-nghe",
+        "name": "Công Nghệ",
+        "slug": "cong-nghe",
+        "sort_order": 6,
+        "items": [
+          { "name": "Phụ Kiện Hi-Tech", "slug": "phu-kien-hi-tech", "image_url": "", "url": "/search?q=phụ+kiện+công+nghệ" },
+          { "name": "Thiết Bị IT", "slug": "thiet-bi-it", "image_url": "", "url": "/search?q=thiết+bị+it" },
+          { "name": "Camera & Máy ảnh", "slug": "camera-may-anh", "image_url": "", "url": "/search?q=camera+máy+ảnh" }
+        ]
+      },
+      {
+        "id": "nha-cua-doi-song",
+        "name": "Nhà Cửa - Đời Sống",
+        "slug": "nha-cua-doi-song-promo",
+        "sort_order": 7,
+        "items": [
+          { "name": "Dụng cụ nhà bếp", "slug": "dung-cu-nha-bep", "image_url": "", "url": "/categories/dung-cu-nha-bep" },
+          { "name": "Đồ dùng phòng ngủ", "slug": "do-dung-phong-ngu", "image_url": "", "url": "/categories/do-dung-phong-ngu" },
+          { "name": "Nội thất", "slug": "noi-that", "image_url": "", "url": "/categories/noi-that" },
+          { "name": "Dụng cụ tiện ích", "slug": "dung-cu-tien-ich", "image_url": "", "url": "/categories/dung-cu-thiet-bi-tien-ich" }
+        ]
+      },
+      {
+        "id": "the-thao-da-ngoai",
+        "name": "Thể Thao",
+        "slug": "the-thao",
+        "sort_order": 8,
+        "items": [
+          { "name": "VALI - BALO", "slug": "vali-balo", "image_url": "", "url": "/search?q=vali+balo" },
+          { "name": "GIÀY NAM", "slug": "giay-nam", "image_url": "", "url": "/search?q=giày+nam" },
+          { "name": "GIÀY NỮ", "slug": "giay-nu", "image_url": "", "url": "/search?q=giày+nữ" },
+          { "name": "PHỤ KIỆN THỂ THAO", "slug": "phu-kien-the-thao", "image_url": "", "url": "/search?q=phụ+kiện+thể+thao" }
+        ]
+      },
+      {
+        "id": "xe-phu-kien",
+        "name": "Xe & Phụ Kiện Xe",
+        "slug": "xe-phu-kien",
+        "sort_order": 9,
+        "items": [
+          { "name": "Phụ kiện - Chăm sóc xe", "slug": "phu-kien-xe", "image_url": "", "url": "/search?q=phụ+kiện+xe" },
+          { "name": "Xe máy", "slug": "xe-may", "image_url": "", "url": "/search?q=xe+máy" },
+          { "name": "Xe đạp", "slug": "xe-dap", "image_url": "", "url": "/search?q=xe+đạp" }
+        ]
+      },
+      {
+        "id": "thoi-trang",
+        "name": "Thời Trang",
+        "slug": "thoi-trang",
+        "sort_order": 10,
+        "items": [
+          { "name": "Thời trang nữ", "slug": "thoi-trang-nu", "image_url": "", "url": "/search?q=thời+trang+nữ" },
+          { "name": "Thời trang nam", "slug": "thoi-trang-nam", "image_url": "", "url": "/search?q=thời+trang+nam" }
+        ]
+      },
+      {
+        "id": "bach-hoa",
+        "name": "Bách Hóa",
+        "slug": "bach-hoa",
+        "sort_order": 2,
+        "items": [
+          { "name": "Bách Hóa Online", "slug": "bach-hoa-online", "image_url": "", "url": "/search?q=bách+hóa" }
+        ]
+      }
+    ],
+    "quick_links": [
+      {
+        "name": "Khách Hàng Thân Thiết",
+        "image_url": "https://salt.tikicdn.com/ts/tikimsp/2b/e0/e7/33af0e00d4a47372e99158a8f5612aa8.png",
+        "url": "/search?q=khuyến+mãi+thành+viên"
+      },
+      {
+        "name": "Đại Siêu Thị Online",
+        "image_url": "https://salt.tikicdn.com/ts/tikimsp/74/27/52/e3bffcd34eb05d9da8bf5b46bcae85ba.png",
+        "url": "/search?q=đại+siêu+thị"
+      },
+      {
+        "name": "Tiki Trading",
+        "image_url": "https://salt.tikicdn.com/ts/tikimsp/72/8d/23/64bf96b88894ba49ff1e0e39bc6694f4.png",
+        "url": "/search?q=tiki+trading"
+      },
+      {
+        "name": "Hot Coupon Mỗi Ngày",
+        "image_url": "https://salt.tikicdn.com/ts/tikimsp/8b/a4/9f/990604a4a36713417c17fb54107e9d46.png",
+        "url": "/search?q=coupon+hot"
+      },
+      {
+        "name": "Giải Nhiệt Mùa Hè",
+        "image_url": "https://salt.tikicdn.com/ts/tikimsp/32/07/d6/e94fa5bca697008ee883dacd343f8a6d.png",
+        "url": "/search?q=mùa+hè"
+      },
+      {
+        "name": "Tiki Game",
+        "image_url": "https://salt.tikicdn.com/ts/tikimsp/b7/95/43/130bb2e1af3bf17d8f2afae308d8c8f.png",
+        "url": "/search?q=game"
+      },
+      {
+        "name": "Công Nghệ Chào Hè",
+        "image_url": "https://salt.tikicdn.com/ts/tikimsp/4b/35/2f/d20445c0cc4e690bd6c06d91fdf40f34.png",
+        "url": "/search?q=công+nghệ"
+      },
+      {
+        "name": "Thiết Bị Văn Phòng",
+        "image_url": "https://salt.tikicdn.com/ts/tikimsp/9b/cf/92/b30bd978a38ec5d0fd2402acaee894ed.png",
+        "url": "/search?q=thiết+bị+văn+phòng"
+      },
+      {
+        "name": "Sách Hay Hè Này",
+        "image_url": "https://salt.tikicdn.com/ts/tikimsp/e9/4c/f3/603f8b3fd2ce57035ebebaae4145fa06.png",
+        "url": "/search?q=sách+hay"
+      },
+      {
+        "name": "Xả Kho Nửa Giá",
+        "image_url": "https://salt.tikicdn.com/ts/tikimsp/a5/d8/06/9777e0c67c50c05b5970a67e04868a4e.png",
+        "url": "/search?q=xả+kho"
+      }
+    ]
+  }
+]

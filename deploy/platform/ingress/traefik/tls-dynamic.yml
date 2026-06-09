@@ -1,0 +1,6 @@
+# Traefik dynamic TLS configuration (loaded via file provider)
+# Self-signed certificate for dev environment
+tls:
+  certificates:
+    - certFile: /run/secrets/tiki_cert
+      keyFile: /run/secrets/tiki_key

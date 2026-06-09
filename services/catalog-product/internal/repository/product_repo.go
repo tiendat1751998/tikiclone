@@ -163,8 +163,8 @@ func (r *ProductRepository) List(ctx context.Context, filter domain.ProductFilte
 		if products == nil {
 			products = []domain.Product{}
 		}
-		// Use estimated count for performance - accurate enough for pagination
-		total, err := r.collection.EstimatedDocumentCount(ctx)
+		// Count matching documents for accurate pagination
+		total, err := r.collection.CountDocuments(ctx, query)
 		if err != nil {
 			total = int64(len(products))
 		}
@@ -219,8 +219,8 @@ func (r *ProductRepository) List(ctx context.Context, filter domain.ProductFilte
 		products = []domain.Product{}
 	}
 
-	// Use estimated count for performance
-	total, err := r.collection.EstimatedDocumentCount(ctx)
+	// Count matching documents for accurate pagination
+	total, err := r.collection.CountDocuments(ctx, query)
 	if err != nil {
 		total = int64(len(products))
 	}

@@ -194,16 +194,22 @@ func (s *CartService) AddItem(ctx context.Context, cartID string, req AddItemReq
 	metrics.ItemsAdded.Inc()
 
 	if s.publisher != nil {
-		s.publisher.Publish(ctx, &domain.CartEvent{
-			EventType:     domain.EventItemAdded,
-			AggregateType: "cart_item",
-			AggregateID:   item.ID,
-			Payload: domain.ItemAddedPayload{
-				CartID: cartID, SKU: req.SKU, ProductName: req.ProductName,
-				ShopID: req.ShopID, Quantity: req.Quantity, UnitPrice: req.UnitPrice,
-			},
-			CreatedAt: time.Now(),
-		})
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+			defer cancel()
+			if err := s.publisher.Publish(ctx, &domain.CartEvent{
+				EventType:     domain.EventItemAdded,
+				AggregateType: "cart_item",
+				AggregateID:   item.ID,
+				Payload: domain.ItemAddedPayload{
+					CartID: cartID, SKU: req.SKU, ProductName: req.ProductName,
+					ShopID: req.ShopID, Quantity: req.Quantity, UnitPrice: req.UnitPrice,
+				},
+				CreatedAt: time.Now(),
+			}); err != nil {
+				observability.LogWithTrace(ctx).Error("failed to publish item added event", zap.Error(err))
+			}
+		}()
 	}
 
 	return item, nil
@@ -312,10 +318,16 @@ func (s *CartService) ClearCart(ctx context.Context, cartID string) error {
 	}
 
 	if s.publisher != nil {
-		s.publisher.Publish(ctx, &domain.CartEvent{
-			EventType: domain.EventCartCleared, AggregateType: "cart",
-			AggregateID: cartID, CreatedAt: time.Now(),
-		})
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+			defer cancel()
+			if err := s.publisher.Publish(ctx, &domain.CartEvent{
+				EventType: domain.EventCartCleared, AggregateType: "cart",
+				AggregateID: cartID, CreatedAt: time.Now(),
+			}); err != nil {
+				observability.LogWithTrace(ctx).Error("failed to publish cart cleared event", zap.Error(err))
+			}
+		}()
 	}
 
 	return nil
@@ -399,15 +411,21 @@ func (s *CartService) MergeCarts(ctx context.Context, sourceCartID, targetCartID
 	metrics.CartsMerged.Inc()
 
 	if s.publisher != nil {
-		s.publisher.Publish(ctx, &domain.CartEvent{
-			EventType: domain.EventCartMerged, AggregateType: "cart",
-			AggregateID: targetCartID,
-			Payload: domain.CartMergedPayload{
-				SourceCartID: sourceCartID, TargetCartID: targetCartID,
-				UserID: userID, ItemsMerged: merged,
-			},
-			CreatedAt: time.Now(),
-		})
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+			defer cancel()
+			if err := s.publisher.Publish(ctx, &domain.CartEvent{
+				EventType: domain.EventCartMerged, AggregateType: "cart",
+				AggregateID: targetCartID,
+				Payload: domain.CartMergedPayload{
+					SourceCartID: sourceCartID, TargetCartID: targetCartID,
+					UserID: userID, ItemsMerged: merged,
+				},
+				CreatedAt: time.Now(),
+			}); err != nil {
+				observability.LogWithTrace(ctx).Error("failed to publish cart merged event", zap.Error(err))
+			}
+		}()
 	}
 
 	observability.LogWithTrace(ctx).Info("carts merged",
@@ -502,14 +520,20 @@ func (s *CartService) PrepareCheckout(ctx context.Context, cartID, userID, idemp
 	metrics.CheckoutPreviewsCreated.Inc()
 
 	if s.publisher != nil {
-		s.publisher.Publish(ctx, &domain.CartEvent{
-			EventType: domain.EventCheckoutPrepared, AggregateType: "cart",
-			AggregateID: cartID,
-			Payload: domain.CheckoutPreparedPayload{
-				CartID: cartID, UserID: userID, Subtotal: cart.Subtotal, ItemCount: len(selectedItems),
-			},
-			CreatedAt: time.Now(),
-		})
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+			defer cancel()
+			if err := s.publisher.Publish(ctx, &domain.CartEvent{
+				EventType: domain.EventCheckoutPrepared, AggregateType: "cart",
+				AggregateID: cartID,
+				Payload: domain.CheckoutPreparedPayload{
+					CartID: cartID, UserID: userID, Subtotal: cart.Subtotal, ItemCount: len(selectedItems),
+				},
+				CreatedAt: time.Now(),
+			}); err != nil {
+				observability.LogWithTrace(ctx).Error("failed to publish checkout prepared event", zap.Error(err))
+			}
+		}()
 	}
 
 	return preview, nil
@@ -533,20 +557,26 @@ func (s *CartService) GetCartWithItems(ctx context.Context, cartID string) (*dom
 	return cart, items, nil
 }
 
-// recalculateCart updates cart totals based on items
-func (s *CartService) recalculateCart(ctx context.Context, cart *domain.Cart) error {
-	items, err := s.itemRepo.FindByCartID(ctx, cart.ID)
-	if err != nil {
-		return fmt.Errorf("find items for recalculation: %w", err)
+// recalculateCart updates cart totals — accepts pre-fetched items to avoid extra SELECT
+func (s *CartService) recalculateCart(ctx context.Context, cart *domain.Cart, items ...[]*domain.CartItem) error {
+	var fetchedItems []*domain.CartItem
+	if len(items) > 0 && len(items[0]) > 0 {
+		fetchedItems = items[0]
+	} else {
+		var err error
+		fetchedItems, err = s.itemRepo.FindByCartID(ctx, cart.ID)
+		if err != nil {
+			return fmt.Errorf("find items for recalculation: %w", err)
+		}
 	}
 
 	total := int64(0)
-	for _, item := range items {
+	for _, item := range fetchedItems {
 		if item.IsSelected {
 			total += item.TotalPrice
 		}
 	}
-	cart.UpdateTotals(len(items), total)
+	cart.UpdateTotals(len(fetchedItems), total)
 	if err := s.cartRepo.Update(ctx, cart); err != nil {
 		return fmt.Errorf("update cart after recalculation: %w", err)
 	}

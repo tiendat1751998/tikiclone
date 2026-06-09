@@ -191,13 +191,14 @@ func registerUpstreams(cfg *config.Config, svcDiscovery *discovery.ServiceDiscov
 }
 
 func registerProxyOptions(cfg *config.Config, proxy *transport.Proxy) {
-	services := []string{"auth", "catalog", "cart", "order", "inventory", "payment", "search", "recommendation", "delivery"}
+	services := []string{"auth", "catalog", "cart", "checkout", "order", "inventory", "payment", "search", "recommendation", "delivery"}
 	opts := make([]transport.ProxyOption, 0, len(services))
 
 	timeouts := map[string]time.Duration{
 		"auth":           5 * time.Second,
 		"catalog":        5 * time.Second,
 		"cart":           3 * time.Second,
+		"checkout":       10 * time.Second,
 		"order":          10 * time.Second,
 		"inventory":      3 * time.Second,
 		"payment":        10 * time.Second,

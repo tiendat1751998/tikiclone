@@ -22,24 +22,21 @@ func NewProducer(brokers []string) *Producer {
 	writer := &kafka.Writer{
 		Addr:         kafka.TCP(brokers...),
 		Balancer:     &kafka.LeastBytes{},
-		BatchTimeout: 10 * time.Millisecond,
-		WriteTimeout: 10 * time.Second,
-		Async:        false,
-		// [RELIABILITY] Require all in-sync replicas for durability
-		RequiredAcks: kafka.RequireAll,
-		// [RELIABILITY] Retry failed writes
-		MaxAttempts: 3,
+		BatchTimeout: 1 * time.Millisecond,
+		WriteTimeout: 2 * time.Second,
+		Async:        true,
+		RequiredAcks: kafka.RequireOne,
+		MaxAttempts:  2,
 	}
 
-	// DLQ writer for failed messages
 	dlqWriter := &kafka.Writer{
-		Addr:            kafka.TCP(brokers...),
-		Balancer:        &kafka.LeastBytes{},
-		BatchTimeout:    10 * time.Millisecond,
-		WriteTimeout:    10 * time.Second,
-		Async:           false,
-		RequiredAcks:    kafka.RequireAll,
-		MaxAttempts:     1, // Don't retry DLQ writes
+		Addr:         kafka.TCP(brokers...),
+		Balancer:     &kafka.LeastBytes{},
+		BatchTimeout: 1 * time.Millisecond,
+		WriteTimeout: 2 * time.Second,
+		Async:        true,
+		RequiredAcks: kafka.RequireOne,
+		MaxAttempts:  1,
 	}
 
 	return &Producer{

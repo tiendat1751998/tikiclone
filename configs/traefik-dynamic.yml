@@ -1,0 +1,38 @@
+tls:
+  certificates:
+    - certFile: /certs/cert.pem
+      keyFile: /certs/key.pem
+
+http:
+  services:
+    gateway:
+      loadBalancer:
+        servers:
+          - url: "http://tiki_gateway:8080"
+        passHostHeader: true
+
+    web:
+      loadBalancer:
+        servers:
+          - url: "http://tiki_web:3000"
+        passHostHeader: true
+
+  routers:
+    gateway:
+      rule: "PathPrefix(`/`)"
+      service: "gateway"
+      entryPoints:
+        - web
+
+    gateway_secure:
+      rule: "PathPrefix(`/api/`) || PathPrefix(`/health`) || Path(`/ready`) || Path(`/metrics`) || Path(`/upstreams`)"
+      service: "gateway"
+      entryPoints:
+        - websecure
+
+    web_secure:
+      rule: "PathPrefix(`/`) || Path(`/favicon.ico`)"
+      priority: 50
+      service: "web"
+      entryPoints:
+        - websecure

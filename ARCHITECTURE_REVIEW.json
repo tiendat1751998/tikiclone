@@ -1,0 +1,244 @@
+{
+  "findings": [
+    {
+      "id": "SA-001",
+      "severity": "P0",
+      "category": "config",
+      "service": "notification",
+      "file": "deploy/swarm/docker-stack.yml",
+      "line": 451,
+      "description": "Notification service uses wrong Docker image 'tikiclone-auth:latest' instead of a notification-specific image. This means notification service is actually running auth service code. All notification endpoints (port 8087) will behave as auth endpoints.",
+      "recommendation": "Create a dedicated tikiclone-notification image and update the image field to 'tikiclone-notification:latest'. This is a deployment-critical bug."
+    },
+    {
+      "id": "SA-002",
+      "severity": "P0",
+      "category": "resilience",
+      "service": "gateway",
+      "file": "services/gateway/cmd/server/main.go",
+      "line": 200,
+      "description": "Circuit breakers are configured in code (registerProxyOptions) but CircuitBreakerEnabled defaults to false in config. The circuit breaker objects are created with zero-value CircuitBreakerOptions from ProxyOption, meaning all circuit breakers use library defaults (MaxRequests=5, Interval=60s, Timeout=30s) with no explicit tuning. More importantly, the circuit breaker state check in proxy.go:229-232 means if cb != nil, it uses circuit breaker path, but if cb is nil (which it never is since all 9 services register CBs), it falls through. However, Execute() on line 230-232 calls fn() and records success/failure but does NOT actually retry — the retry path (line 233-236) is only used when cb is nil. So circuit breakers are active but retries are disabled, which is the correct design. The real issue: circuit breaker thresholds are not tuned per-service — a 500ms timeout service and a 5s timeout service share identical CB settings.",
+      "recommendation": "Enable circuit breakers via config (CIRCUIT_BREAKER_ENABLED=true) and add per-service CircuitBreakerOptions to the ProxyOption struct. Different services need different thresholds — payment needs tighter thresholds than catalog."
+    },
+    {
+      "id": "SA-003",
+      "severity": "P0",
+      "category": "resilience",
+      "service": "all",
+      "file": "services/*/cmd/server/main.go",
+      "line": 0,
+      "description": "All Go services use hardcoded 500ms upstream timeout in gateway proxy (registerProxyOptions line 200: Timeout: 500ms). This is extremely aggressive — database queries, complex aggregations, and payment processing can easily exceed 500ms. This will cause cascading failures where healthy services appear unhealthy due to timeout pressure. The comment says 'Aggressive timeout for <10ms target' but this ignores actual service response distributions.",
+      "recommendation": "Set per-service timeouts based on measured P99 latencies. Payment/checkout need longer timeouts (2-5s), catalog can be shorter (1-2s). Add these as config options with 500ms as absolute minimum. Monitor actual latencies and tune."
+    },
+    {
+      "id": "SA-004",
+      "severity": "P0",
+      "category": "observability",
+      "service": "otel-collector",
+      "file": "configs/otel-collector.yaml",
+      "line": 21,
+      "description": "OTel collector exporters are set to 'debug' verbosity with no actual exporters (Jaeger, Zipkin, Prometheus remote write). All trace and metric data is being processed and discarded. The entire distributed tracing pipeline is non-functional — services export spans to the collector but they go nowhere.",
+      "recommendation": "Replace 'debug' exporter with actual backends: add jaeger exporter for traces, prometheusremotewrite for metrics, or otlp to send to a managed backend. At minimum, add file exporter for debugging."
+    },
+    {
+      "id": "SA-005",
+      "severity": "P0",
+      "category": "coupling",
+      "service": "payment",
+      "file": "services/payment/public/payment.go",
+      "line": 50,
+      "description": "Public NewPaymentService constructor (line 50) passes nil for both kafkaProducer and fraudDetector, meaning the payment service built via this public API has NO fraud detection and NO event publishing. If any consumer uses this constructor, payments will be authorized without fraud checks and no downstream events will be published.",
+      "recommendation": "Remove the public constructor or make it require all critical dependencies. The fraudDetector and kafkaProducer should not be optional. If a test/seal constructor is needed, name it clearly (NewPaymentServiceForTest) and document the safety implications."
+    },
+    {
+      "id": "SA-006",
+      "severity": "P1",
+      "category": "coupling",
+      "service": "checkout",
+      "file": "services/checkout/internal/config/config.go",
+      "line": 24,
+      "description": "Checkout service has InventoryServiceAddr, PromotionServiceAddr, and OrderServiceAddr config fields but these are never used to create HTTP/gRPC clients. The checkout service doesn't actually call inventory to reserve stock or promotions to validate discounts — it has repositories for these but no inter-service communication. This means checkout is not validating inventory availability or promotion applicability in real-time.",
+      "recommendation": "Implement gRPC clients for inventory checkout (ReserveStock) and promotion checkout (ValidatePromotion) using the configured addresses. These calls should be part of the checkout saga/workflow before creating an order."
+    },
+    {
+      "id": "SA-007",
+      "severity": "P1",
+      "category": "auth",
+      "service": "multiple",
+      "file": "services/*/cmd/server/main.go",
+      "line": 0,
+      "description": "Inconsistent JWT auth enforcement across services. Order (line 89), Payment (line 93) have conditional auth (only if secret != 'change-me-in-production'), Cart has no direct auth (gateway handles it), Inventory correctly always requires auth. The conditional pattern means in development/staging, auth is completely disabled on order and payment services if someone sets the default secret.",
+      "recommendation": "Remove the conditional auth middleware check. If auth is configured, always enforce it. Use separate env vars for 'auth bypass' in dev only, clearly documented. The default 'change-me-in-production' secret should never enable auth — it should still be enforced, just with a weak key that fails in CI checks."
+    },
+    {
+      "id": "SA-008",
+      "severity": "P1",
+      "category": "config",
+      "service": "gateway",
+      "file": "services/gateway/internal/config/config.go",
+      "line": 169,
+      "description": "Gateway upstream config references non-existent Docker Swarm services: 'catalog-product:8080' (actual service is 'search' on 8088), 'shopping-cart:8080' (actual is 'cart' on 8082), 'order-processing:8080' (actual is 'order' on 8084), 'inventory-flashsale:8080' (no such service in docker-stack.yml), 'search-indexing:8080' (actual is 'search'), 'recommendation-ml:8080' (no such service), 'payment-ledger:8080' (actual is 'payment' on 8083), 'shipment:8092' (no service on 8092). The configmap.yaml also uses Kubernetes-style names that don't match Swarm service names.",
+      "recommendation": "Align gateway upstream configs with actual Docker Swarm service names and ports. Create a single source of truth for service discovery. The hardcoded upstreams in main.go registerStatic() should match docker-stack.yml service names exactly."
+    },
+    {
+      "id": "SA-009",
+      "severity": "P1",
+      "category": "schema",
+      "service": "multiple",
+      "file": "services/*/internal/config/config.go",
+      "line": 0,
+      "description": "Product service uses 'tiki_platform' database, catalog-product uses MongoDB for catalog + 'tiki_platform' MySQL, product-catalog uses its own MySQL. Three separate services (product, catalog-product, product-catalog) with overlapping product data domains. The boundaries are unclear — product handles CRUD, catalog-product handles MongoDB-based browse, product-catalog handles SKU/category/attribute management. No clear data ownership.",
+      "recommendation": "Document clear data ownership boundaries. Ideally consolidate product and product-catalog into one service. If separation is intentional, define which service owns which tables/collections and enforce via API-only access (shared database is an anti-pattern)."
+    },
+    {
+      "id": "SA-010",
+      "severity": "P1",
+      "category": "resilience",
+      "service": "shipment",
+      "file": "services/shipment/cmd/server/main.go",
+      "line": 114,
+      "description": "Shipment service starts HTTP/gRPC servers with goroutine but logs Fatal for gRPC failure while HTTP is Fatal. More critically, the outbox worker goroutine uses the same quit channel as the main select, but the quit channel is never closed — it's read from twice (line 119-121 and line 135). When SIGTERM arrives, the first read unblocks the cancel() and the outbox worker's second read on quit will also unblock, but there's a race: the outbox worker may process one more ticker cycle before the quit signal arrives.",
+      "recommendation": "Use sync.Once or a shared context for coordinated shutdown. All background goroutines should use context cancellation, not raw channel reads. Use the WaitGroup that's already declared but only used in inventory service."
+    },
+    {
+      "id": "SA-011",
+      "severity": "P1",
+      "category": "config",
+      "service": "all",
+      "file": "deploy/swarm/docker-stack.yml",
+      "line": 0,
+      "description": "Docker Swarm stack references Swarm service names in gateway config that don't match the gateway's own discovery registration. Gateway static registration uses names: 'auth', 'catalog', 'cart', 'order', 'inventory', 'payment', 'search', 'recommendation', 'delivery' but docker-stack.yml defines service names: 'identity-auth', 'search', 'cart', 'checkout', 'order', 'notification'. Services 'inventory', 'payment', 'recommendation', 'delivery' are declared in gateway code but NOT deployed in docker-stack.yml.",
+      "recommendation": "Either add the missing 4 services (inventory, payment, recommendation, delivery) to docker-stack.yml or remove them from gateway upstream registration. The gateway should not route to non-existent services."
+    },
+    {
+      "id": "SA-012",
+      "severity": "P1",
+      "category": "observability",
+      "service": "all",
+      "file": "services/*/cmd/server/main.go",
+      "line": 0,
+      "description": "Prometheus config (configs/prometheus.yml) lists 12 services for scraping but docker-stack.yml only deploys 8. Services 'product-catalog', 'promotion', 'inventory', 'shipment' are in prometheus config but not all are deployed. Additionally, admin-panel uses raw http.ServeMux and doesn't expose a /metrics endpoint for Prometheus — the handler returns a static string, not actual metrics.",
+      "recommendation": "Align prometheus scrape targets with actually deployed services. Add proper prometheus metrics to admin-panel service. Standardize on shared middleware for /metrics across all Go services."
+    },
+    {
+      "id": "SA-013",
+      "severity": "P1",
+      "category": "performance",
+      "service": "all",
+      "file": "services/*/cmd/server/main.go",
+      "line": 0,
+      "description": "All Go services hardcode GOGC=50 in init() via os.Setenv, which means if an operator sets GOGC via environment variable, it will be silently overwritten. The comment says 'if not set' but the check gogc == '' means an empty string env var is treated as unset, so GOGC='' gets overwritten to '50'.",
+      "recommendation": "Check if the env var key exists (os.LookupEnv) rather than checking the value. Allow operators to set GOGC='' explicitly if desired. Document the GC tuning decision."
+    },
+    {
+      "id": "SA-014",
+      "severity": "P2",
+      "category": "coupling",
+      "service": "gateway",
+      "file": "services/gateway/internal/routing/routes.go",
+      "line": 89,
+      "description": "The checkout route (PREFIX /api/v1/checkout) targets 'order' service, not 'checkout' service. But docker-stack.yml has a separate 'checkout' service on port 8085. The gateway either should route checkout to 'checkout' service or the services should be merged.",
+      "recommendation": "Route /api/v1/checkout to 'checkout' service and add a 'checkout' upstream to gateway config, or document that checkout logic lives inside the order service. The current setup means checkout service receives no external traffic through the gateway."
+    },
+    {
+      "id": "SA-015",
+      "severity": "P2",
+      "category": "config",
+      "service": "promotion",
+      "file": "services/promotion/cmd/server/main.go",
+      "line": 74,
+      "description": "Promotion service Redis store is passed as nil (last arg to NewPromotionService) even when Redis is available. The store parameter controls event publishing but is not wired, meaning promotion events are never published to Kafka.",
+      "recommendation": "Wire the Redis/Kafka event publisher into the promotion service. Use the redisStore for idempotency checks and the kafka producer for event publishing, same pattern as cart/order/payment."
+    },
+    {
+      "id": "SA-016",
+      "severity": "P2",
+      "category": "config",
+      "service": "all",
+      "file": "deploy/swarm/docker-stack.yml",
+      "line": 0,
+      "description": "MySQL host is hardcoded to external IP '10.10.10.200' across all services instead of using Docker service discovery. If MySQL moves, every service needs reconfiguration. Same for MongoDB at '10.10.10.201'. No database connection pooling configuration is visible in docker-stack.yml — services must rely on env defaults which vary per service.",
+      "recommendation": "Add MySQL and MongoDB as services in docker-stack.yml (or at least in the same Swarm overlay network). Use service names instead of IPs. Standardize connection pool settings across services via shared env vars."
+    },
+    {
+      "id": "SA-017",
+      "severity": "P2",
+      "category": "resilience",
+      "service": "all",
+      "file": "deploy/swarm/docker-stack.yml",
+      "line": 0,
+      "description": "Critical services (redis, kafka) run with replicas:1 and no fault tolerance. Kafka has replication factor 1. Redis has no persistence configured beyond the volume (no AOF/RDB). If the worker node running redis or kafka fails, the entire platform becomes unusable — no caching, no event bus.",
+      "recommendation": "For production: use external managed Redis (ElastiCache) and Kafka (MSK/confluent cloud). For local dev: document this as a known single-point-of-failure. Add redis persistence (appendonly yes) and kafka replication factor >= 3."
+    },
+    {
+      "id": "SA-018",
+      "severity": "P2",
+      "category": "observability",
+      "service": "all",
+      "file": "services/*/cmd/server/main.go",
+      "line": 0,
+      "description": "Loki/Promtail are configured but Promtail is deployed in global mode reading /var/log and /var/lib/docker/containers. The Go services use zap structured logging but write to stdout/stderr. Promtail will capture container logs but won't parse structured fields. No log correlation IDs are being propagated to Loki queries.",
+      "re recommendation": "Configure zap to log JSON to stdout. Add Promtail pipeline stages to parse JSON fields. Ensure X-Correlation-ID from gateway appears in all service logs. Add grafana annotations for service deployments."
+    },
+    {
+      "id": "SA-019",
+      "severity": "P2",
+      "category": "config",
+      "service": "admin-panel",
+      "file": "services/admin-panel/cmd/server/main.go",
+      "line": 203,
+      "description": "Admin panel CORS middleware sets Access-Control-Allow-Origin: '*' with no origin validation. Also has no graceful shutdown — ListenAndServe() blocks main() and there's no signal handling. The admin panel will not shut down cleanly during rolling deployments.",
+      "recommendation": "Add origin allowlist for CORS. Add signal handling and Shutdown() call like all other services. Add request timeout middleware (currently no timeout on the 30s read/write, but no idle timeout either)."
+    },
+    {
+      "id": "SA-020",
+      "severity": "P2",
+      "category": "schema",
+      "service": "order",
+      "file": "services/order/internal/config/config.go",
+      "line": 108,
+      "description": "Order service uses requireEnv for MYSQL_PASSWORD but docker-stack.yml provides it via plain environment variable. If the var is unset at build time (during testing), the service panics immediately. Other services (cart, gateway, product) use getEnv with fallback, making them more resilient.",
+      "recommendation": "Use requireEnv consistently across all services or not at all. If used, ensure all CI/test environments set the required vars. Consider using a config validation step at startup that reports all missing vars at once."
+    },
+    {
+      "id": "SA-021",
+      "severity": "P2",
+      "category": "performance",
+      "service": "gateway",
+      "file": "services/gateway/internal/cache/cache.go",
+      "line": 0,
+      "description": "Gateway response cache middleware is listed in imports (router.go line 15) but the cache package file was not found. The cache middleware may be a no-op or missing entirely. The router.go line 68-72 references cache.NewCacheMiddleware but if this function doesn't exist, it will panic at startup.",
+      "recommendation": "Implement the cache middleware or remove the dead code. If caching is desired, implement it with cache-Control headers, ETags, and proper cache invalidation on write operations."
+    },
+    {
+      "id": "SA-022",
+      "severity": "P2",
+      "category": "resilience",
+      "service": "identity-auth",
+      "file": "services/identity-auth/cmd/server/main.go",
+      "line": 78,
+      "description": "Audit repository is created with context.Background() at startup (line 78) which has no timeout or cancellation. If the audit DB write blocks, it blocks service startup indefinitely. Also, auditRepo.Stop() is deferred but if auditRepo constructor fails, Stop() will panic on nil.",
+      "re recommendation": "Use a context with timeout for audit repo creation. Add nil check before calling Stop(). Initialize audit repo in the goroutine after DB connection is confirmed, not during."
+    },
+    {
+      "id": "SA-023",
+      "severity": "P2",
+      "category": "auth",
+      "service": "gateway",
+      "file": "services/gateway/internal/auth/middleware.go",
+      "line": 37,
+      "description": "Auth middleware in gateway uses exact string matching (c.Request.URL.Path == path) for public paths but prefix matching (strings.HasPrefix) for some paths. The inconsistency means /api/v1/auth/login/token would be public (matches /api/v1/auth/login prefix) but /api/v1/auth/login2FA would not. More importantly, exact match on '/api/v1/products' means GET /api/v1/products/123 is NOT public at gateway level, the prefix check is for '/api/v1/products/' with trailing slash.",
+      "recommendation": "Standardize on prefix matching for all public paths. Remove the exact match fallback. Add test cases that verify /api/v1/products/123 is accessible without auth and /api/v1/products POST requires auth."
+    },
+    {
+      "id": "SA-024",
+      "severity": "P2",
+      "category": "coupling",
+      "service": "product",
+      "file": "services/product/cmd/server/main.go",
+      "line": 98,
+      "description": "Product service creates moderationRepo (line 89) but then assigns _ = moderationRepo (line 98), explicitly discarding it. The moderation feature is completely unimplemented. This is a security concern — products can be created via admin endpoints (POST /api/v1/products) with no moderation workflow.",
+      "recommendation": "Either implement the moderation workflow (product goes to pending state, requires admin approval) or remove the dead code. If moderation is needed, it should block public visibility of unmoderated products."
+    }
+  ]
+}

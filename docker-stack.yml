@@ -1,0 +1,718 @@
+version: "3.9"
+
+networks:
+  frontend:
+    driver: overlay
+    attachable: true
+  backend:
+    driver: overlay
+    attachable: true
+  monitoring:
+    driver: overlay
+    attachable: true
+
+volumes:
+  tikiclone_grafana_data:
+  tikiclone_prometheus_data:
+  tikiclone_loki_data:
+  tikiclone_redis_data:
+
+services:
+  # ============================================================
+  # Traefik Load Balancer (MASTER ONLY)
+  # ============================================================
+  traefik:
+    image: traefik:3.7.1
+    command:
+      - "--providers.swarm=true"
+      - "--providers.swarm.exposedbydefault=false"
+      - "--providers.swarm.network=tiki_frontend"
+      - "--entrypoints.web.address=:80"
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--log.level=INFO"
+      - "--ping=true"
+      - "--accesslog=true"
+    ports:
+      - "80:80"
+    networks:
+      - frontend
+      - backend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+  # ============================================================
+  # Monitoring Stack (MASTER ONLY)
+  # ============================================================
+  prometheus:
+    image: prom/prometheus:v3.12.0
+    volumes:
+      - tikiclone_prometheus_data:/prometheus
+      - /home/datdt/tikiclone/configs/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - monitoring
+      - backend
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=7d'
+      - '--web.enable-lifecycle'
+      - '--web.enable-remote-write-receiver'
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+  grafana:
+    image: grafana/grafana:11.5.2
+    volumes:
+      - tikiclone_grafana_data:/var/lib/grafana
+    networks:
+      - monitoring
+      - frontend
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=***      - GF_USERS_ALLOW_SIGN_UP=false
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+  loki:
+    image: grafana/loki:3.6.11
+    networks:
+      - monitoring
+      - backend
+    volumes:
+      - tikiclone_loki_data:/loki
+      - /home/datdt/tikiclone/configs/loki-config.yaml:/etc/loki/local-config.yaml:ro
+    command:
+      - "-config.file=/etc/loki/local-config.yaml"
+      - "-server.http-listen-port=3100"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+  promtail:
+    image: grafana/promtail:3.6.11
+    volumes:
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    networks:
+      - monitoring
+    deploy:
+      mode: global
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    networks:
+      - monitoring
+    deploy:
+      mode: global
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    networks:
+      - monitoring
+    deploy:
+      mode: global
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.91.0
+    volumes:
+      - /home/datdt/tikiclone/configs/otel-collector.yaml:/etc/otelcol-contrib/config.yaml:ro
+    networks:
+      - backend
+      - monitoring
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+  # ============================================================
+  # Redis + Kafka (WORKER ONLY)
+  # ============================================================
+  redis:
+    image: redis:8-alpine
+    volumes:
+      - tikiclone_redis_data:/data
+    networks:
+      - backend
+    command: redis-server --maxclients 50000
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == worker]
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    networks:
+      - backend
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == worker]
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      - zookeeper
+    networks:
+      - backend
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == worker]
+
+  # ============================================================
+  # App Services (WORKER ONLY - 3 or 6 replicas)
+  # ============================================================
+  identity-auth:
+    image: tikiclone-identity-auth:latest
+    networks:
+      - backend
+      - frontend
+    environment:
+      APP_ENV: production
+      AUTH_HTTP_PORT: "8080"
+      MYSQL_HOST: 10.10.10.150
+      MYSQL_PORT: "6033"
+      MYSQL_DATABASE: tiki_auth
+      MYSQL_USER: "tiki"
+      MYSQL_PASSWORD: "tiki_dev"
+      REDIS_ADDR: redis:6379
+      JWT_ACCESS_SECRET: dev-access-secret-key-for-local-development-only
+      JWT_REFRESH_SECRET: dev-refresh-secret-key-for-local-development-only
+      JWT_ACCESS_TTL: "15m"
+      JWT_REFRESH_TTL: "168h"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8080/health || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      mode: replicated
+      replicas: 3
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 256M
+    stop_grace_period: 10s
+
+  gateway:
+    image: tikiclone-gateway:optimized
+    networks:
+      - frontend
+      - backend
+    environment:
+      APP_ENV: development
+      GATEWAY_HTTP_PORT: "8080"
+      REDIS_ADDR: redis:6379
+      KAFKA_BROKERS: kafka:9092
+      JWT_ACCESS_SECRET: dev-access-secret-key-for-local-development-only
+      ENCRYPTION_KEY: b8477fd5d6f4c7b22878f8d3b873778e28fcac8e34a0be45cdf014bbb31571d7
+      UPSTREAM_AUTH_SERVICE: "tiki_identity-auth:8080"
+      UPSTREAM_CATALOG_SERVICE: "tiki_catalog-product:8080"
+      UPSTREAM_CART_SERVICE: "tiki_cart:8082"
+      UPSTREAM_ORDER_SERVICE: "tiki_order:8084"
+      UPSTREAM_INVENTORY_SERVICE: "tiki_inventory:8086"
+      UPSTREAM_PAYMENT_SERVICE: "tiki_payment:8083"
+      UPSTREAM_SEARCH_SERVICE: "tiki_search:8088"
+      UPSTREAM_RECOMMENDATION_SERVICE: "tiki_rec-vector:8096"
+      UPSTREAM_DELIVERY_SERVICE: "tiki_shipment:8092"
+    ulimits:
+      nofile:
+        soft: 100000
+        hard: 100000
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.gateway.rule=PathPrefix(`/api/`)"
+        - "traefik.http.routers.gateway.entrypoints=web"
+        - "traefik.http.services.gateway.loadbalancer.server.port=8080"
+        - "traefik.http.services.gateway.loadbalancer.passhostheader=true"
+      mode: replicated
+      replicas: 6
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 512M
+
+  product:
+    image: tikiclone-product:latest
+    networks:
+      - backend
+      - frontend
+    environment:
+      APP_ENV: development
+      HTTP_PORT: "8089"
+      MYSQL_HOST: "10.10.10.200"
+      MYSQL_PORT: "3306"
+      MYSQL_USER: "tiki"
+      MYSQL_PASSWORD: "tiki_dev"
+      MYSQL_DATABASE: tiki_platform
+      REDIS_ADDR: redis:6379
+      KAFKA_BROKERS: kafka:9092
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8089/health || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      mode: replicated
+      replicas: 6
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 512M
+
+  search:
+    image: tikiclone-catalog-product:latest
+    networks:
+      - backend
+      - frontend
+    environment:
+      APP_ENV: development
+      PORT: "8088"
+      MYSQL_HOST: "10.10.10.200"
+      MYSQL_PORT: "3306"
+      MYSQL_USER: "tiki"
+      MYSQL_PASSWORD: "tiki_dev"
+      MYSQL_DATABASE: tiki_platform
+      REDIS_ADDR: redis:6379
+      KAFKA_BROKERS: kafka:9092
+      MONGODB_URI: "mongodb://10.10.10.201:27017"
+      MONGODB_DATABASE: tiki_catalog
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8088/health || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      mode: replicated
+      replicas: 6
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 256M
+
+  cart:
+    image: tikiclone-cart:latest
+    networks:
+      - backend
+      - frontend
+    environment:
+      APP_ENV: development
+      CART_HTTP_PORT: "8082"
+      MYSQL_HOST: "10.10.10.200"
+      MYSQL_PORT: "3306"
+      MYSQL_USER: "tiki"
+      MYSQL_PASSWORD: "tiki_dev"
+      MYSQL_DATABASE: tiki_cart
+      REDIS_ADDR: redis:6379
+      KAFKA_BROKERS: kafka:9092
+      JWT_ACCESS_SECRET: dev-access-secret-key-for-local-development-only
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8082/health || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      mode: replicated
+      replicas: 6
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 512M
+
+  category:
+    image: tikiclone-catalog-product:latest
+    networks:
+      - backend
+      - frontend
+    environment:
+      APP_ENV: development
+      PORT: "8088"
+      MYSQL_HOST: "10.10.10.200"
+      MYSQL_PORT: "3306"
+      MYSQL_USER: "tiki"
+      MYSQL_PASSWORD: "tiki_dev"
+      MYSQL_DATABASE: tiki_platform
+      REDIS_ADDR: redis:6379
+      KAFKA_BROKERS: kafka:9092
+      MONGODB_URI: "mongodb://10.10.10.201:27017"
+      MONGODB_DATABASE: tiki_catalog
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8088/health || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      mode: replicated
+      replicas: 3
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 256M
+
+  checkout:
+    image: tikiclone-checkout:latest
+    networks:
+      - backend
+      - frontend
+    environment:
+      APP_ENV: development
+      CHECKOUT_HTTP_PORT: "8085"
+      MYSQL_HOST: "10.10.10.200"
+      MYSQL_PORT: "3306"
+      MYSQL_USER: "tiki"
+      MYSQL_PASSWORD: "tiki_dev"
+      MYSQL_DATABASE: tiki_checkout
+      REDIS_ADDR: redis:6379
+      KAFKA_BROKERS: kafka:9092
+      JWT_ACCESS_SECRET: dev-access-secret-key-for-local-development-only
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8085/health || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      mode: replicated
+      replicas: 3
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 512M
+
+  order:
+    image: tikiclone-order:latest
+    networks:
+      - backend
+      - frontend
+    environment:
+      APP_ENV: development
+      ORDER_HTTP_PORT: "8084"
+      MYSQL_HOST: "10.10.10.200"
+      MYSQL_PORT: "3306"
+      MYSQL_USER: "tiki"
+      MYSQL_PASSWORD: "tiki_dev"
+      MYSQL_DATABASE: tiki_order
+      REDIS_ADDR: redis:6379
+      KAFKA_BROKERS: kafka:9092
+      JWT_ACCESS_SECRET: dev-access-secret-key-for-local-development-only
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8084/health || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      mode: replicated
+      replicas: 3
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 512M
+
+  payment:
+    image: tikiclone-payment:latest
+    networks:
+      - backend
+      - frontend
+    environment:
+      APP_ENV: production
+      PAYMENT_HTTP_PORT: "8083"
+      PAYMENT_GRPC_PORT: "9093"
+      MYSQL_HOST: 10.10.10.150
+      MYSQL_PORT: "6033"
+      MYSQL_USER: "tiki"
+      MYSQL_PASSWORD: "tiki_dev"
+      MYSQL_DATABASE: tiki_payment
+      REDIS_ADDR: redis:6379
+      KAFKA_BROKERS: kafka:9092
+      JWT_ACCESS_SECRET: dev-access-secret-key-for-local-development-only
+      WEBHOOK_SECRET: dev-webhook-secret-for-local-only
+      VNPAY_TMNCODE: VNPAYDEMO
+      VNPAY_HASH_SECRET: demo-secret-key-123
+    deploy:
+      mode: replicated
+      replicas: 3
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 512M
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+        max_attempts: 3
+
+  notification:
+    image: tikiclone-notification:latest
+    networks:
+      - backend
+      - frontend
+    environment:
+      APP_ENV: development
+      NOTIFICATION_HTTP_PORT: "8087"
+      MYSQL_HOST: "10.10.10.200"
+      MYSQL_PORT: "3306"
+      MYSQL_USER: "tiki"
+      MYSQL_PASSWORD: "tiki_dev"
+      MYSQL_DATABASE: tiki_notification
+      REDIS_ADDR: redis:6379
+      KAFKA_BROKERS: kafka:9092
+      OTEL_EXPORTER_OTLP_ENDPOINT: otel-collector:4317
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8087/health || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      mode: replicated
+      replicas: 3
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 256M
+
+  # ============================================================
+  # Harness CI/CD Platform (MASTER ONLY)
+  # ============================================================
+  harness:
+    image: harness/harness:latest
+    networks:
+      - frontend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/harness:/data
+    environment:
+      - GITNESS_HTTP_HOST=harness.tiki.local
+      - GITNESS_CI_PLUGINS_ZIP_URL=http://10.10.10.133:8765/plugins.zip
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      resources:
+        limits:
+          memory: 512M
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.harness.rule=Host(`harness.tiki.local`)"
+        - "traefik.http.routers.harness.entrypoints=web"
+        - "traefik.http.services.harness.loadbalancer.server.port=3000"
+        - "traefik.http.services.harness.loadbalancer.passhostheader=true"
+
+  inventory:
+    image: tikiclone-inventory:latest
+    networks:
+      - backend
+    environment:
+      APP_ENV: production
+      INVENTORY_HTTP_PORT: "8086"
+      INVENTORY_GRPC_PORT: "9096"
+      MYSQL_HOST: 10.10.10.200
+      MYSQL_PORT: "3306"
+      MYSQL_USER: "tiki"
+      MYSQL_PASSWORD: "tiki_dev"
+      MYSQL_DATABASE: tiki_inventory
+      REDIS_ADDR: redis:6379
+      KAFKA_BROKERS: kafka:9092
+      JWT_ACCESS_SECRET: dev-access-secret-key-for-local-development-only
+    deploy:
+      mode: replicated
+      replicas: 3
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 512M
+      restart_policy:
+        condition: any
+        delay: 3s
+        max_attempts: 3
+
+  oms-fulfillment:
+    image: tikiclone-oms-fulfillment:latest
+    networks:
+      - backend
+      - frontend
+    environment:
+      APP_ENV: development
+      OMS_HTTP_PORT: "8095"
+      OMS_GRPC_PORT: "9095"
+      MYSQL_HOST: "10.10.10.200"
+      MYSQL_PORT: "3306"
+      MYSQL_USER: "tiki"
+      MYSQL_PASSWORD: "tiki_dev"
+      MYSQL_DATABASE: tiki_fulfillment
+      REDIS_ADDR: redis:6379
+      KAFKA_BROKERS: kafka:9092
+      JWT_ACCESS_SECRET: dev-access-secret-key-for-local-development-only
+    deploy:
+      mode: replicated
+      replicas: 3
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 512M
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+
+  rec-vector:
+    image: tikiclone-rec-vector:latest
+    networks:
+      - backend
+      - frontend
+    environment:
+      APP_ENV: development
+      REC_HTTP_PORT: "8096"
+      REC_GRPC_PORT: "9096"
+      MYSQL_HOST: "10.10.10.200"
+      MYSQL_PORT: "3306"
+      MYSQL_USER: "tiki"
+      MYSQL_PASSWORD: "tiki_dev"
+      MYSQL_DATABASE: tiki_recommendation
+      REDIS_ADDR: redis:6379
+      JWT_ACCESS_SECRET: dev-access-secret-key-for-local-development-only
+    deploy:
+      mode: replicated
+      replicas: 3
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 512M
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+
+  payment-ledger:
+    image: tikiclone-payment-ledger:latest
+    networks:
+      - backend
+      - frontend
+    environment:
+      APP_ENV: development
+      LEDGER_HTTP_PORT: "8097"
+      LEDGER_GRPC_PORT: "9097"
+      MYSQL_HOST: "10.10.10.200"
+      MYSQL_PORT: "3306"
+      MYSQL_USER: "tiki"
+      MYSQL_PASSWORD: "tiki_dev"
+      MYSQL_DATABASE: tiki_payment_ledger
+      JWT_ACCESS_SECRET: dev-access-secret-key-for-local-development-only
+    deploy:
+      mode: replicated
+      replicas: 3
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 512M
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+
+  shipment:
+    image: tikiclone-shipment:latest
+    networks:
+      - backend
+      - frontend
+    environment:
+      APP_ENV: production
+      SHIPMENT_HTTP_PORT: "8092"
+      SHIPMENT_GRPC_PORT: "9102"
+      MYSQL_HOST: 10.10.10.200
+      MYSQL_PORT: "3306"
+      MYSQL_USER: tiki
+      MYSQL_PASSWORD: tiki_dev
+      MYSQL_DATABASE: tiki_platform
+      REDIS_ADDR: redis:6379
+      KAFKA_BROKERS: kafka:9092
+      NOMINATIM_BASE_URL: https://nominatim.openstreetmap.org
+      NOMINATIM_USER_AGENT: tiki-shipment/1.0
+      OSRM_BASE_URL: https://router.project-osrm.org
+    deploy:
+      mode: replicated
+      replicas: 3
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 512M
+      restart_policy:
+        condition: any
+        delay: 3s
+        max_attempts: 3
+
+  web:
+    image: tikiclone-web:latest
+    networks:
+      - frontend
+      - backend
+    environment:
+      NODE_ENV: production
+      GATEWAY_URL: http://gateway:8080
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.web.rule=PathPrefix(`/`)"
+        - "traefik.http.routers.web.entrypoints=web"
+        - "traefik.http.services.web.loadbalancer.server.port=3000"
+      mode: replicated
+      replicas: 6
+      placement:
+        constraints: [node.role == worker]
+      resources:
+        limits:
+          memory: 1G
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3

@@ -226,31 +226,33 @@ func (h *Handler) CancelOrder(c *gin.Context) {
 func (h *Handler) GetOrderHistory(c *gin.Context) {
 	orderID := c.Param("id")
 
-	// Validate ownership: fetch order first to check user
-	order, err := h.orderService.GetOrder(c.Request.Context(), orderID)
-	if err != nil {
-		handleError(c, err)
-		return
-	}
-
-	userID, exists := c.Get("user_id")
+	// Use order from context (set by auth middleware after fetching) or fetch if not present
+	orderVal, exists := c.Get("order")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-		return
+		orderVal, _ = h.orderService.GetOrder(c.Request.Context(), orderID)
 	}
-	uid, ok := userID.(string)
-	if !ok || uid == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-		return
-	}
-	role, _ := c.Get("role")
-	r := ""
-	if role != nil {
-		r, _ = role.(string)
-	}
-	if order.UserID != uid && r != "admin" && r != "seller" {
-		c.JSON(http.StatusForbidden, gin.H{"error": "access denied"})
-		return
+	order, ok := orderVal.(*domain.Order)
+	if ok && order != nil {
+		// Validate ownership
+		userID, exists := c.Get("user_id")
+		if !exists {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+			return
+		}
+		uid, ok := userID.(string)
+		if !ok || uid == "" {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+			return
+		}
+		role, _ := c.Get("role")
+		r := ""
+		if role != nil {
+			r, _ = role.(string)
+		}
+		if order.UserID != uid && r != "admin" && r != "seller" {
+			c.JSON(http.StatusForbidden, gin.H{"error": "access denied"})
+			return
+		}
 	}
 
 	history, err := h.orderService.GetOrderHistory(c.Request.Context(), orderID)

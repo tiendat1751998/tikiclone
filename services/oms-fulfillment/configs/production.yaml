@@ -1,0 +1,51 @@
+app:
+  name: tiki-oms-fulfillment
+  env: production
+
+server:
+  http_port: 8095
+  grpc_port: 9095
+
+mysql:
+  host: "${MYSQL_HOST}"
+  port: 3306
+  user: tiki
+  password: "${MYSQL_PASSWORD}"
+  database: tiki_fulfillment
+  max_open_conns: 100
+  max_idle_conns: 50
+  max_lifetime: 30m
+  timeout: 2s
+
+redis:
+  addr: "${REDIS_ADDR}"
+  password: "${REDIS_PASSWORD}"
+  db: 7
+  pool_size: 300
+  min_idle: 50
+  dial_timeout: 5s
+  read_timeout: 150ms
+  write_timeout: 150ms
+  max_retries: 3
+
+kafka:
+  brokers:
+    - "${KAFKA_BROKERS}"
+  topic_prefix: tiki.fulfillment
+  consumer_group: tiki-oms-service
+  dlq_topic: tiki.fulfillment.dlq
+
+jwt:
+  access_secret: "${JWT_ACCESS_SECRET}"
+  issuer: tiki-auth
+  audience: tiki-clone
+
+fulfillment:
+  auto_confirm_after: 30m
+  max_pick_retries: 3
+  default_carrier: standard
+
+otel:
+  endpoint: "${OTEL_EXPORTER_OTLP_ENDPOINT}"
+  service_name: tiki-oms-fulfillment
+  trace_ratio: 0.1

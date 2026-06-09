@@ -52,14 +52,14 @@ otel:
   metrics_prefix: tiki_gateway
 
 upstreams:
-  auth_service: identity-auth:8080
-  catalog_service: catalog-product:8080
-  cart_service: shopping-cart:8080
-  order_service: order-processing:8080
-  inventory_service: inventory-flashsale:8080
-  payment_service: payment-ledger:8080
-  search_service: search-indexing:8080
-  recommendation_service: recommendation-ml:8080
+  auth_service: tiki_identity-auth:8080
+  catalog_service: tiki_catalog-product:8080
+  cart_service: tiki_cart:8080
+  order_service: tiki_order:8084
+  inventory_service: tiki_inventory:8080
+  payment_service: tiki_payment:8080
+  search_service: tiki_search-indexing:8080
+  recommendation_service: tiki_recommendation:8080
   default_timeout: 30s
   max_idle_conns: 100
   idle_conn_timeout: 90s

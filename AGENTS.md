@@ -1,6 +1,9 @@
-## Session Startup
-1. Read `TASK_LOG.md` (active-only), scan `LESSONS.md` for patterns.
-2. Read `PROJECT_BRIEF.md` only if architecture context is needed.
+## Session Startup (MANDATORY — do this FIRST every session)
+1. Read `~/.hermes/memories/MEMORY.md` — SSOOT for infra, rules, anti-patterns, lessons
+2. Read this file (`AGENTS.md`) fully — workflow, coding rules, sub-agent architecture
+3. Read `TASK_LOG.md` (active tasks only)
+4. Scan `LESSONS.md` for relevant patterns
+5. Read `PROJECT_BRIEF.md` only if architecture context needed
 
 ## Autonomous Workflow (MANDATORY)
 Execute this loop per logical unit of work. Do not ask for confirmation between steps.
@@ -21,6 +24,9 @@ Execute this loop per logical unit of work. Do not ask for confirmation between 
 - **Atomic Guardrail:** Run build/lint/test after each logical unit. Defer only for synchronized multi-file breaking changes. Never leave a broken build.
 - **Pivot Limits:** Max 3 attempts per strategy, 2 pivots per task. If still failing: stop, dump logs, exit.
 - **Fail-Fast:** If a tool/patch fails, change strategy immediately. Never retry same args.
+
+## 🔥 ANTI-PATTERNS & RULES
+See `~/.hermes/memories/MEMORY.md` § blocks 1-6 for all anti-patterns, deploy rules, coding rules, and agent rules. Read on startup.
 
 <!-- NEW SECTION START -->
 ## Session Lifecycle & Sub-Agent Architecture

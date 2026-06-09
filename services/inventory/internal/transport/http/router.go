@@ -16,10 +16,9 @@ func (r *Router) Setup(engine *gin.Engine) {
 	engine.Use(middleware.RequestID())
 	engine.Use(middleware.Recovery())
 
-	if r.authMw != nil { engine.Use(r.authMw) }
-	{
-		engine.POST("/reserve", r.handler.ReserveStock)
-		engine.POST("/release/:id", r.handler.ReleaseStock)
-		engine.GET("/stock/:sku_id", r.handler.GetStock)
-	}
+	protected := engine.Group("/")
+	if r.authMw != nil { protected.Use(r.authMw) }
+	protected.POST("/reserve", r.handler.ReserveStock)
+	protected.POST("/release/:id", r.handler.ReleaseStock)
+	protected.GET("/stock/:sku_id", r.handler.GetStock)
 }

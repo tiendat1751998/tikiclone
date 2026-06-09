@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -38,15 +39,24 @@ func (r *OrderRepository) Create(ctx context.Context, order *domain.Order, outbo
 
 	for i := range order.Items {
 		order.Items[i].OrderID = order.ID
-		itemQuery := `INSERT INTO order_items (id, order_id, product_id, sku_id, shop_id, quantity, unit_price, total_price, snapshot, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-		_, err = tx.ExecContext(ctx, itemQuery,
-			order.Items[i].ID, order.Items[i].OrderID, order.Items[i].ProductID,
-			order.Items[i].SkuID, order.Items[i].ShopID, order.Items[i].Quantity,
-			order.Items[i].UnitPrice, order.Items[i].TotalPrice, order.Items[i].Snapshot,
-			order.Items[i].CreatedAt,
-		)
-		if err != nil {
-			return fmt.Errorf("failed to insert order item: %w", err)
+	}
+
+	if len(order.Items) > 0 {
+		itemQuery := `INSERT INTO order_items (id, order_id, product_id, sku_id, shop_id, quantity, unit_price, total_price, snapshot, created_at) VALUES `
+		values := make([]interface{}, 0, len(order.Items)*9)
+		placeholders := make([]string, 0, len(order.Items))
+		for i := range order.Items {
+			placeholders = append(placeholders, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			values = append(values,
+				order.Items[i].ID, order.Items[i].OrderID, order.Items[i].ProductID,
+				order.Items[i].SkuID, order.Items[i].ShopID, order.Items[i].Quantity,
+				order.Items[i].UnitPrice, order.Items[i].TotalPrice, order.Items[i].Snapshot,
+				order.Items[i].CreatedAt,
+			)
+		}
+		itemQuery += strings.Join(placeholders, ", ")
+		if _, err = tx.ExecContext(ctx, itemQuery, values...); err != nil {
+			return fmt.Errorf("failed to insert order items: %w", err)
 		}
 	}
 
@@ -76,9 +86,11 @@ func (r *OrderRepository) FindByID(ctx context.Context, id string) (*domain.Orde
 		return nil, fmt.Errorf("find order by id: %w", err)
 	}
 
-	items, err := r.FindItemsByOrderID(ctx, id)
+	itemsMap, err := r.FindItemsByOrderIDs(ctx, []string{id})
 	if err == nil {
-		order.Items = items
+		if items, ok := itemsMap[id]; ok {
+			order.Items = items
+		}
 	}
 
 	return &order, nil
@@ -122,10 +134,18 @@ func (r *OrderRepository) FindByUserID(ctx context.Context, userID string, limit
 	if err := r.db.SelectContext(ctx, &orders, query, userID, limit, offset); err != nil {
 		return nil, fmt.Errorf("failed to list orders: %w", err)
 	}
-	for _, o := range orders {
-		items, err := r.FindItemsByOrderID(ctx, o.ID)
+	if len(orders) > 0 {
+		ids := make([]string, len(orders))
+		for i, o := range orders {
+			ids[i] = o.ID
+		}
+		itemsMap, err := r.FindItemsByOrderIDs(ctx, ids)
 		if err == nil {
-			o.Items = items
+			for _, o := range orders {
+				if items, ok := itemsMap[o.ID]; ok {
+					o.Items = items
+				}
+			}
 		}
 	}
 	return orders, nil
@@ -187,6 +207,27 @@ func (r *OrderRepository) FindItemsByOrderID(ctx context.Context, orderID string
 		return nil, fmt.Errorf("failed to find order items: %w", err)
 	}
 	return items, nil
+}
+
+// FindItemsByOrderIDs batch-fetches items for multiple orders in 2 queries (orders + items) instead of N+1.
+func (r *OrderRepository) FindItemsByOrderIDs(ctx context.Context, orderIDs []string) (map[string][]domain.OrderItem, error) {
+	if len(orderIDs) == 0 {
+		return nil, nil
+	}
+	var items []domain.OrderItem
+	query, args, err := sqlx.In(`SELECT id, order_id, product_id, sku_id, shop_id, quantity, unit_price, total_price, snapshot, created_at FROM order_items WHERE order_id IN (?) ORDER BY order_id, id ASC LIMIT 50000`, orderIDs)
+	if err != nil {
+		return nil, fmt.Errorf("build find items by ids: %w", err)
+	}
+	query = r.db.Rebind(query)
+	if err := r.db.SelectContext(ctx, &items, query, args...); err != nil {
+		return nil, fmt.Errorf("find order items by ids: %w", err)
+	}
+	result := make(map[string][]domain.OrderItem, len(orderIDs))
+	for i := range items {
+		result[items[i].OrderID] = append(result[items[i].OrderID], items[i])
+	}
+	return result, nil
 }
 
 func (r *OrderRepository) FindByParentOrderID(ctx context.Context, parentOrderID string) ([]*domain.Order, error) {
@@ -267,9 +308,9 @@ func (r *OrderRepository) GetSnapshot(ctx context.Context, snapshotID string) (*
 }
 
 // Cancellation methods
-// ExecInTx executes a function within a database transaction with SERIALIZABLE isolation.
+// ExecInTx executes a function within a database transaction with READ COMMITTED isolation.
 func (r *OrderRepository) ExecInTx(ctx context.Context, fn func(tx *sqlx.Tx) error) error {
-	tx, err := r.db.BeginTxx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+	tx, err := r.db.BeginTxx(ctx, &sql.TxOptions{Isolation: sql.LevelReadCommitted})
 	if err != nil {
 		return fmt.Errorf("begin transaction: %w", err)
 	}

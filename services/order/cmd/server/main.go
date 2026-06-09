@@ -81,6 +81,12 @@ func main() {
 
 	orderService := application.NewOrderService(cfg, orderRepo, outboxRepo, redisStore, kafkaProducer)
 
+	var orderConsumer *kafka.Consumer
+	if len(cfg.Kafka.Brokers) > 0 && cfg.Kafka.Brokers[0] != "" {
+		orderTopics := []string{cfg.Kafka.TopicPrefix + ".order.events"}
+		orderConsumer = kafka.NewConsumer(cfg.Kafka, orderTopics, kafka.NewOrderEventHandler())
+	}
+
 	// Setup HTTP
 	gin.SetMode(getGinMode(cfg.AppEnv))
 	engine := gin.New()
@@ -141,6 +147,22 @@ func main() {
 		}
 	}()
 
+	// Start Kafka consumer
+	if orderConsumer != nil {
+		bgWg.Add(1)
+		go func() {
+			defer bgWg.Done()
+			defer func() {
+				if r := recover(); r != nil {
+					zap.L().Error("panic in order kafka consumer", zap.Any("recover", r))
+				}
+			}()
+			if err := orderConsumer.Start(ctx); err != nil && ctx.Err() == nil {
+				logger.Error("order kafka consumer failed", zap.Error(err))
+			}
+		}()
+	}
+
 	// Start outbox processor
 	bgWg.Add(1)
 	go func() {
@@ -188,6 +210,10 @@ func main() {
 
 	if kafkaProducer != nil {
 		kafkaProducer.Close()
+	}
+
+	if orderConsumer != nil {
+		orderConsumer.Close()
 	}
 
 	logger.Info("order service stopped")

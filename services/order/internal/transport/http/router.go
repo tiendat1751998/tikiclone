@@ -22,16 +22,13 @@ func (r *Router) Setup(engine *gin.Engine) {
 	engine.Use(middleware.Logger())
 	engine.Use(middleware.Recovery())
 
-	if r.authMw != nil {
-		engine.Use(r.authMw)
-	}
-	{
-		engine.POST("/", r.handler.CreateOrder)
-		engine.GET("/", r.handler.ListOrders)
-		engine.GET("/:id", r.handler.GetOrder)
-		engine.GET("/:id/status", r.handler.GetOrderStatus)
-		engine.POST("/:id/cancel", r.handler.CancelOrder)
-		engine.GET("/:id/history", r.handler.GetOrderHistory)
-		engine.GET("/:id/reconciliation", r.handler.GetReconciliationStatus)
-	}
+	protected := engine.Group("/")
+	if r.authMw != nil { protected.Use(r.authMw) }
+	protected.POST("/", r.handler.CreateOrder)
+	protected.GET("/", r.handler.ListOrders)
+	protected.GET("/:id", r.handler.GetOrder)
+	protected.GET("/:id/status", r.handler.GetOrderStatus)
+	protected.POST("/:id/cancel", r.handler.CancelOrder)
+	protected.GET("/:id/history", r.handler.GetOrderHistory)
+	protected.GET("/:id/reconciliation", r.handler.GetReconciliationStatus)
 }

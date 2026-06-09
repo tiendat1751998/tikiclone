@@ -1,6 +1,7 @@
 package http
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,6 +16,80 @@ type Handler struct {
 
 func NewHandler(paymentService *application.PaymentService) *Handler {
 	return &Handler{paymentService: paymentService}
+}
+
+// VNPayCreatePayment handles frontend VNPay payment initiation
+func (h *Handler) VNPayCreatePayment(c *gin.Context) {
+	ctx := c.Request.Context()
+	var req struct {
+		OrderID   string `json:"order_id" binding:"required"`
+		Amount    int64  `json:"amount" binding:"required"`
+		ClientIP  string `json:"client_ip" binding:"required"`
+		ReturnURL string `json:"return_url" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		return
+	}
+	uid, ok := userID.(string)
+	if !ok || uid == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		return
+	}
+
+	txnRef := req.OrderID
+	vnpayReq, paymentID, err := h.paymentService.VNPayAuthorizePayment(ctx, req.OrderID, uid, req.Amount, txnRef, req.ClientIP, req.ReturnURL)
+	if err != nil {
+		handleError(c, err)
+		return
+	}
+
+	// Build params map for hash generation
+	params := map[string]string{
+		"vnp_Version":    vnpayReq.Version,
+		"vnp_Command":    vnpayReq.Command,
+		"vnp_TmnCode":    vnpayReq.TmnCode,
+		"vnp_Amount":     fmt.Sprintf("%d", vnpayReq.Amount),
+		"vnp_CurrCode":   vnpayReq.CurrCode,
+		"vnp_TxnRef":     vnpayReq.TxnRef,
+		"vnp_OrderInfo":  vnpayReq.OrderInfo,
+		"vnp_ReturnUrl":  vnpayReq.ReturnUrl,
+		"vnp_IpAddr":     vnpayReq.IpAddr,
+		"vnp_CreateDate": vnpayReq.CreateDate,
+		"vnp_Locale":     vnpayReq.Locale,
+	}
+	if vnpayReq.BankCode != "" {
+		params["vnp_BankCode"] = vnpayReq.BankCode
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"payment_id":   paymentID,
+		"vnpay_params": vnpayReq,
+		"redirect_url": "/simulator/vnpay?" + domain.BuildVNPayQueryString(params),
+	})
+}
+
+// VNPayCallback handles VNPay return callback after payment processing
+func (h *Handler) VNPayCallback(c *gin.Context) {
+	ctx := c.Request.Context()
+	params := make(map[string]string)
+	for key, values := range c.Request.URL.Query() {
+		if len(values) > 0 {
+			params[key] = values[0]
+		}
+	}
+
+	if err := h.paymentService.ProcessVNPayCallback(ctx, params); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "success", "order_id": params["vnp_TxnRef"]})
 }
 
 func (h *Handler) AuthorizePayment(c *gin.Context) {

@@ -156,7 +156,13 @@ func (s *OrderService) CreateOrder(ctx context.Context, req *CreateOrderRequest)
 		if err := s.orderRepo.SaveIdempotencyKey(ctx, rec); err != nil {
 			zap.L().Warn("failed to save idempotency key", zap.Error(err))
 		}
-		s.redisStore.StoreIdempotencyKey(ctx, req.IdempotencyKey, order.ID, s.cfg.Order.IdempotencyKeyTTL)
+		// Pipeline: store idempotency + cache order in one round-trip
+		if err := s.redisStore.StoreIdempotencyAndCache(ctx, req.IdempotencyKey, order, s.cfg.Order.IdempotencyKeyTTL, 5*time.Minute); err != nil {
+			zap.L().Warn("failed to pipeline redis ops", zap.Error(err))
+		}
+	} else {
+		// Cache the order
+		s.redisStore.CacheOrder(ctx, order, 5*time.Minute)
 	}
 
 	// Save lifecycle event (best-effort after successful transaction)
@@ -165,7 +171,7 @@ func (s *OrderService) CreateOrder(ctx context.Context, req *CreateOrderRequest)
 		zap.L().Warn("failed to save lifecycle event", zap.Error(err))
 	}
 
-	// Publish to Kafka (best-effort after successful transaction)
+	// Publish to Kafka (best-effort, async — outbox pattern is the reliable path)
 	if s.kafkaProducer != nil {
 		if err := s.kafkaProducer.PublishEvent(ctx, orderEvent); err != nil {
 			zap.L().Warn("failed to publish kafka event", zap.Error(err))
@@ -174,11 +180,6 @@ func (s *OrderService) CreateOrder(ctx context.Context, req *CreateOrderRequest)
 
 	// Populate computed fields from snapshot
 	domain.EnrichOrder(order)
-
-	// Cache the order
-	s.redisStore.CacheOrder(ctx, order, 5*time.Minute)
-
-	// Update metrics
 	metrics.OrdersCreatedTotal.WithLabelValues(currency).Inc()
 	metrics.ActiveOrdersByStatus.WithLabelValues(string(domain.OrderStatusPending)).Inc()
 

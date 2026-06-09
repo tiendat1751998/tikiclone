@@ -39,11 +39,14 @@ func (s *PaymentStatus) Scan(value interface{}) error {
 type PaymentMethod string
 
 const (
-	PaymentMethodCreditCard  PaymentMethod = "credit_card"
-	PaymentMethodDebitCard   PaymentMethod = "debit_card"
-	PaymentMethodEWallet     PaymentMethod = "e_wallet"
-	PaymentMethodBankTransfer PaymentMethod = "bank_transfer"
-	PaymentMethodCOD         PaymentMethod = "cod"
+	PaymentMethodCreditCard    PaymentMethod = "credit_card"
+	PaymentMethodDebitCard     PaymentMethod = "debit_card"
+	PaymentMethodEWallet       PaymentMethod = "e_wallet"
+	PaymentMethodBankTransfer  PaymentMethod = "bank_transfer"
+	PaymentMethodCOD           PaymentMethod = "cod"
+	PaymentMethodVNPayQR       PaymentMethod = "vnpay_qr"
+	PaymentMethodVNPayToken      PaymentMethod = "vnpay_token"
+	PaymentMethodVNPayGateway    PaymentMethod = "vnpay_gateway"
 )
 
 type Payment struct {

@@ -1,11 +1,9 @@
 package transport
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -88,12 +86,12 @@ func NewProxy(
 		MaxIdleConns:          maxIdleConns,
 		MaxIdleConnsPerHost:   maxIdleConns,
 		IdleConnTimeout:       idleConnTimeout,
-		DisableCompression:    true,
+		DisableCompression:    false,
 		MaxConnsPerHost:        maxIdleConns * 2,
 		DisableKeepAlives:     false,
 		ForceAttemptHTTP2:     false,
-		ExpectContinueTimeout: 0,
-		ResponseHeaderTimeout: 2 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+		ResponseHeaderTimeout: 30 * time.Second,
 	}
 	transport.MaxResponseHeaderBytes = 1 << 20
 	return &Proxy{
@@ -140,7 +138,7 @@ func (p *Proxy) getTimeout(service string) time.Duration {
 	if t, ok := p.timeouts[service]; ok {
 		return t
 	}
-	return 30 * time.Second
+	return 10 * time.Second
 }
 
 func (p *Proxy) getOrCreateProxy(serviceName string) *httputil.ReverseProxy {
@@ -352,7 +350,6 @@ func (p *Proxy) HealthCheck(serviceName string) gin.HandlerFunc {
 type responseRecorder struct {
 	http.ResponseWriter
 	statusCode int
-	body       bytes.Buffer
 }
 
 func (r *responseRecorder) WriteHeader(code int) {
@@ -361,21 +358,7 @@ func (r *responseRecorder) WriteHeader(code int) {
 }
 
 func (r *responseRecorder) Write(b []byte) (int, error) {
-	r.body.Write(b)
 	return r.ResponseWriter.Write(b)
-}
-
-func copyRequestBody(r *http.Request) ([]byte, error) {
-	if r.Body == nil {
-		return nil, nil
-	}
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		return nil, err
-	}
-	r.Body.Close()
-	r.Body = io.NopCloser(bytes.NewBuffer(body))
-	return body, nil
 }
 
 func errorType(err error) string {

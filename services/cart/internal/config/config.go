@@ -80,24 +80,24 @@ func Load() *Config {
 			Host:         getEnv("MYSQL_HOST", "localhost"),
 			Port:         getEnvInt("MYSQL_PORT", 3306),
 			User:         getEnv("MYSQL_USER", "tiki"),
-			Password:     getEnv("MYSQL_PASSWORD", "tiki_dev"),
+			Password:     requireEnv("MYSQL_PASSWORD"),
 			Database:     getEnv("MYSQL_DATABASE", "tiki_cart"),
-			MaxOpenConns: getEnvInt("MYSQL_MAX_OPEN_CONNS", 25),
-			MaxIdleConns: getEnvInt("MYSQL_MAX_IDLE_CONNS", 10),
+			MaxOpenConns: getEnvInt("MYSQL_MAX_OPEN_CONNS", 100),
+			MaxIdleConns: getEnvInt("MYSQL_MAX_IDLE_CONNS", 50),
 			MaxLifetime:  getEnvDuration("MYSQL_MAX_LIFETIME", 5*time.Minute),
-			Timeout:      getEnvDuration("MYSQL_TIMEOUT", 5*time.Second),
+			Timeout:      getEnvDuration("MYSQL_TIMEOUT", 500*time.Millisecond),
 		},
 
 		Redis: RedisConfig{
 			Addr:         getEnv("REDIS_ADDR", "localhost:6379"),
 			Password:     getEnv("REDIS_PASSWORD", ""),
 			DB:           getEnvInt("REDIS_DB", 0),
-			PoolSize:     getEnvInt("REDIS_POOL_SIZE", 100),
-			MinIdleConns: getEnvInt("REDIS_MIN_IDLE", 20),
-			DialTimeout:  getEnvDuration("REDIS_DIAL_TIMEOUT", 5*time.Second),
-			ReadTimeout:  getEnvDuration("REDIS_READ_TIMEOUT", 3*time.Second),
-			WriteTimeout: getEnvDuration("REDIS_WRITE_TIMEOUT", 3*time.Second),
-			MaxRetries:   getEnvInt("REDIS_MAX_RETRIES", 3),
+			PoolSize:     getEnvInt("REDIS_POOL_SIZE", 300),
+			MinIdleConns: getEnvInt("REDIS_MIN_IDLE", 50),
+			DialTimeout:  getEnvDuration("REDIS_DIAL_TIMEOUT", 500*time.Millisecond),
+			ReadTimeout:  getEnvDuration("REDIS_READ_TIMEOUT", 150*time.Millisecond),
+			WriteTimeout: getEnvDuration("REDIS_WRITE_TIMEOUT", 150*time.Millisecond),
+			MaxRetries:   getEnvInt("REDIS_MAX_RETRIES", 2),
 		},
 
 		Kafka: KafkaConfig{
@@ -110,7 +110,7 @@ func Load() *Config {
 		MaxQuantityPerItem: getEnvInt("MAX_QUANTITY_PER_ITEM", 99),
 
 		JWT: JWTConfig{
-			AccessSecret: getEnv("JWT_ACCESS_SECRET", ""),
+			AccessSecret: requireEnv("JWT_ACCESS_SECRET"),
 		},
 		OpenTelemetry: OTELConfig{
 			Endpoint:    getEnv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318"),
@@ -122,6 +122,13 @@ func Load() *Config {
 
 func (c *Config) IsDevelopment() bool { return c.AppEnv == "development" }
 func (c *Config) IsProduction() bool  { return c.AppEnv == "production" }
+
+func requireEnv(key string) string {
+	if val := os.Getenv(key); val != "" {
+		return val
+	}
+	panic("required environment variable " + key + " is not set")
+}
 
 func getEnv(key, fallback string) string {
 	if val := os.Getenv(key); val != "" {

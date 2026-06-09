@@ -1,0 +1,20 @@
+{
+  "app/admin/analytics/page.tsx -> @/components/admin/RevenueChart": {
+    "id": 7839,
+    "files": [
+      "static/chunks/7839.35e22b0f37a86d06.js"
+    ]
+  },
+  "app/admin/page.tsx -> @/components/admin/RevenueChart": {
+    "id": 7839,
+    "files": [
+      "static/chunks/7839.35e22b0f37a86d06.js"
+    ]
+  },
+  "app/checkout/page.tsx -> @/components/delivery/LocationPicker": {
+    "id": 6379,
+    "files": [
+      "static/chunks/6379.196364bf6e5dce3e.js"
+    ]
+  }
+}

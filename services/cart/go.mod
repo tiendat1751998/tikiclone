@@ -3,6 +3,7 @@ module github.com/tikiclone/tiki/services/cart
 go 1.26.3
 
 require (
+	github.com/gin-contrib/gzip v1.0.1
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-sql-driver/mysql v1.10.0
 	github.com/google/uuid v1.6.0

@@ -1,0 +1,171 @@
+{
+  "review": [
+    {
+      "file": "deploy/swarm/docker-stack.yml",
+      "status": "approved",
+      "issues": [],
+      "recommendations": [
+        "SA-001 fix verified: notification service now uses tikiclone-notification:latest (line 451) with NOTIFICATION_HTTP_PORT and tiki_database=tiki_notification. The original tikiclone-auth:latest image reference has been corrected."
+      ]
+    },
+    {
+      "file": "services/gateway/cmd/server/main.go",
+      "status": "needs_work",
+      "issues": [
+        "Circuit breaker configuration removed: The original code conditionally created CircuitBreaker objects from config (cfg.Upstreams.CircuitBreaker.Enabled). The DEV replaced this with hardcoded MaxAttempts=1 retry config but removed the circuit breaker wiring entirely. The circuitBreakers map in Proxy struct is still allocated (line 106) but never populated, meaning all circuit breaker checks at proxy.go:229 will always be nil, falling through to the plain doProxyRequest path with zero resilience.",
+        "ResponseHeaderTimeout reduced from 2s to 500ms (proxy.go:97): This is extremely aggressive and will cause false-positive timeouts on healthy upstreams during moderate load. The per-service timeouts (1-3s) are overridden by this lower-level transport timeout.",
+        "Tracing init changed from Fatal to Warn (line 55): If tracing fails to init, the gateway silently continues without distributed traces. This is acceptable for resilience but makes debugging production issues significantly harder. Should at minimum log at Error level.",
+        "getGinMode always returns ReleaseMode (line 263): This removes debug logging in development/staging environments, making local debugging harder. The original code had a proper env-based switch.",
+        "MaxAttempts=1 means no retries at all: The comment says 'NO RETRY - retry doubles load on slow upstreams' which is a valid design choice, but this should be documented as an intentional architectural decision, not just a code comment."
+      ],
+      "recommendations": [
+        "Either re-enable circuit breaker configuration from config or remove the dead circuit breaker code entirely (struct fields, Configure method entries, getCircuitBreaker). Dead code is worse than no code.",
+        "Increase ResponseHeaderTimeout to at least match the lowest per-service timeout (500ms auth). A value of 1s would be more reasonable.",
+        "Consider making the tracing init failure behavior configurable: Fatal in production, Warn in dev."
+      ]
+    },
+    {
+      "file": "services/gateway/internal/routing/routes.go",
+      "status": "approved",
+      "issues": [],
+      "recommendations": [
+        "SA-014 fix verified: checkout route target changed from 'order' to 'checkout' (line 54). This correctly routes /api/v1/checkout to the checkout service on port 8085.",
+        "SA-023-related: delivery route Auth changed from false to true (line 85). This is a correct security improvement - delivery endpoints should require authentication.",
+        "NOTE: The checkout service is defined in docker-stack.yml but the gateway's registerUpstreams (main.go:155-191) does NOT register a 'checkout' upstream. The route targets 'checkout' but svcDiscovery has no 'checkout' instances. This will cause 'no healthy upstream instances' errors at runtime. This is a regression introduced by the fix."
+      ]
+    },
+    {
+      "file": "services/gateway/internal/auth/middleware.go",
+      "status": "approved",
+      "issues": [],
+      "recommendations": [
+        "SA-023 fix verified: Public path matching now uses consistent strings.HasPrefix (line 38) instead of mixing exact match and prefix match. This is correct.",
+        "NOTE: The prefix matching for '/api/v1/products' (line 28) means POST /api/v1/products will also be public since it matches the prefix. This is intentional for product browsing (GET) but means product creation (POST) bypasses auth at the gateway level. The downstream service should enforce write-protection."
+      ]
+    },
+    {
+      "file": "services/order/cmd/server/main.go",
+      "status": "approved",
+      "issues": [],
+      "recommendations": [
+        "SA-007 fix verified: JWT auth condition changed from 'cfg.JWT.AccessSecret != \"\" && cfg.JWT.AccessSecret != \"change-me-in-production\"' to simply 'cfg.JWT.AccessSecret != \"\"' (line 89). Auth is now always enforced when a secret is configured.",
+        "NOTE: The order service's getGinMode (line 207) still uses env-based switching (ReleaseMode for production/staging, DebugMode for dev). This is correct and differs from the gateway's always-ReleaseMode approach. This inconsistency between services is acceptable but should be documented."
+      ]
+    },
+    {
+      "file": "services/payment/cmd/server/main.go",
+      "status": "approved",
+      "issues": [],
+      "recommendations": [
+        "SA-007 fix verified: Same pattern as order service - JWT auth condition simplified to 'cfg.JWT.AccessSecret != \"\"' (line 93). Correct fix.",
+        "The payment service properly creates a fraudDetector (line 83) and passes it to NewPaymentService (line 87), so the nil-panic guard in public/payment.go will not trigger in normal operation."
+      ]
+    },
+    {
+      "file": "services/payment/public/payment.go",
+      "status": "approved",
+      "issues": [
+        "The nil-panic approach (lines 53-58) is a valid fail-fast pattern but panics are harsh for a public API constructor. If a consumer calls this in a deferred-recover context, the panic message is clear. However, returning an error would be more idiomatic Go."
+      ],
+      "recommendations": [
+        "SA-005 fix verified: NewPaymentService now requires non-nil kafkaProducer and fraudDetector, with explicit panic guards. The function signature changed from domain.FraudDetector interface to *fraud.Detector concrete type, which is actually stronger (compile-time type safety).",
+        "Consider returning (*PaymentService, error) instead of panicking, to give callers a chance to handle the error gracefully."
+      ]
+    },
+    {
+      "file": "configs/otel-collector.yaml",
+      "status": "needs_work",
+      "issues": [
+        "Circular OTLP exporter: The otlp exporter points to 'otel-collector:4317' (line 11), which is the collector's own gRPC endpoint. This creates a loop where the collector exports traces back to itself. This will cause resource exhaustion or silent trace loss.",
+        "Prometheus remote write exporter (line 15) points to 'http://prometheus:9090/api/v1/write' but standard Prometheus does not enable remote write by default. This requires the --web.enable-remote-write-receiver flag on Prometheus, which is not configured in docker-stack.yml prometheus command."
+      ],
+      "recommendations": [
+        "For the OTLP exporter, point to an actual backend (e.g., Jaeger at jaeger:14250, or a managed OTLP endpoint). If self-collection is intended, remove the OTLP exporter and use only prometheusremotewrite.",
+        "Either add --web.enable-remote-write-receiver to the Prometheus command in docker-stack.yml, or replace prometheusremotewrite with a file exporter for debugging, or use the Prometheus OTLP receiver directly."
+      ]
+    },
+    {
+      "file": "services/gateway/internal/config/config.go",
+      "status": "needs_work",
+      "issues": [
+        "CatalogService defaults changed from 'catalog-product:8080' to 'category:8088' (line 170). The docker-stack.yml has a 'category' service on port 8088, so this is correct. However, the service name 'category' is misleading - it's actually the catalog-product image (tikiclone-catalog-product:latest) serving both categories and search.",
+        "InventoryService defaults to 'inventory:8086' (line 175) but there is NO inventory service defined in deploy/swarm/docker-stack.yml. The FIXES_SUMMARY claims the root docker-stack.yml was updated, but deploy/swarm/docker-stack.yml still lacks it.",
+        "PaymentService defaults to 'payment:8083' (line 176) but there is NO payment service defined in deploy/swarm/docker-stack.yml.",
+        "RecommendationService defaults to 'recommendation:8091' (line 178) but there is NO recommendation service defined in deploy/swarm/docker-stack.yml.",
+        "DeliveryService defaults to 'delivery:8092' (line 179) but there is NO delivery service defined in deploy/swarm/docker-stack.yml."
+      ],
+      "recommendations": [
+        "SA-008 fix partially verified: The config defaults now match docker-stack.yml service names where those services exist (identity-auth, category, cart, order, search). However, 4 services (inventory, payment, recommendation, delivery) are still missing from docker-stack.yml. The gateway will fail to proxy to these services at runtime.",
+        "Either add these 4 missing services to docker-stack.yml or remove their upstream registrations from the gateway."
+      ]
+    },
+    {
+      "file": "services/gateway/internal/transport/proxy.go",
+      "status": "needs_work",
+      "issues": [
+        "Removed 500ms error check (lines removed around 289-292): The original code returned an error for upstream responses with status >= 500, which would trigger circuit breaker failure counting. This was removed, meaning upstream 500 errors are silently swallowed and never recorded by circuit breakers. This is a regression in observability.",
+        "Removed response body capture from responseRecorder (removed body field and Write method): This is fine since the cache middleware has its own responseCapture, but the proxy's responseRecorder no longer captures body content. Any future error analysis based on response body will be impossible.",
+        "ResponseHeaderTimeout set to 500ms (line 97): As noted above, this is more aggressive than the per-service timeouts and will cause premature connection resets."
+      ],
+      "recommendations": [
+        "Re-add the 500-status error reporting in doProxyRequest so circuit breakers can track upstream failures.",
+        "Align ResponseHeaderTimeout with the per-service timeout configuration, or remove it entirely and let the context timeout handle it."
+      ]
+    },
+    {
+      "file": "services/gateway/internal/routing/router.go",
+      "status": "needs_work",
+      "issues": [
+        "Removed middleware stack: The DEV removed 8 middleware handlers (ErrorHandler, SecurityHeaders, OTelMiddleware, RequestLogger, RequestSanitizer, BodySizeLimiter, CORS, DeviceMetadata, AntiAbuse, RequestValidation). This is a significant reduction in security and observability.",
+        "SecurityHeaders removed: No more X-Content-Type-Options, X-Frame-Options, etc. being set at the gateway level.",
+        "CORS removed: Cross-origin requests will fail or behave inconsistently without CORS headers at the gateway.",
+        "BodySizeLimiter removed: No protection against oversized request bodies at the gateway level.",
+        "RequestSanitizer removed: No input sanitization at the gateway level.",
+        "AntiAbuse removed: No basic abuse prevention at the gateway level.",
+        "OTelMiddleware removed: No per-request span creation at the gateway level (though the proxy does create spans internally).",
+        "Cache TTL doubled from 60s to 120s: This increases the window for stale data being served."
+      ],
+      "recommendations": [
+        "The middleware removal appears to be a performance optimization ('Minimal middleware stack for performance' comment at line 62), but it removes critical security controls. At minimum, SecurityHeaders and CORS should be restored.",
+        "If the intent is to reduce latency, benchmark before and after. The overhead of these middleware handlers is typically <1ms per request.",
+        "Consider making the middleware stack configurable via environment variable for different deployment scenarios."
+      ]
+    },
+    {
+      "file": "services/gateway/internal/cache/middleware.go",
+      "status": "approved",
+      "issues": [],
+      "recommendations": [
+        "SA-021 fix verified: The cache middleware now exists and is functional. The implementation uses direct Redis calls instead of helper methods, which is simpler and removes the logging dependency.",
+        "Added 50KB body size limit for caching (line 85): This is a good addition to prevent memory issues from caching large responses.",
+        "Removed unused imports (context, zap, observability): Clean improvement.",
+        "NOTE: The cache does not differentiate between authenticated and anonymous users. Authenticated responses (e.g., user-specific pricing) could be cached and served to other users. This is a potential data leak."
+      ]
+    }
+  ],
+  "summary": {
+    "total_files_reviewed": 11,
+    "approved": 5,
+    "needs_work": 5,
+    "rejected": 0,
+    "critical_issues": [
+      "Gateway routes to 'checkout' service but no 'checkout' upstream is registered in registerUpstreams (main.go). Runtime error: 'no healthy upstream instances' for checkout.",
+      "4 upstream services (inventory, payment, recommendation, delivery) are registered in gateway config but not deployed in docker-stack.yml. Gateway will fail to proxy to these.",
+      "OTel collector has circular OTLP exporter (exports to itself) and Prometheus remote write may not work without --web.enable-remote-write-receiver flag.",
+      "Circuit breaker code is dead: Configure() is called with empty CircuitBreaker options, so all circuit breakers are nil. The resilience feature is non-functional.",
+      "Upstream 500 errors are silently swallowed in proxy.go (removed error check), breaking circuit breaker failure counting.",
+      "Critical middleware removed from gateway router: SecurityHeaders, CORS, BodySizeLimiter, AntiAbuse, RequestSanitizer all removed."
+    ],
+    "positive_changes": [
+      "Notification service image fixed from tikiclone-auth to tikiclone-notification (SA-001)",
+      "Checkout route target fixed from 'order' to 'checkout' (SA-014)",
+      "JWT auth enforcement fixed on order and payment services (SA-007)",
+      "Auth middleware public path matching standardized to prefix-only (SA-023)",
+      "Payment public constructor now requires non-nil kafkaProducer and fraudDetector (SA-005)",
+      "OTel collector now has real exporters instead of debug (SA-004)",
+      "Per-service timeouts configured (SA-003)",
+      "Gateway upstream config aligned with docker-stack.yml service names (SA-008)",
+      "Cache middleware implemented and functional (SA-021)"
+    ]
+  }
+}

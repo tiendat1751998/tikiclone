@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/tikiclone/tiki/packages/go-shared/pkg/errors"
 	"github.com/tikiclone/tiki/services/catalog-product/internal/domain"
 	"github.com/tikiclone/tiki/services/catalog-product/internal/usecase"
@@ -88,7 +87,6 @@ func toProductResponse(p *domain.Product) ProductResponse {
 	media := make([]MediaResponse, 0, len(p.Images))
 	for i, img := range p.Images {
 		media = append(media, MediaResponse{
-			ID:           uuid.New().String(),
 			ProductID:    p.SPUID,
 			Type:         "image",
 			URL:          img,

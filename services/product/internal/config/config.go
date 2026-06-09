@@ -80,10 +80,10 @@ func Load() *Config {
 			Host:         getEnv("MYSQL_HOST", "localhost"),
 			Port:         getEnvInt("MYSQL_PORT", 3306),
 			User:         getEnv("MYSQL_USER", "tiki"),
-			Password:     getEnv("MYSQL_PASSWORD", "tiki_dev"),
+			Password:     requireEnv("MYSQL_PASSWORD"),
 			Database:     getEnv("MYSQL_DATABASE", "tiki_product"),
-			MaxOpenConns: getEnvInt("MYSQL_MAX_OPEN_CONNS", 25),
-			MaxIdleConns: getEnvInt("MYSQL_MAX_IDLE_CONNS", 10),
+			MaxOpenConns: getEnvInt("MYSQL_MAX_OPEN_CONNS", 100),
+			MaxIdleConns: getEnvInt("MYSQL_MAX_IDLE_CONNS", 50),
 			MaxLifetime:  getEnvDuration("MYSQL_MAX_LIFETIME", 5*time.Minute),
 		},
 
@@ -91,8 +91,8 @@ func Load() *Config {
 			Addr:         getEnv("REDIS_ADDR", "localhost:6379"),
 			Password:     getEnv("REDIS_PASSWORD", ""),
 			DB:           getEnvInt("REDIS_DB", 0),
-			PoolSize:     getEnvInt("REDIS_POOL_SIZE", 100),
-			MinIdleConns: getEnvInt("REDIS_MIN_IDLE", 20),
+			PoolSize:     getEnvInt("REDIS_POOL_SIZE", 300),
+			MinIdleConns: getEnvInt("REDIS_MIN_IDLE", 50),
 		},
 
 		Kafka: KafkaConfig{
@@ -102,7 +102,7 @@ func Load() *Config {
 		OpenSearch: OpenSearchConfig{
 			Addresses: []string{getEnv("OPENSEARCH_ADDR", "http://localhost:9200")},
 			Username:  getEnv("OPENSEARCH_USER", "admin"),
-			Password:  getEnv("OPENSEARCH_PASSWORD", "admin"),
+			Password:  requireEnv("OPENSEARCH_PASSWORD"),
 		},
 
 		OpenTelemetry: OTELConfig{
@@ -112,11 +112,18 @@ func Load() *Config {
 		},
 
 		Server: ServerConfig{
-			ReadTimeout:  getEnvDuration("SERVER_READ_TIMEOUT", 15*time.Second),
-			WriteTimeout: getEnvDuration("SERVER_WRITE_TIMEOUT", 15*time.Second),
-			IdleTimeout:  getEnvDuration("SERVER_IDLE_TIMEOUT", 60*time.Second),
+			ReadTimeout:  getEnvDuration("SERVER_READ_TIMEOUT", 2*time.Second),
+			WriteTimeout: getEnvDuration("SERVER_WRITE_TIMEOUT", 2*time.Second),
+			IdleTimeout:  getEnvDuration("SERVER_IDLE_TIMEOUT", 120*time.Second),
 		},
 	}
+}
+
+func requireEnv(key string) string {
+	if val := os.Getenv(key); val != "" {
+		return val
+	}
+	panic("required environment variable " + key + " is not set")
 }
 
 func getEnv(key, fallback string) string {

@@ -1,0 +1,90 @@
+# ============================================================
+# proxysql-stack.yml
+# Deploy ProxySQL as a global service on Docker Swarm workers.
+# Each worker runs exactly one ProxySQL instance using host
+# networking for zero-overlay overhead. App containers connect
+# to the local worker's IP on port 6033.
+#
+# Hostgroups:
+#   10 = writer (MySQL Master at 10.10.10.200)
+#   20 = reader (MySQL Slaves at 10.10.10.201, 10.10.10.202)
+#
+# Cluster: all 3 ProxySQL instances sync config over port 6032,
+# so any config change on one instance propagates to all.
+# ============================================================
+version: "3.9"
+
+configs:
+  proxysql_bootstrap:
+    file: ./proxysql-bootstrap.cnf
+
+volumes:
+  proxysql_data:
+    driver: local
+
+networks:
+  tiki_backend:
+    external: true
+  default:
+
+services:
+  # PROXYSQL — one container per worker node
+  # ============================================================
+  proxysql:
+    image: proxysql/proxysql:3.0.8
+    hostname: "proxysql-{{.Node.Hostname}}"
+
+    ports:
+      # MySQL protocol port — overlay for app containers
+      - published: 6033
+        target: 6033
+        protocol: tcp
+        mode: ingress
+      # Admin port — host (manager access only)
+      - published: 6032
+        target: 6032
+        protocol: tcp
+        mode: host
+
+    volumes:
+      # Persist ProxySQL's SQLite DB across restarts.
+      - proxysql_data:/var/lib/proxysql
+
+    configs:
+      - source: proxysql_bootstrap
+        target: /etc/proxysql.cnf
+
+    environment:
+      PROXYSQL_CLUSTER_HOSTS: "10.10.10.150:6032,10.10.10.151:6032,10.10.10.152:6032"
+
+    networks:
+      - tiki_backend
+      - default
+
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == worker
+      resources:
+        limits:
+          memory: 256M
+          cpus: "1.0"
+        reservations:
+          memory: 128M
+          cpus: "0.5"
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        delay: 30s
+        failure_action: rollback
+        order: stop-first
+
+  # NOTE: Init is applied manually via deploy-proxysql.sh
+  # after the stack is up. See docker service logs for ProxySQL
+  # readiness, then run:
+  #   mysql -h <WORKER_IP> -P6032 -u admin -padmin < proxysql-init.sql
+  # Cluster sync propagates to all nodes automatically.

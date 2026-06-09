@@ -226,12 +226,12 @@ services:
       context: .
       dockerfile: ./services/payment/Dockerfile
     ports:
-      - "8083:8083"
-      - "9093:9093"
+      - "8084:8084"
+      - "9094:9094"
     environment:
       APP_ENV: development
-      PAYMENT_HTTP_PORT: "8083"
-      PAYMENT_GRPC_PORT: "9093"
+      PAYMENT_HTTP_PORT: "8084"
+      PAYMENT_GRPC_PORT: "9094"
       MYSQL_HOST: mysql-primary
       MYSQL_PORT: "3306"
       MYSQL_USER: "tiki"
@@ -241,6 +241,8 @@ services:
       KAFKA_BROKERS: kafka:9092
       JWT_ACCESS_SECRET: dev-access-secret-key-for-local-development-only
       WEBHOOK_SECRET: dev-webhook-secret-for-local-development
+      VNPAY_TMNCODE: VNPAYDEMO
+      VNPAY_HASH_SECRET: demo-secret-key-123
     depends_on:
       mysql-primary:
         condition: service_healthy

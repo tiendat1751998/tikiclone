@@ -69,6 +69,12 @@ func main() {
 		kafkaProducer = kafka.NewProducer(cfg.Kafka)
 	}
 
+	var invConsumer *kafka.Consumer
+	if len(cfg.Kafka.Brokers) > 0 && cfg.Kafka.Brokers[0] != "" {
+		invTopics := []string{cfg.Kafka.TopicPrefix + ".inventory.events"}
+		invConsumer = kafka.NewConsumer(cfg.Kafka, invTopics, kafka.NewInventoryEventHandler())
+	}
+
 	// [SECURITY] Pass db to service for transaction support
 	invService := application.NewInventoryService(cfg, db.DB, invRepo, redisStore, kafkaProducer)
 
@@ -87,8 +93,12 @@ func main() {
 	engine.GET("/health/ready", healthChecker.ReadinessHandler())
 
 	httpServer := &http.Server{
-		Addr: fmt.Sprintf(":%d", cfg.HTTPPort), Handler: engine,
-		ReadTimeout:       5 * time.Second, WriteTimeout:      10 * time.Second, IdleTimeout:       120 * time.Second,
+		Addr:              fmt.Sprintf(":%d", cfg.HTTPPort),
+		Handler:           engine,
+		ReadTimeout:       2 * time.Second,
+		WriteTimeout:      2 * time.Second,
+		IdleTimeout:       120 * time.Second,
+		ReadHeaderTimeout: 1 * time.Second,
 	}
 
 	grpcServer := grpc.NewServer()
@@ -143,6 +153,28 @@ func main() {
 		}
 	}()
 
+	// Background: Kafka consumer
+	if invConsumer != nil {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			defer func() {
+				if r := recover(); r != nil {
+					zap.L().Error("panic in inventory kafka consumer", zap.Any("recover", r))
+				}
+			}()
+			// Create a derived context so we can cancel from quit
+			consumerCtx, consumerCancel := context.WithCancel(context.Background())
+			go func() {
+				<-quit
+				consumerCancel()
+			}()
+			if err := invConsumer.Start(consumerCtx); err != nil && err != context.Canceled {
+				logger.Error("inventory kafka consumer failed", zap.Error(err))
+			}
+		}()
+	}
+
 	// Background: process outbox events
 	wg.Add(1)
 	go func() {
@@ -152,7 +184,7 @@ func main() {
 				zap.L().Error("panic in inventory outbox worker", zap.Any("recover", r))
 			}
 		}()
-		ticker := time.NewTicker(5 * time.Second)
+		ticker := time.NewTicker(1 * time.Second)
 		defer ticker.Stop()
 		for {
 			select {
@@ -184,6 +216,7 @@ func main() {
 
 	if redisClient != nil { redisClient.Close() }
 	if kafkaProducer != nil { kafkaProducer.Close() }
+	if invConsumer != nil { invConsumer.Close() }
 
 	logger.Info("inventory service stopped")
 }

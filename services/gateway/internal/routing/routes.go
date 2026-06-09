@@ -22,6 +22,13 @@ var RouteTable = []RouteGroup{
 		RateLimit: 5000,
 	},
 	{
+		Prefix:    "/api/auth",
+		Target:    "auth",
+		Strip:     "",
+		Auth:      false,
+		RateLimit: 5000,
+	},
+	{
 		Prefix:    "/api/v1/products",
 		Target:    "catalog",
 		Strip:     "",
@@ -29,7 +36,21 @@ var RouteTable = []RouteGroup{
 		RateLimit: 10000,
 	},
 	{
+		Prefix:    "/api/products",
+		Target:    "catalog",
+		Strip:     "",
+		Auth:      false,
+		RateLimit: 10000,
+	},
+	{
 		Prefix:    "/api/v1/categories",
+		Target:    "catalog",
+		Strip:     "",
+		Auth:      false,
+		RateLimit: 10000,
+	},
+	{
+		Prefix:    "/api/categories",
 		Target:    "catalog",
 		Strip:     "",
 		Auth:      false,
@@ -74,9 +95,30 @@ var RouteTable = []RouteGroup{
 	{
 		Prefix:    "/api/v1/recommendations",
 		Target:    "recommendation",
-		Strip:     "/api/v1/recommendations",
+		Strip:     "",
 		Auth:      true,
 		RateLimit: 5000,
+	},
+	{
+		Prefix:    "/api/v1/collections",
+		Target:    "recommendation",
+		Strip:     "",
+		Auth:      true,
+		RateLimit: 5000,
+	},
+	{
+		Prefix:    "/api/v1/models",
+		Target:    "recommendation",
+		Strip:     "",
+		Auth:      true,
+		RateLimit: 5000,
+	},
+	{
+		Prefix:    "/api/v1/jobs",
+		Target:    "recommendation",
+		Strip:     "",
+		Auth:      true,
+		RateLimit: 1000,
 	},
 	{
 		Prefix:    "/api/v1/delivery",

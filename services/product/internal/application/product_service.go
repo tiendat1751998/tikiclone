@@ -148,10 +148,14 @@ func (s *ProductService) CreateProduct(ctx context.Context, req CreateProductReq
 
 	event := domain.NewProductCreatedEvent(product)
 	if payload, err := event.Marshal(); err == nil {
-		if pubErr := s.publisher.Publish(ctx, "product.events", product.SPUID, payload); pubErr != nil {
-			observability.LogWithTrace(ctx).Warn("failed to publish product created event",
-				zap.String("spu_id", product.SPUID), zap.Error(pubErr))
-		}
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+			defer cancel()
+			if pubErr := s.publisher.Publish(ctx, "product.events", product.SPUID, payload); pubErr != nil {
+				observability.LogWithTrace(ctx).Warn("failed to publish product created event",
+					zap.String("spu_id", product.SPUID), zap.Error(pubErr))
+			}
+		}()
 	}
 
 	span.SetAttributes(attribute.String("spu_id", product.SPUID))
@@ -267,10 +271,14 @@ func (s *ProductService) UpdateProduct(ctx context.Context, spuID string, req Up
 
 	event := domain.NewProductUpdatedEvent(existing, nil)
 	if payload, err := event.Marshal(); err == nil {
-		if pubErr := s.publisher.Publish(ctx, "product.events", spuID, payload); pubErr != nil {
-			observability.LogWithTrace(ctx).Warn("failed to publish product updated event",
-				zap.String("spu_id", spuID), zap.Error(pubErr))
-		}
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+			defer cancel()
+			if pubErr := s.publisher.Publish(ctx, "product.events", spuID, payload); pubErr != nil {
+				observability.LogWithTrace(ctx).Warn("failed to publish product updated event",
+					zap.String("spu_id", spuID), zap.Error(pubErr))
+			}
+		}()
 	}
 
 	span.SetAttributes(attribute.String("spu_id", spuID))
@@ -306,9 +314,13 @@ func (s *ProductService) DeleteProduct(ctx context.Context, spuID string) error 
 	if err != nil {
 		observability.LogWithTrace(ctx).Error("failed to marshal delete event", zap.Error(err))
 	} else if s.publisher != nil {
-		if err := s.publisher.Publish(ctx, "product.events", spuID, payload); err != nil {
-			observability.LogWithTrace(ctx).Error("failed to publish delete event", zap.Error(err))
-		}
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+			defer cancel()
+			if err := s.publisher.Publish(ctx, "product.events", spuID, payload); err != nil {
+				observability.LogWithTrace(ctx).Error("failed to publish delete event", zap.Error(err))
+			}
+		}()
 	}
 
 	span.SetAttributes(attribute.String("spu_id", spuID))

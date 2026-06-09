@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TikiClone — Checkout Saga · UML Sequence Diagram</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #020617;
+    color: #e2e8f0;
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+  }
+  .diagram-container {
+    max-width: 1400px;
+    width: 100%;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 32px;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+  }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #f8fafc; }
+  .subtitle { font-size: 12px; color: #64748b; margin-bottom: 32px; }
+  .header-row { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+  .dot {
+    width: 10px; height: 10px; border-radius: 50%; animation: pulse 2s ease-in-out infinite;
+  }
+  .dot.emerald { background: #34d399; box-shadow: 0 0 8px #34d39988; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  svg { width: 100%; height: auto; display: block; }
+  .legend { margin-top: 12px; padding-top: 16px; border-top: 1px solid #1e293b; }
+  .legend-title { font-size: 10px; color: #64748b; margin-bottom: 8px; }
+  .legend-items { display: flex; gap: 24px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #94a3b8; }
+  .legend-swatch { width: 28px; height: 3px; border-radius: 2px; }
+  .legend-swatch.solid { background: #475569; }
+  .legend-swatch.dashed { background: transparent; border-top: 2px dashed #475569; width: 28px; }
+  .legend-swatch.async { background: #fb923c; }
+  .legend-swatch.comp { background: #fb7185; }
+</style>
+</head>
+<body>
+
+<div class="diagram-container">
+  <div class="header-row">
+    <div class="dot emerald"></div>
+    <h1>UML Sequence — Checkout Saga (Distributed Transaction)</h1>
+  </div>
+  <div class="subtitle">TikiClone · Saga Orchestration Pattern · 2026-06-05</div>
+
+  <svg viewBox="0 0 1320 1100" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+      </pattern>
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 Z" fill="#475569"/>
+      </marker>
+      <marker id="arrow-rose" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 Z" fill="#fb7185"/>
+      </marker>
+      <marker id="arrow-reply" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 Z" fill="#64748b"/>
+      </marker>
+    </defs>
+
+    <rect width="1320" height="1100" fill="url(#grid)"/>
+
+    <!-- LIFELINE LABELS -->
+    <!-- Customer -->
+    <rect x="60" y="40" width="90" height="80" rx="4" fill="#0f172a"/>
+    <rect x="60" y="40" width="90" height="80" rx="4" fill="rgba(30,41,59,0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+    <text x="105" y="65" text-anchor="middle" font-size="8" fill="#94a3b8" font-weight="600">Customer</text>
+    <text x="105" y="80" text-anchor="middle" font-size="7" fill="#64748b">Browser</text>
+    <!-- Lifeline -->
+    <line x1="105" y1="120" x2="105" y2="1020" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <!-- Next.js -->
+    <rect x="180" y="40" width="90" height="80" rx="4" fill="#0f172a"/>
+    <rect x="180" y="40" width="90" height="80" rx="4" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+    <text x="225" y="65" text-anchor="middle" font-size="8" fill="#22d3ee" font-weight="600">Next.js</text>
+    <text x="225" y="80" text-anchor="middle" font-size="7" fill="#67e8f9">Storefront</text>
+    <line x1="225" y1="120" x2="225" y2="1020" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <!-- Gateway -->
+    <rect x="300" y="40" width="100" height="80" rx="4" fill="#0f172a"/>
+    <rect x="300" y="40" width="100" height="80" rx="4" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1.5"/>
+    <text x="350" y="65" text-anchor="middle" font-size="8" fill="#34d399" font-weight="600">Gateway</text>
+    <text x="350" y="80" text-anchor="middle" font-size="7" fill="#6ee7b7">Go · 6x</text>
+    <line x1="350" y1="120" x2="350" y2="1020" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <!-- Auth -->
+    <rect x="430" y="40" width="100" height="80" rx="4" fill="#0f172a"/>
+    <rect x="430" y="40" width="100" height="80" rx="4" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1.5"/>
+    <text x="480" y="65" text-anchor="middle" font-size="8" fill="#34d399" font-weight="600">identity-auth</text>
+    <text x="480" y="80" text-anchor="middle" font-size="7" fill="#6ee7b7">Java · 3x</text>
+    <line x1="480" y1="120" x2="480" y2="1020" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <!-- Cart -->
+    <rect x="560" y="40" width="100" height="80" rx="4" fill="#0f172a"/>
+    <rect x="560" y="40" width="100" height="80" rx="4" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1.5"/>
+    <text x="610" y="65" text-anchor="middle" font-size="8" fill="#34d399" font-weight="600">cart</text>
+    <text x="610" y="80" text-anchor="middle" font-size="7" fill="#6ee7b7">Go · 6x</text>
+    <line x1="610" y1="120" x2="610" y2="1020" stroke="#475569" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <!-- Checkout (Saga Orchestrator) -->
+    <rect x="690" y="40" width="120" height="80" rx="4" fill="#0f172a"/>
+    <rect x="690" y="40" width="120" height="80" rx="4" fill="rgba(251,146,60,0.3)" stroke="#fb923c" stroke-width="1.5"/>
+    <text x="750" y="60" text-anchor="middle" font-size="8" fill="#fb923c" font-weight="600">checkout</text>
+    <text x="750" y="75" text-anchor="middle" font-size="7" fill="#fdba74">Saga Orchestrator</text>
+    <text x="750" y="90" text-anchor="middle" font-size="7" fill="#fdba74">Go · 3x</text>
+    <line x1="750" y1="120" x2="750" y2="1020" stroke="#fb923c" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+    <!-- Inventory -->
+    <rect x="840" y="40" width="110" height="80" rx="4" fill="#0f172a"/>
+    <rect x="840" y="40" width="110" height="80" rx="4" fill="rgba(136,19,55,0.4)" stroke="#fb7185" stroke-width="1.5"/>
+    <text x="895" y="65" text-anchor="middle" font-size="8" fill="#fb7185" font-weight="600">inventory</text>
+    <text x="895" y="80" text-anchor="middle" font-size="7" fill="#fda4af">NOT DEPLOYED</text>
+    <line x1="895" y1="120" x2="895" y2="1020" stroke="#fb7185" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <!-- Redis -->
+    <rect x="980" y="40" width="110" height="80" rx="4" fill="#0f172a"/>
+    <rect x="980" y="40" width="110" height="80" rx="4" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="1035" y="65" text-anchor="middle" font-size="8" fill="#a78bfa" font-weight="600">Redis 8</text>
+    <text x="1035" y="80" text-anchor="middle" font-size="7" fill="#c4b5fd">Stock · Cache</text>
+    <line x1="1035" y1="120" x2="1035" y2="1020" stroke="#a78bfa" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <!-- Kafka -->
+    <rect x="1120" y="40" width="110" height="80" rx="4" fill="#0f172a"/>
+    <rect x="1120" y="40" width="110" height="80" rx="4" fill="rgba(251,146,60,0.3)" stroke="#fb923c" stroke-width="1.5"/>
+    <text x="1175" y="65" text-anchor="middle" font-size="8" fill="#fb923c" font-weight="600">Kafka</text>
+    <text x="1175" y="80" text-anchor="middle" font-size="7" fill="#fdba74">Event Bus</text>
+    <line x1="1175" y1="120" x2="1175" y2="1020" stroke="#fb923c" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <!-- SEQUENCE: NORMAL FLOW -->
+
+    <!-- 1. Browse -->
+    <path d="M 105 160 L 225 160" stroke="#475569" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="120" y="152" font-size="7" fill="#64748b">1. Browse products</text>
+    <path d="M 225 180 L 105 180" stroke="#64748b" stroke-width="1" fill="none" stroke-dasharray="4,2" marker-end="url(#arrow-reply)"/>
+    <text x="120" y="174" font-size="7" fill="#475569">SSR page · ISR</text>
+
+    <!-- 2. Add to Cart -->
+    <path d="M 105 220 L 225 220" stroke="#475569" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="120" y="212" font-size="7" fill="#64748b">2. Add to Cart</text>
+    <path d="M 225 240 L 350 240" stroke="#475569" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="240" y="232" font-size="7" fill="#64748b">POST /api/v1/cart</text>
+    <path d="M 350 260 L 610 260" stroke="#475569" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="400" y="252" font-size="7" fill="#64748b">JWT verify → AddItem</text>
+    <path d="M 610 280 L 350 280" stroke="#64748b" stroke-width="1" fill="none" stroke-dasharray="4,2" marker-end="url(#arrow-reply)"/>
+    <text x="400" y="274" font-size="7" fill="#475569">{ cart_id, items[] }</text>
+
+    <!-- 3. View Cart → Checkout -->
+    <path d="M 105 320 L 225 320" stroke="#475569" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="120" y="312" font-size="7" fill="#64748b">3. Proceed to Checkout</text>
+    <path d="M 225 340 L 350 340" stroke="#475569" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="240" y="332" font-size="7" fill="#64748b">POST /api/v1/checkout</text>
+    <path d="M 350 360 L 610 360" stroke="#475569" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="400" y="352" font-size="7" fill="#64748b">GetCart (JWT verify)</text>
+    <path d="M 610 380 L 350 380" stroke="#64748b" stroke-width="1" fill="none" stroke-dasharray="4,2" marker-end="url(#arrow-reply)"/>
+    <text x="400" y="374" font-size="7" fill="#475569">cart snapshot + prices</text>
+
+    <!-- 4. Saga: Reserve Stock -->
+    <path d="M 350 420 L 750 420" stroke="#fb923c" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="400" y="412" font-size="7" fill="#fb923c">4. CheckoutRequest</text>
+    <path d="M 750 450 L 895 450" stroke="#fb923c" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="780" y="442" font-size="6" fill="#fb923c">ReserveStock(order_id, sku, qty)</text>
+    <path d="M 895 470 L 1035 470" stroke="#475569" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="910" y="462" font-size="7" fill="#64748b">EVALSHA reserve.lua</text>
+
+    <!-- Redis stock check -->
+    <rect x="1005" y="475" width="60" height="18" rx="3" fill="#0f172a"/>
+    <rect x="1005" y="475" width="60" height="18" rx="3" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="0.8"/>
+    <text x="1035" y="487" text-anchor="middle" font-size="6" fill="#c4b5fd">ATOMIC DECRBY</text>
+
+    <path d="M 1035 500 L 895 500" stroke="#64748b" stroke-width="1" fill="none" stroke-dasharray="4,2" marker-end="url(#arrow-reply)"/>
+    <text x="910" y="493" font-size="7" fill="#475569">{ success: true, reserved_at }</text>
+
+    <!-- 5. Saga: Create Order -->
+    <path d="M 895 530 L 750 530" stroke="#64748b" stroke-width="1" fill="none" stroke-dasharray="4,2" marker-end="url(#arrow-reply)"/>
+    <text x="800" y="522" font-size="7" fill="#475569">stock reserved ✓</text>
+
+    <path d="M 750 560 L 350 560" stroke="#64748b" stroke-width="1" fill="none" stroke-dasharray="4,2" marker-end="url(#arrow-reply)"/>
+    <text x="400" y="552" font-size="7" fill="#475569">5. CheckoutResponse (redirect payment)</text>
+
+    <!-- 6. Payment Gateway -->
+    <path d="M 105 600 L 350 600" stroke="#475569" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="120" y="592" font-size="7" fill="#64748b">6. Payment form → submit</text>
+    <path d="M 350 620 L 750 620" stroke="#475569" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="400" y="612" font-size="7" fill="#64748b">ProcessPayment(order_id, amount)</text>
+
+    <path d="M 750 640 L 1175 640" stroke="#fb923c" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="800" y="632" font-size="7" fill="#fb923c">publish: payment.completed</text>
+
+    <!-- 7. Order confirmed -->
+    <path d="M 1175 660 L 750 660" stroke="#64748b" stroke-width="1" fill="none" stroke-dasharray="4,2" marker-end="url(#arrow-reply)"/>
+    <text x="800" y="653" font-size="7" fill="#64748b">consume: payment.completed</text>
+
+    <path d="M 750 680 L 350 680" stroke="#64748b" stroke-width="1" fill="none" stroke-dasharray="4,2" marker-end="url(#arrow-reply)"/>
+    <text x="400" y="672" font-size="7" fill="#475569">7. Order confirmed</text>
+    <path d="M 350 700 L 225 700" stroke="#64748b" stroke-width="1" fill="none" stroke-dasharray="4,2" marker-end="url(#arrow-reply)"/>
+    <path d="M 225 720 L 105 720" stroke="#64748b" stroke-width="1" fill="none" stroke-dasharray="4,2" marker-end="url(#arrow-reply)"/>
+    <text x="120" y="714" font-size="7" fill="#475569">Order #12345 success</text>
+
+    <!-- === COMPENSATION PATH === -->
+    <!-- Divider -->
+    <line x1="40" y1="760" x2="1240" y2="760" stroke="#fb7185" stroke-width="1" stroke-dasharray="4,4"/>
+    <text x="60" y="776" font-size="8" fill="#fb7185" font-weight="600">COMPENSATION PATH (Payment Failure / Timeout)</text>
+
+    <!-- 8C. Payment fails -->
+    <path d="M 350 800 L 750 800" stroke="#fb7185" stroke-width="1.5" fill="none" marker-end="url(#arrow-rose)"/>
+    <text x="400" y="792" font-size="7" fill="#fb7185">8. PaymentFailed(order_id, reason)</text>
+
+    <!-- 9C. Release stock -->
+    <path d="M 750 830 L 895 830" stroke="#fb7185" stroke-width="1.5" fill="none" marker-end="url(#arrow-rose)"/>
+    <text x="780" y="822" font-size="6" fill="#fb7185">ReleaseStock(order_id, sku, qty)</text>
+    <path d="M 895 850 L 1035 850" stroke="#475569" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="910" y="842" font-size="7" fill="#64748b">EVALSHA release.lua</text>
+
+    <rect x="1005" y="855" width="60" height="18" rx="3" fill="#0f172a"/>
+    <rect x="1005" y="855" width="60" height="18" rx="3" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="0.8"/>
+    <text x="1035" y="867" text-anchor="middle" font-size="6" fill="#c4b5fd">INCRBY stock</text>
+
+    <path d="M 1035 880 L 895 880" stroke="#64748b" stroke-width="1" fill="none" stroke-dasharray="4,2" marker-end="url(#arrow-reply)"/>
+    <text x="910" y="873" font-size="7" fill="#475569">{ released: true }</text>
+
+    <!-- 10C. Order cancelled -->
+    <path d="M 895 910 L 750 910" stroke="#64748b" stroke-width="1" fill="none" stroke-dasharray="4,2" marker-end="url(#arrow-reply)"/>
+    <text x="800" y="902" font-size="7" fill="#475569">stock released ✓</text>
+    <path d="M 750 930 L 350 930" stroke="#fb7185" stroke-width="1" fill="none" stroke-dasharray="4,2" marker-end="url(#arrow-rose)"/>
+    <text x="400" y="922" font-size="7" fill="#fb7185">9. Order cancelled → rollback</text>
+    <path d="M 350 950 L 225 950" stroke="#fb7185" stroke-width="1" fill="none" stroke-dasharray="4,2" marker-end="url(#arrow-rose)"/>
+    <path d="M 225 970 L 105 970" stroke="#fb7185" stroke-width="1" fill="none" stroke-dasharray="4,2" marker-end="url(#arrow-rose)"/>
+    <text x="120" y="964" font-size="7" fill="#fb7185">Payment failed, try again</text>
+
+    <!-- Saga state annotations -->
+    <rect x="690" y="1000" width="290" height="40" rx="6" fill="none" stroke="#fb923c" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="705" y="1016" font-size="7" fill="#fb923c">Saga Orchestrator states: PENDING → STOCK_RESERVED → PAYMENT_PENDING</text>
+    <text x="705" y="1030" font-size="7" fill="#fb923c">→ CONFIRMED | → CANCELLED (compensation: release stock)</text>
+  </svg>
+
+  <div class="legend">
+    <div class="legend-title">LEGEND</div>
+    <div class="legend-items">
+      <div class="legend-item"><div class="legend-swatch solid"></div> Request</div>
+      <div class="legend-item"><div class="legend-swatch dashed" style="border-top-color:#475569"></div> Response</div>
+      <div class="legend-item"><div class="legend-swatch async"></div> Saga / Async</div>
+      <div class="legend-item"><div class="legend-swatch comp"></div> Compensation (rollback)</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

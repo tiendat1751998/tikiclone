@@ -26,8 +26,8 @@ func NewProductCache(client *redis.Client) *ProductCache {
 	}
 	return &ProductCache{
 		client:     client,
-		defaultTTL: 1 * time.Minute,
-		listTTL:    1 * time.Minute,
+		defaultTTL: 5 * time.Minute,
+		listTTL:    3 * time.Minute,
 	}
 }
 
@@ -162,7 +162,7 @@ func NewCategoryCache(client *redis.Client) *CategoryCache {
 	}
 	return &CategoryCache{
 		client:     client,
-		defaultTTL: 10 * time.Minute,
+		defaultTTL: 30 * time.Minute,
 	}
 }
 

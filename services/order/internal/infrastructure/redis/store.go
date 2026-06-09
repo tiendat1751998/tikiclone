@@ -85,6 +85,24 @@ func (s *Store) StoreIdempotencyKey(ctx context.Context, key, orderID string, tt
 	return s.client.Set(ctx, redisKey, orderID, ttl).Err()
 }
 
+// StoreIdempotencyAndCache pipelines idempotency store + order cache in one round-trip.
+func (s *Store) StoreIdempotencyAndCache(ctx context.Context, key string, order *domain.Order, idempotencyTTL, cacheTTL time.Duration) error {
+	if s.client == nil {
+		return nil
+	}
+	pipe := s.client.Pipeline()
+	idemKey := fmt.Sprintf("idempotency:%s", key)
+	pipe.Set(ctx, idemKey, order.ID, idempotencyTTL)
+	cacheKey := fmt.Sprintf("order:%s", order.ID)
+	data, err := json.Marshal(order)
+	if err != nil {
+		return err
+	}
+	pipe.Set(ctx, cacheKey, data, cacheTTL)
+	_, err = pipe.Exec(ctx)
+	return err
+}
+
 // Distributed lock for state transitions
 func (s *Store) AcquireTransitionLock(ctx context.Context, orderID string, ttl time.Duration) (bool, error) {
 	if s.client == nil {

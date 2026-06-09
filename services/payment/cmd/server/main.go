@@ -18,6 +18,7 @@ import (
 	"github.com/tikiclone/tiki/services/payment/internal/config"
 	"github.com/tikiclone/tiki/services/payment/internal/health"
 	"github.com/tikiclone/tiki/services/payment/internal/infrastructure/fraud"
+	vnpaysim "github.com/tikiclone/tiki/services/payment/internal/infrastructure/vnpay"
 	"github.com/tikiclone/tiki/services/payment/internal/infrastructure/kafka"
 	"github.com/tikiclone/tiki/services/payment/internal/infrastructure/mysql"
 	redisinfra "github.com/tikiclone/tiki/services/payment/internal/infrastructure/redis"
@@ -80,11 +81,23 @@ func main() {
 		kafkaProducer = kafka.NewProducer(cfg.Kafka)
 	}
 
+	var paymentConsumer *kafka.Consumer
+	if len(cfg.Kafka.Brokers) > 0 && cfg.Kafka.Brokers[0] != "" {
+		paymentTopics := []string{cfg.Kafka.TopicPrefix + ".payment.events"}
+		paymentConsumer = kafka.NewConsumer(cfg.Kafka, paymentTopics, kafka.NewPaymentEventHandler())
+	}
+
 	fraudDetector := fraud.NewDetector(fraud.DetectorConfig{
 		RiskThreshold: cfg.Payment.FraudRiskThreshold,
 	})
 
-	paymentService := application.NewPaymentService(cfg, paymentRepo, redisStore, kafkaProducer, fraudDetector)
+paymentService := application.NewPaymentService(cfg, paymentRepo, redisStore, kafkaProducer, fraudDetector)
+
+	// Initialize VNPay simulator for testing
+	var vnpaySimulator *vnpaysim.Simulator
+	if cfg.AppEnv == "development" || cfg.AppEnv == "staging" {
+		vnpaySimulator = vnpaysim.NewSimulator(cfg, paymentRepo, redisStore, kafkaProducer)
+	}
 
 	gin.SetMode(getGinMode(cfg.AppEnv))
 	engine := gin.New()
@@ -100,7 +113,7 @@ func main() {
 	if redisClient != nil {
 		webhookMiddlewares = append(webhookMiddlewares, middleware.RateLimit(redisStore, 100, time.Minute))
 	}
-	router := httptransport.NewRouter(handler, authMw, webhookMiddlewares...)
+	router := httptransport.NewRouterWithVNPay(handler, authMw, vnpaySimulator, webhookMiddlewares...)
 	router.Setup(engine)
 
 	healthChecker := health.NewChecker(cfg.AppName, version, db, redisClient)
@@ -110,9 +123,11 @@ func main() {
 	httpServer := &http.Server{
 		Addr:              fmt.Sprintf(":%d", cfg.HTTPPort),
 		Handler:           engine,
-		ReadTimeout:       5 * time.Second,
-		WriteTimeout:      10 * time.Second,
+		ReadTimeout:       500 * time.Millisecond,
+		WriteTimeout:      2 * time.Second,
 		IdleTimeout:       120 * time.Second,
+		ReadHeaderTimeout: 2 * time.Second,
+		MaxHeaderBytes:    1 << 20,
 	}
 
 	grpcServer := grpc.NewServer()
@@ -144,6 +159,21 @@ func main() {
 		}
 	}()
 
+	if paymentConsumer != nil {
+		bgWg.Add(1)
+		go func() {
+			defer bgWg.Done()
+			defer func() {
+				if r := recover(); r != nil {
+					zap.L().Error("panic in payment kafka consumer", zap.Any("recover", r))
+				}
+			}()
+			if err := paymentConsumer.Start(ctx); err != nil && ctx.Err() == nil {
+				logger.Error("payment kafka consumer failed", zap.Error(err))
+			}
+		}()
+	}
+
 	bgWg.Add(1)
 	go func() {
 		defer bgWg.Done()
@@ -152,7 +182,7 @@ func main() {
 				zap.L().Error("panic in payment outbox worker", zap.Any("recover", r))
 			}
 		}()
-		ticker := time.NewTicker(5 * time.Second)
+		ticker := time.NewTicker(100 * time.Millisecond)
 		defer ticker.Stop()
 		for {
 			select {
@@ -185,6 +215,9 @@ func main() {
 	}
 	if kafkaProducer != nil {
 		kafkaProducer.Close()
+	}
+	if paymentConsumer != nil {
+		paymentConsumer.Close()
 	}
 
 	logger.Info("payment service stopped")

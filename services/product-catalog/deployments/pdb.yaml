@@ -1,4 +1,0 @@
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata: {name: shopee-product-catalog}
-spec: {minAvailable: 2, selector: {matchLabels: {app: shopee-product-catalog}}}

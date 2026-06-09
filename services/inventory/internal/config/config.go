@@ -91,13 +91,13 @@ func Load() *Config {
 		MySQL: MySQLConfig{
 			Host: getEnv("MYSQL_HOST", "localhost"), Port: getEnvInt("MYSQL_PORT", 3306),
 			User: getEnv("MYSQL_USER", "tiki"), Password: requireEnv("MYSQL_PASSWORD"),
-			Database: getEnv("MYSQL_DATABASE", "tiki_inventory"), MaxOpenConns: 25, MaxIdleConns: 10,
-			MaxLifetime: 5 * time.Minute, Timeout: 5 * time.Second,
+			Database: getEnv("MYSQL_DATABASE", "tiki_inventory"), MaxOpenConns: 100, MaxIdleConns: 50,
+			MaxLifetime: 5 * time.Minute, Timeout: 500 * time.Millisecond,
 		},
 		Redis: RedisConfig{
 			Addr: getEnv("REDIS_ADDR", "localhost:6379"), Password: getEnv("REDIS_PASSWORD", ""),
-			DB: getEnvInt("REDIS_DB", 6), PoolSize: 100, MinIdleConns: 20,
-			DialTimeout: 5 * time.Second, ReadTimeout: 3 * time.Second, WriteTimeout: 3 * time.Second, MaxRetries: 3,
+			DB: getEnvInt("REDIS_DB", 6), PoolSize: 300, MinIdleConns: 50,
+			DialTimeout: 500 * time.Millisecond, ReadTimeout: 150 * time.Millisecond, WriteTimeout: 150 * time.Millisecond, MaxRetries: 2,
 		},
 		Kafka: KafkaConfig{
 			Brokers: getEnvSlice("KAFKA_BROKERS", ","), TopicPrefix: getEnv("KAFKA_TOPIC_PREFIX", "tiki.inventory"),

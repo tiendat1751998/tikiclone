@@ -70,7 +70,7 @@ func (s *InventoryService) ReserveStock(ctx context.Context, req *ReserveStockRe
 	}
 
 	// Acquire distributed lock for this SKU (prevents concurrent reservations across instances)
-	lockToken, locked, err := s.redisStore.AcquireStockLock(ctx, req.SkuID, 10*time.Second)
+	lockToken, locked, err := s.redisStore.AcquireStockLock(ctx, req.SkuID, 3*time.Second)
 	if err != nil || !locked {
 		metrics.ReservationFailures.WithLabelValues("lock_failed").Inc()
 		return nil, fmt.Errorf("failed to acquire stock lock for SKU %s", req.SkuID)
@@ -99,7 +99,7 @@ func (s *InventoryService) ReserveStock(ctx context.Context, req *ReserveStockRe
 	// Invalidate cache (don't update - prevents stale data on cache write failure)
 	s.redisStore.InvalidateStockCache(ctx, req.SkuID)
 
-	// Publish event via outbox pattern
+	// Publish event via outbox pattern + async Kafka
 	event := &domain.InventoryEvent{
 		ProductID: req.ProductID, SkuID: req.SkuID, WarehouseID: req.WarehouseID,
 		Quantity: req.Quantity, EventType: domain.EventStockReserved, Timestamp: time.Now().UTC(),
@@ -108,12 +108,21 @@ func (s *InventoryService) ReserveStock(ctx context.Context, req *ReserveStockRe
 	if err != nil {
 		observability.LogWithTrace(ctx).Error("failed to marshal reserve event", zap.Error(err))
 	} else {
-		s.invRepo.SaveOutboxEvent(ctx, domain.NewOutboxEvent("inventory", reservation.ID, string(domain.EventStockReserved), payload))
+		// Save outbox event asynchronously to avoid blocking response
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+			defer cancel()
+			s.invRepo.SaveOutboxEvent(ctx, domain.NewOutboxEvent("inventory", reservation.ID, string(domain.EventStockReserved), payload))
+		}()
 	}
 	if s.kafkaProducer != nil {
-		if err := s.kafkaProducer.PublishEvent(ctx, event); err != nil {
-			observability.LogWithTrace(ctx).Error("failed to publish reserve event", zap.Error(err))
-		}
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+			defer cancel()
+			if err := s.kafkaProducer.PublishEvent(ctx, event); err != nil {
+				observability.LogWithTrace(ctx).Error("failed to publish reserve event", zap.Error(err))
+			}
+		}()
 	}
 
 	span.SetAttributes(
@@ -223,7 +232,7 @@ func (s *InventoryService) ReleaseStock(ctx context.Context, reservationID strin
 	// Invalidate cache after successful commit
 	s.redisStore.InvalidateStockCache(ctx, reservation.SkuID)
 
-	// Publish event
+	// Publish event asynchronously
 	event := &domain.InventoryEvent{
 		SkuID: reservation.SkuID, EventType: domain.EventStockReleased, Timestamp: time.Now().UTC(),
 	}
@@ -231,12 +240,20 @@ func (s *InventoryService) ReleaseStock(ctx context.Context, reservationID strin
 	if err != nil {
 		observability.LogWithTrace(ctx).Error("failed to marshal release event", zap.Error(err))
 	} else {
-		s.invRepo.SaveOutboxEvent(ctx, domain.NewOutboxEvent("inventory", reservationID, string(domain.EventStockReleased), payload))
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+			defer cancel()
+			s.invRepo.SaveOutboxEvent(ctx, domain.NewOutboxEvent("inventory", reservationID, string(domain.EventStockReleased), payload))
+		}()
 	}
 	if s.kafkaProducer != nil {
-		if err := s.kafkaProducer.PublishEvent(ctx, event); err != nil {
-			observability.LogWithTrace(ctx).Error("failed to publish release event", zap.Error(err))
-		}
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+			defer cancel()
+			if err := s.kafkaProducer.PublishEvent(ctx, event); err != nil {
+				observability.LogWithTrace(ctx).Error("failed to publish release event", zap.Error(err))
+			}
+		}()
 	}
 
 	return nil

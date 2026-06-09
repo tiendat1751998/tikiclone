@@ -149,12 +149,12 @@ func (c *Cache) GetOrFetch(ctx context.Context, key string, ttl time.Duration, f
 		return nil, nil
 	}
 
-	// Cache the result (bounded concurrency, propagate caller context)
+	// Cache the result (bounded concurrency, independent context)
 	select {
 	case c.sem <- struct{}{}:
 		go func() {
 			defer func() { <-c.sem }()
-			ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 			defer cancel()
 			c.Set(ctx, key, product, ttl)
 		}()
@@ -189,7 +189,7 @@ func (c *Cache) GetOrFetchCategory(ctx context.Context, key string, ttl time.Dur
 	case c.sem <- struct{}{}:
 		go func() {
 			defer func() { <-c.sem }()
-			ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 			defer cancel()
 			if data, err := sonic.Marshal(category); err == nil {
 				c.client.Set(ctx, c.prefix+key, data, ttl)
@@ -226,7 +226,7 @@ func (c *Cache) GetOrFetchTree(ctx context.Context, key string, ttl time.Duratio
 	case c.sem <- struct{}{}:
 		go func() {
 			defer func() { <-c.sem }()
-			ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 			defer cancel()
 			if data, err := sonic.Marshal(tree); err == nil {
 				c.client.Set(ctx, c.prefix+key, data, ttl)

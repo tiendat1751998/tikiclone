@@ -294,13 +294,17 @@ func (s *CheckoutService) stepComplete(ctx context.Context, checkout *domain.Che
 	}
 
 	if s.publisher != nil {
-		if err := s.publisher.Publish(ctx, "checkout.completed", map[string]interface{}{
-			"checkout_id": checkout.ID, "order_id": checkout.OrderID,
-			"grand_total": checkout.GrandTotal, "currency": checkout.Currency,
-		}); err != nil {
-			observability.LogWithTrace(ctx).Error("failed to publish checkout.completed event",
-				zap.String("checkout_id", checkout.ID), zap.Error(err))
-		}
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+			defer cancel()
+			if err := s.publisher.Publish(ctx, "checkout.completed", map[string]interface{}{
+				"checkout_id": checkout.ID, "order_id": checkout.OrderID,
+				"grand_total": checkout.GrandTotal, "currency": checkout.Currency,
+			}); err != nil {
+				observability.LogWithTrace(ctx).Error("failed to publish checkout.completed event",
+					zap.String("checkout_id", checkout.ID), zap.Error(err))
+			}
+		}()
 	}
 }
 
@@ -334,11 +338,15 @@ func (s *CheckoutService) handleFailure(ctx context.Context, checkout *domain.Ch
 	metrics.CheckoutsFailed.Inc()
 
 	if s.publisher != nil {
-		if pubErr := s.publisher.Publish(ctx, "checkout.failed", map[string]interface{}{
-			"checkout_id": checkout.ID, "step": step, "error": err.Error(),
-		}); pubErr != nil {
-			logger.Error("failed to publish checkout.failed event", zap.Error(pubErr))
-		}
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+			defer cancel()
+			if pubErr := s.publisher.Publish(ctx, "checkout.failed", map[string]interface{}{
+				"checkout_id": checkout.ID, "step": step, "error": err.Error(),
+			}); pubErr != nil {
+				observability.LogWithTrace(ctx).Error("failed to publish checkout.failed event", zap.Error(pubErr))
+			}
+		}()
 	}
 }
 

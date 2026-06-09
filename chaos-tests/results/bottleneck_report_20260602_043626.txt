@@ -1,0 +1,56 @@
+══════════════════════════════════════════════════════════════════════
+TIKI-CLONE LOAD TEST / BOTTLENECK ANALYSIS REPORT
+Generated: 2026-06-02T04:36:26.412666
+══════════════════════════════════════════════════════════════════════
+
+── RPS SCALING SUMMARY ─────────────────────────────────────────────
+  Target TPS   Actual RPS     Avg RT     p95 RT     p99 RT   Failures     Status
+          10          N/A
+
+── CONTAINER RESOURCE USAGE ──────────────────────────────────────────
+
+  At 10 TPS:
+  Service                        CPU before  CPU after    CPU Δ    Mem after
+  tikiclone-web-tls-1                  0.0%       0.0%    +0.0%        0.0%
+  tikiclone-gateway-1                  0.0%       0.0%    +0.0%        0.0%
+  tikiclone-gateway-2-1                0.0%       0.0%    +0.0%        0.0%
+  tikiclone-web-1                      0.0%       0.0%    +0.0%        0.0%
+  tikiclone-product-1                  0.0%       0.0%    +0.0%        0.0%
+  tikiclone-cart-1                     0.0%       0.0%    +0.0%        0.0%
+  tikiclone-order-1                    0.0%       0.0%    +0.0%        0.0%
+  tikiclone-payment-1                  0.0%       0.0%    +0.0%        0.0%
+  tikiclone-inventory-1                0.0%       0.0%    +0.0%        0.0%
+  tikiclone-auth-1                     0.0%       0.0%    +0.0%        0.0%
+  tikiclone-identity-auth-1            0.0%       0.0%    +0.0%        0.0%
+  tikiclone-mysql-primary-1            0.0%       0.0%    +0.0%        0.0%
+  tikiclone-redis-master-1             0.0%       0.0%    +0.0%        0.0%
+  tikiclone-mongodb-1                  0.0%       0.0%    +0.0%        0.0%
+  tikiclone-kafka-1                    0.0%       0.0%    +0.0%        0.0%
+  ollama                               0.0%       0.0%    +0.0%        0.0%
+
+── ERROR LOG SUMMARY ────────────────────────────────────────────────
+
+  At 10 TPS:
+    tikiclone-web-tls-1:
+      172.19.0.1 - - [01/Jun/2026:09:06:28 +0000] "GET /_next/static/chunks/app/error-8891c80b7e90ceaa.js HTTP/2.0" 404 9 "htt
+    tikiclone-gateway-2-1:
+      2026-06-01T09:04:33.861Z	[33mWARN[0m	gin@v1.10.0/context.go:185	client error	{"service": "tiki-gateway", "trace_id": "
+      github.com/tikiclone/tiki/services/gateway/internal/routing.(*Router).Setup.ErrorHandler.func2
+      2026-06-01T09:04:37.156Z	[33mWARN[0m	gin@v1.10.0/context.go:185	client error	{"service": "tiki-gateway", "trace_id": "
+      github.com/tikiclone/tiki/services/gateway/internal/routing.(*Router).Setup.ErrorHandler.func2
+      2026-06-01T09:06:39.586Z	[33mWARN[0m	gin@v1.10.0/context.go:185	client error	{"service": "tiki-gateway", "trace_id": "
+    ollama:
+      Error response from daemon: No such container: ollama
+
+── BOTTLENECK DIAGNOSIS ────────────────────────────────────────────
+  ✓ No bottleneck detected within tested range
+
+── RECOMMENDATIONS ─────────────────────────────────────────────────
+  1. Scale the primary bottleneck service horizontally
+  2. Add connection pooling to database-facing services
+  3. Enable response caching at gateway level
+  4. Add Redis caching for frequently accessed data
+  5. Consider CDN for static assets (images, JS, CSS)
+  6. Profile slow endpoints with pprof/trace
+
+══════════════════════════════════════════════════════════════════════

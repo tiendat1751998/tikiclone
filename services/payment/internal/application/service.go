@@ -10,8 +10,8 @@ import (
 	"github.com/tikiclone/tiki/services/payment/internal/domain"
 	"github.com/tikiclone/tiki/services/payment/internal/infrastructure/kafka"
 	"github.com/tikiclone/tiki/services/payment/internal/infrastructure/mysql"
-	redisinfra "github.com/tikiclone/tiki/services/payment/internal/infrastructure/redis"
 	"github.com/tikiclone/tiki/services/payment/internal/metrics"
+	redisinfra "github.com/tikiclone/tiki/services/payment/internal/infrastructure/redis"
 	"github.com/tikiclone/tiki/packages/go-shared/pkg/observability"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
@@ -48,19 +48,20 @@ func (s *PaymentService) AuthorizePayment(ctx context.Context, req *AuthorizePay
 	start := time.Now()
 	defer func() { metrics.PaymentAuthorizationLatency.WithLabelValues(s.cfg.Payment.DefaultPSP).Observe(time.Since(start).Seconds()) }()
 
-	lockToken, locked, err := s.redisStore.AcquirePaymentLock(ctx, req.OrderID, 30*time.Second)
+	lockToken, locked, err := s.redisStore.AcquirePaymentLock(ctx, req.OrderID, 5*time.Second)
 	if err != nil || !locked {
 		return nil, fmt.Errorf("failed to acquire payment lock")
 	}
 	defer s.redisStore.ReleasePaymentLock(ctx, req.OrderID, lockToken)
 
-	// Idempotency check (inside lock)
+	// Idempotency check: Redis first, skip DB if Redis hits
 	if req.IdempotencyKey != "" {
 		existingID, err := s.redisStore.CheckIdempotencyKey(ctx, req.IdempotencyKey)
 		if err == nil && existingID != "" {
 			metrics.DuplicatePreventionCount.Inc()
 			return s.paymentRepo.FindByID(ctx, existingID)
 		}
+		// Only check DB if Redis miss
 		existing, err := s.paymentRepo.FindByIdempotencyKey(ctx, req.IdempotencyKey)
 		if err == nil && existing != nil {
 			metrics.DuplicatePreventionCount.Inc()
@@ -68,7 +69,7 @@ func (s *PaymentService) AuthorizePayment(ctx context.Context, req *AuthorizePay
 		}
 	}
 
-	// Check if payment already exists for this order (inside lock)
+	// Check if payment already exists for this order
 	existingPayment, err := s.paymentRepo.FindByOrderID(ctx, req.OrderID)
 	if err == nil && existingPayment != nil && !existingPayment.IsTerminal() {
 		span.SetStatus(codes.Error, "double charge detected")
@@ -83,14 +84,19 @@ func (s *PaymentService) AuthorizePayment(ctx context.Context, req *AuthorizePay
 		payment.Metadata = &req.Metadata
 	}
 
-	// Fraud check via domain service
+	// Fraud check (non-blocking save)
 	fraudResult, err := s.fraudDetector.Assess(ctx, payment.ID, req.UserID, req.Amount, req.PaymentMethod)
 	if err != nil {
 		observability.LogWithTrace(ctx).Error("fraud detection failed", zap.Error(err))
 	} else {
-		if err := s.paymentRepo.SaveFraudCheck(ctx, fraudResult); err != nil {
-			observability.LogWithTrace(ctx).Error("failed to save fraud check", zap.Error(err))
-		}
+		// Save fraud check async — don't block payment creation
+		go func() {
+			bgCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+			defer cancel()
+			if err := s.paymentRepo.SaveFraudCheck(bgCtx, fraudResult); err != nil {
+				zap.L().Warn("failed to save fraud check", zap.Error(err))
+			}
+		}()
 		if fraudResult.IsFraud {
 			metrics.FraudDetectedCount.Inc()
 			return nil, domain.ErrFraudDetected
@@ -107,31 +113,31 @@ func (s *PaymentService) AuthorizePayment(ctx context.Context, req *AuthorizePay
 		return nil, fmt.Errorf("failed to create payment: %w", err)
 	}
 
-	// Store idempotency
+	// Store idempotency in background (best-effort)
 	if req.IdempotencyKey != "" {
 		rec := domain.NewIdempotencyRecord(req.IdempotencyKey, payment.ID, s.cfg.Payment.IdempotencyTTL)
-		if err := s.paymentRepo.SaveIdempotencyKey(ctx, rec); err != nil {
-			observability.LogWithTrace(ctx).Error("failed to save idempotency key", zap.Error(err))
-		}
-		if err := s.redisStore.StoreIdempotencyKey(ctx, req.IdempotencyKey, payment.ID, s.cfg.Payment.IdempotencyTTL); err != nil {
-			observability.LogWithTrace(ctx).Error("failed to store idempotency key in Redis", zap.Error(err))
-		}
+		go func() {
+			bgCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+			defer cancel()
+			if err := s.paymentRepo.SaveIdempotencyKey(bgCtx, rec); err != nil {
+				zap.L().Warn("failed to save idempotency key", zap.Error(err))
+			}
+			if err := s.redisStore.StoreIdempotencyKey(bgCtx, req.IdempotencyKey, payment.ID, s.cfg.Payment.IdempotencyTTL); err != nil {
+				zap.L().Warn("failed to store idempotency key in redis", zap.Error(err))
+			}
+		}()
 	}
 
-	// [FIX A2] Publish event - MUST handle error
+	// Publish event via outbox (reliable) — Kafka is now async so this is fast
 	event := domain.NewPaymentEvent(payment, domain.EventPaymentAuthorized, req.Metadata)
-	payload, err := json.Marshal(event)
-	if err != nil {
-		observability.LogWithTrace(ctx).Error("failed to marshal payment event", zap.Error(err))
-	} else {
+	if payload, err := json.Marshal(event); err == nil {
 		if err := s.paymentRepo.SaveOutboxEvent(ctx, domain.NewOutboxEvent("payment", payment.ID, string(domain.EventPaymentAuthorized), payload)); err != nil {
 			observability.LogWithTrace(ctx).Error("failed to save outbox event", zap.Error(err))
 		}
 	}
+	// Kafka publish is now async — fire and forget
 	if s.kafkaProducer != nil {
-		if err := s.kafkaProducer.PublishEvent(ctx, event); err != nil {
-			observability.LogWithTrace(ctx).Error("failed to publish payment event to Kafka", zap.Error(err))
-		}
+		go s.kafkaProducer.PublishEvent(context.Background(), event)
 	}
 
 	metrics.PaymentsAuthorizedTotal.WithLabelValues(s.cfg.Payment.DefaultPSP, string(req.PaymentMethod)).Inc()
@@ -162,19 +168,14 @@ func (s *PaymentService) CapturePayment(ctx context.Context, paymentID, actorID 
 	}
 
 	event := domain.NewPaymentEvent(payment, domain.EventPaymentCaptured, nil)
-	payload, err := json.Marshal(event)
-	if err != nil {
-		observability.LogWithTrace(ctx).Error("failed to marshal capture event", zap.Error(err))
-	} else {
+	if payload, err := json.Marshal(event); err == nil {
 		if err := s.paymentRepo.SaveOutboxEvent(ctx, domain.NewOutboxEvent("payment", payment.ID, string(domain.EventPaymentCaptured), payload)); err != nil {
 			observability.LogWithTrace(ctx).Error("failed to save capture outbox event",
 				zap.String("payment_id", payment.ID), zap.Error(err))
 		}
 	}
 	if s.kafkaProducer != nil {
-		if err := s.kafkaProducer.PublishEvent(ctx, event); err != nil {
-			observability.LogWithTrace(ctx).Error("failed to publish capture event", zap.Error(err))
-		}
+		go s.kafkaProducer.PublishEvent(context.Background(), event)
 	}
 
 	metrics.PaymentsCapturedTotal.WithLabelValues(s.cfg.Payment.DefaultPSP).Inc()
@@ -223,19 +224,14 @@ func (s *PaymentService) RefundPayment(ctx context.Context, paymentID, reason, i
 	}
 
 	event := domain.NewPaymentEvent(payment, domain.EventPaymentRefunded, nil)
-	payload, err := json.Marshal(event)
-	if err != nil {
-		observability.LogWithTrace(ctx).Error("failed to marshal refund event", zap.Error(err))
-	} else {
+	if payload, err := json.Marshal(event); err == nil {
 		if err := s.paymentRepo.SaveOutboxEvent(ctx, domain.NewOutboxEvent("payment", payment.ID, string(domain.EventPaymentRefunded), payload)); err != nil {
 			observability.LogWithTrace(ctx).Error("failed to save refund outbox event",
 				zap.String("payment_id", payment.ID), zap.Error(err))
 		}
 	}
 	if s.kafkaProducer != nil {
-		if err := s.kafkaProducer.PublishEvent(ctx, event); err != nil {
-			observability.LogWithTrace(ctx).Error("failed to publish refund event", zap.Error(err))
-		}
+		go s.kafkaProducer.PublishEvent(context.Background(), event)
 	}
 
 	metrics.RefundsProcessed.WithLabelValues("success").Inc()
@@ -244,6 +240,82 @@ func (s *PaymentService) RefundPayment(ctx context.Context, paymentID, reason, i
 
 func (s *PaymentService) GetPayment(ctx context.Context, paymentID string) (*domain.Payment, error) {
 	return s.paymentRepo.FindByID(ctx, paymentID)
+}
+
+// VNPayAuthorizePayment creates a payment and returns VNPay payment URL for frontend redirect
+func (s *PaymentService) VNPayAuthorizePayment(ctx context.Context, orderID, userID string, amount int64, txnRef, clientIP, returnURL string) (*domain.VNPayPaymentRequest, string, error) {
+	currency := "VND"
+	paymentMethod := domain.PaymentMethodVNPayGateway
+
+	payment := domain.NewPayment(orderID, userID, amount, currency, paymentMethod, "vnpay", txnRef)
+
+	if err := s.paymentRepo.Create(ctx, payment); err != nil {
+		return nil, "", fmt.Errorf("failed to create payment: %w", err)
+	}
+
+	req := &domain.VNPayPaymentRequest{
+		Version:    domain.VNPayVersion,
+		Command:    "pay",
+		TmnCode:    s.cfg.Payment.VNPayTmnCode,
+		Amount:     amount,
+		CurrCode:   currency,
+		Locale:     "vn",
+		TxnRef:     txnRef,
+		OrderInfo:  fmt.Sprintf("Order %s", orderID),
+		ReturnUrl:  returnURL,
+		IpAddr:     clientIP,
+		CreateDate: domain.FormatVNPayDate(time.Now()),
+	}
+
+	return req, payment.ID, nil
+}
+
+// ProcessVNPayCallback handles the VNPay return callback
+func (s *PaymentService) ProcessVNPayCallback(ctx context.Context, params map[string]string) error {
+	txnRef := params["vnp_TxnRef"]
+	responseCode := params["vnp_ResponseCode"]
+	transactionNo := params["vnp_TransactionNo"]
+	transactionStatus := params["vnp_TransactionStatus"]
+
+	payment, err := s.paymentRepo.FindByOrderID(ctx, txnRef)
+	if err != nil {
+		return fmt.Errorf("payment not found: %w", err)
+	}
+
+	success := responseCode == "00" && transactionStatus == "00"
+
+	var newStatus domain.PaymentStatus
+	if success {
+		newStatus = domain.PaymentStatusCaptured
+		payment.PSPTransactionID = transactionNo
+	} else {
+		newStatus = domain.PaymentStatusFailed
+		if msg, ok := domain.VNPayResponseCodes[responseCode]; ok {
+			payment.FailureReason = msg
+		}
+	}
+
+	if err := payment.TransitionTo(newStatus); err != nil {
+		return fmt.Errorf("failed to transition payment: %w", err)
+	}
+
+	if err := s.paymentRepo.Update(ctx, payment); err != nil {
+		return fmt.Errorf("failed to update payment: %w", err)
+	}
+
+	eventType := domain.EventPaymentCaptured
+	if !success {
+		eventType = domain.EventPaymentFailed
+	}
+
+	event := domain.NewPaymentEvent(payment, eventType, nil)
+	payload, _ := json.Marshal(event)
+	s.paymentRepo.SaveOutboxEvent(ctx, domain.NewOutboxEvent("payment", payment.ID, string(eventType), payload))
+	if s.kafkaProducer != nil {
+		s.kafkaProducer.PublishEvent(ctx, event)
+	}
+
+	return nil
 }
 
 // [FIX A3] Webhook handler - now properly processes PSP events

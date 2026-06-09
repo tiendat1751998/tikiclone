@@ -1,0 +1,84 @@
+{
+  "fixes": [
+    {
+      "id": "SA-001",
+      "severity": "P0",
+      "status": "FIXED",
+      "files": ["deploy/swarm/docker-stack.yml"],
+      "description": "Changed notification service image from tikiclone-auth:latest to tikiclone-notification:latest. Replaced auth-specific env vars (AUTH_HTTP_PORT, MYSQL_DATABASE=tiki_auth, JWT_ACCESS_SECRET) with notification-appropriate vars (NOTIFICATION_HTTP_PORT, MYSQL_DATABASE=tiki_notification, OTEL_EXPORTER_OTLP_ENDPOINT)."
+    },
+    {
+      "id": "SA-003",
+      "severity": "P0",
+      "status": "FIXED",
+      "files": ["services/gateway/cmd/server/main.go"],
+      "description": "Replaced uniform 500ms timeout with per-service timeouts: payment=3s, order=2s, catalog/cart/search/inventory/recommendation=1s, auth=500ms, default=1s."
+    },
+    {
+      "id": "SA-004",
+      "severity": "P0",
+      "status": "FIXED",
+      "files": ["configs/otel-collector.yaml"],
+      "description": "Replaced debug exporter with real exporters: otlp exporter pointing to otel-collector:4317 for traces, prometheusremotewrite exporter pointing to prometheus:9090 for metrics."
+    },
+    {
+      "id": "SA-005",
+      "severity": "P0",
+      "status": "FIXED",
+      "files": ["services/payment/public/payment.go"],
+      "description": "Fixed NewPaymentService to require kafkaProducer and fraudDetector as explicit parameters (no nil defaults). Added nil checks that panic if either is nil. Added imports for kafka and fraud packages."
+    },
+    {
+      "id": "SA-007",
+      "severity": "P1",
+      "status": "FIXED",
+      "files": ["services/order/cmd/server/main.go", "services/payment/cmd/server/main.go"],
+      "description": "Removed the 'change-me-in-production' conditional check. JWT auth middleware is now always enforced when AccessSecret is non-empty on both order and payment services."
+    },
+    {
+      "id": "SA-008",
+      "severity": "P1",
+      "status": "FIXED",
+      "files": ["services/gateway/internal/config/config.go"],
+      "description": "Aligned all gateway upstream default addresses with docker-stack.yml service names: identity-auth:8080, category:8088, cart:8082, order:8084, inventory:8086, payment:8083, search:8088, recommendation:8091, delivery:8092."
+    },
+    {
+      "id": "SA-011",
+      "severity": "P1",
+      "status": "FIXED",
+      "files": ["docker-stack.yml"],
+      "description": "Added 4 missing service placeholder definitions to root docker-stack.yml: inventory (tikiclone-inventory:latest:8086), payment (tikiclone-payment:latest:8083), recommendation (tikiclone-recommendation:latest:8091), delivery (tikiclone-delivery:latest:8092). All configured with proper Redis, Kafka, MySQL, healthcheck, and resource limits."
+    },
+    {
+      "id": "SA-014",
+      "severity": "P1",
+      "status": "FIXED",
+      "files": ["services/gateway/internal/routing/routes.go"],
+      "description": "Changed checkout route target from 'order' to 'checkout' so /api/v1/checkout routes to the checkout service (port 8085) instead of the order service."
+    },
+    {
+      "id": "SA-023",
+      "severity": "P1",
+      "status": "FIXED",
+      "files": ["services/gateway/internal/auth/middleware.go"],
+      "description": "Standardized auth middleware public path matching to use only strings.HasPrefix (prefix matching) instead of mixing exact match and prefix match. This ensures consistent behavior for all sub-paths of public endpoints."
+    }
+  ],
+  "verification": {
+    "go_vet_gateway": "PASS",
+    "go_vet_payment": "PASS",
+    "go_vet_order": "PASS"
+  },
+  "files_modified": [
+    "deploy/swarm/docker-stack.yml",
+    "docker-stack.yml",
+    "services/gateway/cmd/server/main.go",
+    "services/gateway/internal/config/config.go",
+    "services/gateway/internal/routing/routes.go",
+    "services/gateway/internal/auth/middleware.go",
+    "configs/otel-collector.yaml",
+    "services/payment/public/payment.go",
+    "services/order/cmd/server/main.go",
+    "services/payment/cmd/server/main.go"
+  ]
+}

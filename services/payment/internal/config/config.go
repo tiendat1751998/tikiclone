@@ -74,6 +74,8 @@ type PaymentConfig struct {
 	MaxRetryAttempts int
 	WebhookSecret       string
 	FraudRiskThreshold  int
+	VNPayTmnCode        string
+	VNPayHashSecret     string
 }
 
 type IdempotencyConfig struct {
@@ -95,26 +97,26 @@ func Load() *Config {
 		GRPCPort: getEnvInt("PAYMENT_GRPC_PORT", 9094),
 
 		MySQL: MySQLConfig{
-			Host:         getEnv("MYSQL_HOST", "localhost"),
-			Port:         getEnvInt("MYSQL_PORT", 3306),
+			Host:         getEnv("MYSQL_HOST", "10.10.10.150"),
+			Port:         getEnvInt("MYSQL_PORT", 6033),
 			User:         getEnv("MYSQL_USER", "tiki"),
 			Password:     requireEnv("MYSQL_PASSWORD"),
-			Database:     getEnv("MYSQL_DATABASE", "tiki_payments"),
-			MaxOpenConns: getEnvInt("MYSQL_MAX_OPEN_CONNS", 25),
-			MaxIdleConns: getEnvInt("MYSQL_MAX_IDLE_CONNS", 10),
-			MaxLifetime:  getEnvDuration("MYSQL_MAX_LIFETIME", 5*time.Minute),
-			Timeout:      getEnvDuration("MYSQL_TIMEOUT", 5*time.Second),
+			Database:     getEnv("MYSQL_DATABASE", "tiki_payment"),
+			MaxOpenConns: getEnvInt("MYSQL_MAX_OPEN_CONNS", 100),
+			MaxIdleConns: getEnvInt("MYSQL_MAX_IDLE_CONNS", 50),
+			MaxLifetime:  getEnvDuration("MYSQL_MAX_LIFETIME", 30*time.Minute),
+			Timeout:      getEnvDuration("MYSQL_TIMEOUT", 500*time.Millisecond),
 		},
 
 		Redis: RedisConfig{
-			Addr:         getEnv("REDIS_ADDR", "localhost:6379"),
+			Addr:         getEnv("REDIS_ADDR", "redis:6379"),
 			Password:     getEnv("REDIS_PASSWORD", ""),
 			DB:           getEnvInt("REDIS_DB", 4),
-			PoolSize:     getEnvInt("REDIS_POOL_SIZE", 100),
-			MinIdleConns: getEnvInt("REDIS_MIN_IDLE", 20),
+			PoolSize:     getEnvInt("REDIS_POOL_SIZE", 300),
+			MinIdleConns: getEnvInt("REDIS_MIN_IDLE", 50),
 			DialTimeout:  getEnvDuration("REDIS_DIAL_TIMEOUT", 5*time.Second),
-			ReadTimeout:  getEnvDuration("REDIS_READ_TIMEOUT", 3*time.Second),
-			WriteTimeout: getEnvDuration("REDIS_WRITE_TIMEOUT", 3*time.Second),
+			ReadTimeout:  getEnvDuration("REDIS_READ_TIMEOUT", 150*time.Millisecond),
+			WriteTimeout: getEnvDuration("REDIS_WRITE_TIMEOUT", 150*time.Millisecond),
 			MaxRetries:   getEnvInt("REDIS_MAX_RETRIES", 3),
 		},
 
@@ -139,6 +141,8 @@ func Load() *Config {
 			MaxRetryAttempts:    getEnvInt("PAYMENT_MAX_RETRY", 3),
 			WebhookSecret:       requireEnv("WEBHOOK_SECRET"),
 			FraudRiskThreshold:  getEnvInt("FRAUD_RISK_THRESHOLD", 50),
+			VNPayTmnCode:      getEnv("VNPAY_TMNCODE", "VNPAYDEMO"),
+			VNPayHashSecret:   requireEnv("VNPAY_HASH_SECRET"),
 		},
 
 		Idempotency: IdempotencyConfig{

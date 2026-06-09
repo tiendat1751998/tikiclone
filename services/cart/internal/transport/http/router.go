@@ -1,6 +1,7 @@
 package http
 
 import (
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/tikiclone/tiki/packages/go-shared/pkg/auth"
 	"github.com/tikiclone/tiki/packages/go-shared/pkg/health"
@@ -29,6 +30,7 @@ func (r *Router) Setup(engine *gin.Engine) {
 		middleware.ErrorHandler(),
 		middleware.RequestID(),
 		middleware.CORS(),
+		gzip.Gzip(gzip.DefaultCompression),
 		middleware.OTelMiddleware("tiki-cart"),
 		observability.ObserveHTTPMetrics("tiki-cart"),
 	)
