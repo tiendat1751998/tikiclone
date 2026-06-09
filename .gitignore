@@ -70,3 +70,15 @@ Desktop.ini
 *.jpg
 *.jpeg
 *.gif
+# Next.js
+.next/
+out/
+
+# Turborepo
+.turbo/
+
+# Node
+node_modules/
+
+# Logs
+*.log
